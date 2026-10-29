@@ -1,0 +1,682 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root { color-scheme: light; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+html, body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+</style>
+<title>Sub ARC Calc</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&family=Outfit:wght@400;600;700&display=swap">
+<style>
+/* Layout: soft raised panel with overlapping round widgets (hero result circle, small stat circles, glass ring with the arc drawing); inputs, delay table and actions in a second panel. */
+:root {
+  --ground: #ecd2bf;
+  --ground-2: #f6e2d4;
+  --panel: #f0d9c9;
+  --panel-edge: #fbeee4;
+  --surface: #f6e6da;
+  --well: #e6c8b4;
+  --ink: #1b1210;
+  --ink-soft: #6c5143;
+  --terra: #c9482e;
+  --terra-hi: #e2755c;
+  --on-terra: #fff6f0;
+  --lens-a: #fbeadc;
+  --lens-b: #e8b49b;
+  --lite: rgba(255, 250, 245, 0.85);
+  --shade: rgba(160, 100, 75, 0.34);
+  --halo: rgba(240, 120, 90, 0.38);
+  --warn: #a3341f;
+  --font-display: "Outfit", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Figtree", "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #1a110e;
+    --ground-2: #241713;
+    --panel: #2a1c17;
+    --panel-edge: #3a2820;
+    --surface: #37251e;
+    --well: #1f1410;
+    --ink: #f7e8de;
+    --ink-soft: #c9ad9d;
+    --terra: #c9482e;
+    --terra-hi: #e8795f;
+    --on-terra: #fff6f0;
+    --lens-a: #4b2f25;
+    --lens-b: #2b1b15;
+    --lite: rgba(255, 220, 200, 0.07);
+    --shade: rgba(0, 0, 0, 0.55);
+    --halo: rgba(232, 100, 70, 0.28);
+    --warn: #ff9a85;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --ground: #1a110e;
+  --ground-2: #241713;
+  --panel: #2a1c17;
+  --panel-edge: #3a2820;
+  --surface: #37251e;
+  --well: #1f1410;
+  --ink: #f7e8de;
+  --ink-soft: #c9ad9d;
+  --terra: #c9482e;
+  --terra-hi: #e8795f;
+  --on-terra: #fff6f0;
+  --lens-a: #4b2f25;
+  --lens-b: #2b1b15;
+  --lite: rgba(255, 220, 200, 0.07);
+  --shade: rgba(0, 0, 0, 0.55);
+  --halo: rgba(232, 100, 70, 0.28);
+  --warn: #ff9a85;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--ground);
+  background-image: linear-gradient(160deg, var(--ground-2), var(--ground) 60%);
+  background-attachment: fixed;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.4;
+  padding-block: 24px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.layout {
+  max-width: 460px;
+  margin: 0 auto;
+  display: grid;
+  gap: 22px;
+  align-items: start;
+}
+@media (min-width: 980px) {
+  .layout { max-width: 980px; grid-template-columns: 440px minmax(0, 1fr); gap: 28px; }
+}
+
+.panel {
+  background: linear-gradient(165deg, var(--panel-edge), var(--panel) 35%);
+  border-radius: 52px;
+  padding: 30px 24px 26px;
+  box-shadow: 22px 28px 60px var(--shade), -14px -14px 40px var(--lite);
+  min-width: 0;
+}
+@media (max-width: 420px) { .panel { border-radius: 40px; padding: 26px 18px 22px; } }
+
+/* header */
+.top { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; }
+.eyebrow { margin: 0; font-size: 15px; font-weight: 500; letter-spacing: 0.04em; color: var(--ink-soft); }
+h1 {
+  margin: 2px 0 6px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(40px, 12.5vw, 58px);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+.summary { margin: 0; font-size: 16px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.summary small { display: block; color: var(--ink-soft); font-size: 13px; margin-top: 2px; }
+.speed { text-align: left; min-width: 0; flex: 0 0 auto; }
+.orb {
+  width: 54px; height: 54px; border-radius: 50%;
+  background: radial-gradient(circle at 34% 28%, #ffd08c 0%, #ee6a48 48%, #a92d1a 100%);
+  box-shadow: 8px 10px 20px var(--shade), inset -4px -6px 10px rgba(120, 20, 10, 0.35), inset 3px 3px 8px rgba(255, 230, 190, 0.6);
+  margin-left: auto;
+}
+.speed b { display: block; margin-top: 14px; font-family: var(--font-display); font-size: 24px; font-weight: 600; font-variant-numeric: tabular-nums; line-height: 1; }
+.speed span { display: block; font-size: 12px; color: var(--ink-soft); margin-top: 4px; font-variant-numeric: tabular-nums; }
+
+/* stage with overlapping circles */
+.stage { position: relative; container-type: inline-size; aspect-ratio: 1 / 1.3; margin-top: 18px; }
+.stage > * { position: absolute; border-radius: 50%; }
+.hero {
+  left: 25%; top: 2%; width: 74%; aspect-ratio: 1;
+  background: linear-gradient(155deg, var(--terra-hi), var(--terra) 70%);
+  color: var(--on-terra);
+  display: grid; place-content: center; padding-left: 8%;
+  box-shadow: 16px 22px 44px var(--shade), 0 0 0 7cqw var(--halo);
+  z-index: 2;
+}
+.hero .lab { font-size: 4.2cqw; font-weight: 600; letter-spacing: 0.02em; }
+.hero .big { font-family: var(--font-display); font-size: 17cqw; font-weight: 700; letter-spacing: -0.03em; line-height: 1; font-variant-numeric: tabular-nums; margin-top: 1cqw; }
+.hero .big i { font-style: normal; font-size: 6.5cqw; font-weight: 600; margin-left: 1.2cqw; }
+.hero .sub { font-size: 3.8cqw; font-weight: 500; margin-top: 2cqw; opacity: 0.95; }
+.hero .warn { margin-top: 2cqw; font-size: 3.6cqw; font-weight: 600; background: rgba(0, 0, 0, 0.22); border-radius: 99px; padding: 0.8cqw 2.4cqw; width: fit-content; }
+.chip {
+  background: var(--surface);
+  display: grid; place-content: center; text-align: center;
+  box-shadow: 10px 14px 28px var(--shade), -6px -6px 18px var(--lite);
+  aspect-ratio: 1; z-index: 3;
+}
+.chip .lab { font-size: 3.5cqw; font-weight: 600; color: var(--ink-soft); }
+.chip .val { font-family: var(--font-display); font-size: 6.6cqw; font-weight: 600; font-variant-numeric: tabular-nums; margin-top: 0.6cqw; }
+.chip .val i { font-style: normal; font-size: 3.6cqw; font-weight: 500; margin-left: 0.6cqw; color: var(--ink-soft); }
+.chip.a { left: 0; top: 18%; width: 31%; }
+.chip.b { right: 0; top: 60%; width: 31%; }
+.dot { right: 24%; top: 87.5%; width: 13%; aspect-ratio: 1; background: radial-gradient(circle at 35% 30%, var(--terra-hi), var(--terra)); box-shadow: 6px 8px 16px var(--shade); z-index: 3; }
+.lens {
+  left: 0; top: 52%; width: 62%; aspect-ratio: 1;
+  background: radial-gradient(circle at 30% 20%, var(--lens-a), var(--lens-b));
+  box-shadow: 14px 20px 40px var(--shade), inset 0 0 0 1.5px rgba(255, 255, 255, 0.55);
+  z-index: 1;
+}
+.lens::after { content: ""; position: absolute; inset: 3.2%; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.28); pointer-events: none; }
+.lens svg { width: 100%; height: 100%; display: block; }
+.lens .bx { fill: var(--terra); }
+.lens .bn { fill: var(--on-terra); font: 600 6.5px var(--font-body); text-anchor: middle; }
+.lens .st { stroke: var(--ink-soft); stroke-width: 0.7; stroke-dasharray: 1.5 2; opacity: 0.7; }
+.lens .arc { fill: none; stroke: var(--terra); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.lens .pt { fill: var(--ink); }
+.lens .cap { fill: var(--ink-soft); font: 500 6.8px var(--font-body); text-anchor: middle; }
+
+/* second panel */
+h2 { margin: 0 0 14px; font-family: var(--font-display); font-weight: 600; font-size: 22px; letter-spacing: -0.01em; }
+section + section { margin-top: 26px; }
+.fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 12px; }
+.field { min-width: 0; }
+.field.wide { grid-column: 1 / -1; }
+.field label { display: block; font-size: 12.5px; font-weight: 600; color: var(--ink-soft); margin: 0 0 6px 6px; }
+.field input {
+  width: 100%; min-width: 0;
+  border: 0; border-radius: 20px; background: var(--well); color: var(--ink);
+  font-family: var(--font-display); font-size: 22px; font-weight: 600; font-variant-numeric: tabular-nums;
+  padding: 12px 16px;
+  box-shadow: inset 5px 6px 12px var(--shade), inset -4px -4px 10px var(--lite);
+}
+.field input:focus-visible { outline: 2px solid var(--terra); outline-offset: 2px; }
+.hint { margin: 14px 6px 0; font-size: 12.5px; color: var(--ink-soft); }
+
+.tablewrap { overflow-x: auto; margin: 0 -6px; padding: 4px 6px 10px; }
+table { border-collapse: separate; border-spacing: 0 6px; width: 100%; min-width: 540px; font-variant-numeric: tabular-nums; }
+th { font-size: 11.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink-soft); padding: 2px 8px; text-align: right; white-space: nowrap; }
+th:first-child, td:first-child { text-align: center; }
+td { padding: 9px 8px; text-align: right; background: var(--surface); font-size: 14px; }
+td:first-child { border-radius: 16px 0 0 16px; font-family: var(--font-display); font-weight: 600; }
+td:last-child { border-radius: 0 16px 16px 0; padding-right: 10px; }
+.norm { display: inline-block; min-width: 56px; padding: 3px 10px; border-radius: 99px; font-weight: 600; text-align: center; background: var(--terra); color: var(--on-terra); }
+.norm.zero { background: transparent; color: var(--ink-soft); box-shadow: inset 0 0 0 1.5px var(--ink-soft); }
+.empty { padding: 18px 6px; color: var(--ink-soft); }
+
+.actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.btn {
+  appearance: none; border: 0; cursor: pointer;
+  font: 600 15px var(--font-body); color: var(--ink);
+  background: var(--surface); border-radius: 99px; padding: 14px 22px;
+  box-shadow: 8px 10px 20px var(--shade), -5px -5px 14px var(--lite);
+}
+.btn:active { box-shadow: inset 4px 5px 10px var(--shade), inset -3px -3px 8px var(--lite); }
+.btn.main { background: linear-gradient(155deg, var(--terra-hi), var(--terra)); color: var(--on-terra); }
+.btn:focus-visible { outline: 2px solid var(--terra); outline-offset: 3px; }
+.status { font-size: 13px; color: var(--ink-soft); min-height: 1.3em; }
+.field input.txt { font-family: var(--font-body); font-size: 16px; font-weight: 500; }
+.field input.txt::placeholder { color: var(--ink-soft); opacity: 0.7; }
+.saveRow { margin-top: 16px; }
+.nomargin { margin: -4px 6px 12px; }
+.saved { display: grid; gap: 12px; }
+.card { background: var(--surface); border-radius: 26px; padding: 16px 18px; box-shadow: 8px 10px 22px var(--shade), -5px -5px 14px var(--lite); min-width: 0; }
+.card h3 { margin: 0; font-family: var(--font-display); font-size: 18px; font-weight: 600; overflow-wrap: anywhere; }
+.card .setupName { margin: 2px 0 0; font-weight: 500; overflow-wrap: anywhere; }
+.card .meta { margin: 8px 0 0; font-size: 13px; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.card .stats { margin: 8px 0 0; display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 14px; font-variant-numeric: tabular-nums; }
+.card .stats b { font-family: var(--font-display); font-weight: 600; }
+.card .row { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px; }
+.btn.sm { font-size: 13.5px; padding: 9px 16px; box-shadow: 5px 6px 14px var(--shade), -4px -4px 10px var(--lite); }
+.btn.sm.danger { color: var(--warn); }
+.confirmText { align-self: center; font-size: 14px; font-weight: 600; margin-right: 4px; }
+.errText { margin: 10px 2px 0; font-size: 13px; font-weight: 600; color: var(--warn); }
+.qbtn { appearance: none; border: 0; cursor: pointer; width: 22px; height: 22px; padding: 0; border-radius: 50%; background: var(--surface); color: var(--terra); font: 700 13px/22px var(--font-display); text-align: center; box-shadow: 4px 5px 10px var(--shade), -3px -3px 8px var(--lite); position: absolute; z-index: 4; }
+.qbtn::after { content: ""; position: absolute; inset: -8px; }
+.qbtn[aria-expanded="true"] { background: var(--terra); color: var(--on-terra); }
+.qbtn:focus-visible { outline: 2px solid var(--terra); outline-offset: 2px; }
+.qbtn.inline { position: relative; display: inline-block; vertical-align: middle; margin-left: 4px; box-shadow: 3px 4px 8px var(--shade), -2px -2px 6px var(--lite); width: 20px; height: 20px; font-size: 12px; line-height: 20px; }
+.hero .qbtn { top: 13%; right: 13%; }
+.chip .qbtn { top: 5%; right: 7%; }
+.help { margin-top: 18px; background: var(--well); border-radius: 26px; padding: 16px 18px; box-shadow: inset 5px 6px 12px var(--shade), inset -4px -4px 10px var(--lite); font-size: 14px; }
+.help h4 { margin: 0 0 6px; font-family: var(--font-display); font-size: 16px; font-weight: 600; }
+.help p { margin: 6px 0 0; overflow-wrap: anywhere; }
+.help .formula { font-weight: 600; }
+.help .work { font-variant-numeric: tabular-nums; }
+.help .lab2 { display: block; font-size: 11.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink-soft); margin-top: 10px; }
+.help .close { margin-top: 10px; }
+.emptyList { color: var(--ink-soft); padding: 4px 6px; }
+@media (prefers-reduced-motion: no-preference) { .btn { transition: box-shadow 0.15s; } }
+</style>
+
+</head>
+<body>
+<div class="layout">
+  <div class="panel">
+    <div class="top">
+      <div>
+        <h1>Arc Sub<br>Calc</h1>
+        <p class="summary"><span id="sum1">8 boxes · 14 m · 65°</span><small id="sum2">centre-to-centre 12.660 m</small></p>
+      </div>
+      <div class="speed">
+        <div class="orb" aria-hidden="true"></div>
+        <b id="speed">347.231 m/s</b>
+        <span id="speedSub">25 °C · 63 %</span>
+        <span>speed of sound <button class="qbtn inline" type="button" data-help="speed" aria-expanded="false" aria-label="How is speed of sound calculated?">?</button></span>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="hero" role="group" aria-label="Box spacing">
+        <div class="lab">Box spacing</div>
+        <div class="big"><span id="spacing">0.469</span><i>m</i></div>
+        <div class="sub" id="heroSub">between boxes in the line</div>
+        <div class="warn" id="warn" hidden>Boxes do not fit in the line</div>
+        <button class="qbtn" type="button" data-help="spacing" aria-expanded="false" aria-label="How is box spacing calculated?">?</button>
+      </div>
+      <div class="chip a"><div><div class="lab">Radius</div><div class="val"><span id="radius">11.781</span><i>m</i></div></div><button class="qbtn" type="button" data-help="radius" aria-expanded="false" aria-label="How is radius calculated?">?</button></div>
+      <div class="chip b"><div><div class="lab">Centre–centre</div><div class="val"><span id="length">12.660</span><i>m</i></div></div><button class="qbtn" type="button" data-help="centre" aria-expanded="false" aria-label="How is centre-to-centre length calculated?">?</button></div>
+      <div class="dot" aria-hidden="true"></div>
+      <div class="lens"><svg id="arcsvg" viewBox="0 0 200 200" role="img" aria-label="Diagram of the box line and the virtual arc"></svg></div>
+    </div>
+    <div class="help" id="helpStage" hidden></div>
+  </div>
+
+  <div class="panel">
+    <section>
+      <h2>Inputs</h2>
+      <div class="fields">
+        <div class="field"><label for="n">Number of boxes</label><input id="n" type="number" inputmode="decimal" step="any" value="8"></div>
+        <div class="field"><label for="w">Box width (m)</label><input id="w" type="number" inputmode="decimal" step="any" value="1.34"></div>
+        <div class="field"><label for="l">Line length (m)</label><input id="l" type="number" inputmode="decimal" step="any" value="14"></div>
+        <div class="field"><label for="arc">Arc angle (°)</label><input id="arc" type="number" inputmode="decimal" step="any" value="65"></div>
+        <div class="field"><label for="t">Temperature (°C)</label><input id="t" type="number" inputmode="decimal" step="any" value="25"></div>
+        <div class="field"><label for="h">Humidity (%)</label><input id="h" type="number" inputmode="decimal" step="any" value="63"></div>
+        <div class="field wide"><label for="m">Edge margin each end (m)</label><input id="m" type="number" inputmode="decimal" step="any" value="0"></div>
+      </div>
+      <p class="hint">Spacing is calculated from the line length, box count and box width. The margin only shifts box positions and does not change the spacing.</p>
+    </section>
+
+    <section>
+      <h2>Delay per box</h2>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Box</th><th>Position (m) <button class="qbtn inline" type="button" data-help="pos" aria-expanded="false" aria-label="How is position calculated?">?</button></th><th>Gap (m) <button class="qbtn inline" type="button" data-help="gap" aria-expanded="false" aria-label="How is gap calculated?">?</button></th><th>Dist. (m) <button class="qbtn inline" type="button" data-help="dist" aria-expanded="false" aria-label="How is dist. calculated?">?</button></th><th>Delay (ms) <button class="qbtn inline" type="button" data-help="delay" aria-expanded="false" aria-label="How is delay calculated?">?</button></th><th>Norm. (ms) <button class="qbtn inline" type="button" data-help="norm" aria-expanded="false" aria-label="How is norm. calculated?">?</button></th></tr></thead>
+          <tbody id="body"></tbody>
+        </table>
+        <div class="empty" id="empty" hidden>Enter at least one box.</div>
+      </div>
+      <div class="help" id="helpTable" hidden></div>
+    </section>
+
+    <section>
+      <h2>Save setup</h2>
+      <div class="fields">
+        <div class="field"><label for="venue">Venue</label><input id="venue" class="txt" type="text" maxlength="80" autocomplete="off" placeholder="e.g. Lucerna Great Hall (empty = funny name)"></div>
+        <div class="field"><label for="setup">Setup name</label><input id="setup" class="txt" type="text" maxlength="80" autocomplete="off" placeholder="e.g. Main sub arc, 8 boxes"></div>
+      </div>
+      <div class="actions saveRow">
+        <button class="btn main" id="save" type="button">Save results</button>
+        <span class="status" id="saveStatus" role="status" aria-live="polite"></span>
+      </div>
+    </section>
+
+    <section>
+      <h2>Saved setups</h2>
+      <p class="hint nomargin" id="storeNote"></p>
+      <div class="saved" id="saved"></div>
+    </section>
+
+    <section class="actions">
+      <button class="btn main" id="copy" type="button">Copy results</button>
+      <button class="btn" id="reset" type="button">Reset to defaults</button>
+      <span class="status" id="status" role="status" aria-live="polite"></span>
+    </section>
+  </div>
+</div>
+
+<script>
+var IDS = ["n", "w", "l", "arc", "t", "h", "m"];
+var DEFAULTS = { n: 8, w: 1.34, l: 14, arc: 65, t: 25, h: 63, m: 0 };
+var LABELS = { n: "Number of boxes", w: "Box width (m)", l: "Line length (m)", arc: "Arc angle (°)", t: "Temperature (°C)", h: "Humidity (%)", m: "Edge margin each end (m)" };
+
+function compute(inp) {
+  var N = Math.floor(inp.n), w = inp.w, L = inp.l, arc = inp.arc, T = inp.t, H = inp.h, M = inp.m;
+  var c = 0.606 * T + 0.0124 * H + 331.3;
+  var spacing = N !== 1 ? (L - N * w) / (N - 1) : 0;
+  var cc = L - w;
+  var s = Math.sin(arc / 2 * Math.PI / 180);
+  var R = s ? cc / (2 * s) : 0;
+  var rows = [];
+  for (var i = 1; i <= Math.max(0, Math.min(N, 200)); i++) {
+    var pos = -L / 2 + M + w / 2 + (i - 1) * (w + spacing);
+    var gap = i === 1 ? null : pos - rows[i - 2].pos;
+    var inside = R * R - pos * pos;
+    var virt = inside >= 0 ? R - Math.sqrt(inside) : null;
+    var delay = virt === null ? null : virt / c * 1000;
+    rows.push({ i: i, pos: pos, gap: gap, virt: virt, delay: delay });
+  }
+  var vals = rows.slice(0, 18).map(function (r) { return r.delay; }).filter(Number.isFinite);
+  var min = vals.length ? Math.min.apply(null, vals) : 0;
+  rows.forEach(function (r) { r.norm = r.delay === null ? null : r.delay - min; });
+  return { N: N, c: c, spacing: spacing, cc: cc, R: R, rows: rows };
+}
+
+function num(x) { var v = parseFloat(x); return Number.isFinite(v) ? v : 0; }
+function fmt(x, d) { if (d === undefined) d = 3; return Number.isFinite(x) ? x.toFixed(d) : "—"; }
+function el(id) { return document.getElementById(id); }
+function readInputs() { var o = {}; IDS.forEach(function (id) { o[id] = num(el(id).value); }); return o; }
+
+function drawArc(res, inp) {
+  var svg = el("arcsvg"), rows = res.rows, w = inp.w;
+  if (!rows.length) { svg.innerHTML = '<text class="cap" x="100" y="104">no boxes</text>'; return; }
+  var span = Math.max.apply(null, rows.map(function (r) { return Math.abs(r.pos); })) + w / 2;
+  if (!(span > 0)) span = 1;
+  var scale = 78 / span;
+  var rw = Math.max(2, w * scale), rh = 9, yBox = 62, y0 = yBox + rh + 12;
+  var virts = rows.map(function (r) { return r.virt; }).filter(Number.isFinite);
+  var maxV = virts.length ? Math.max.apply(null, virts) * scale : 0;
+  var k = maxV > 0 ? Math.max(1, Math.min(6, 44 / maxV)) : 1;
+  var out = "", pts = [];
+  rows.forEach(function (r) {
+    var x = 100 + r.pos * scale;
+    out += '<rect class="bx" x="' + (x - rw / 2).toFixed(1) + '" y="' + yBox + '" width="' + rw.toFixed(1) + '" height="' + rh + '" rx="2"/>';
+    if (rw >= 11 && rows.length <= 24) out += '<text class="bn" x="' + x.toFixed(1) + '" y="' + (yBox + 6.6) + '">' + r.i + '</text>';
+    if (r.virt !== null) {
+      var y = y0 + r.virt * scale * k;
+      out += '<line class="st" x1="' + x.toFixed(1) + '" y1="' + (yBox + rh) + '" x2="' + x.toFixed(1) + '" y2="' + y.toFixed(1) + '"/>';
+      pts.push([x, y]);
+    }
+  });
+  if (pts.length > 1) out += '<path class="arc" d="M' + pts.map(function (p) { return p[0].toFixed(1) + " " + p[1].toFixed(1); }).join(" L") + '"/>';
+  pts.forEach(function (p) { out += '<circle class="pt" cx="' + p[0].toFixed(1) + '" cy="' + p[1].toFixed(1) + '" r="2"/>'; });
+  out += '<text class="cap" x="100" y="160">' + (pts.length ? "virtual arc, height ×" + fmt(k, 1) : "arc cannot be calculated") + "</text>";
+  svg.innerHTML = out;
+}
+
+var last = null;
+function render() {
+  var inp = readInputs(), res = compute(inp);
+  last = { inp: inp, res: res };
+  el("spacing").textContent = res.spacing === null ? "—" : fmt(res.spacing);
+  el("radius").textContent = fmt(res.R);
+  el("length").textContent = fmt(res.cc);
+  el("speed").textContent = fmt(res.c) + " m/s";
+  el("speedSub").textContent = fmt(inp.t, 0).replace("—", "0") + " °C · " + fmt(inp.h, 0).replace("—", "0") + " %";
+  el("sum1").textContent = res.N + " boxes · " + fmt(inp.l, 2).replace(/\.?0+$/, "") + " m · " + fmt(inp.arc, 0) + "°";
+  el("sum2").textContent = "centre-to-centre " + fmt(res.cc) + " m";
+  el("warn").hidden = !(res.spacing !== null && res.spacing < 0);
+  var body = el("body");
+  body.innerHTML = res.rows.map(function (r) {
+    var z = r.norm !== null && Math.abs(r.norm) < 0.0005;
+    return "<tr><td>" + r.i + "</td><td>" + fmt(r.pos) + "</td><td>" + (r.gap === null ? "" : fmt(r.gap)) + "</td><td>" + (r.virt === null ? "" : fmt(r.virt)) + "</td><td>" + (r.delay === null ? "" : fmt(r.delay)) + '</td><td><span class="norm' + (z ? " zero" : "") + '">' + (r.norm === null ? "" : fmt(r.norm)) + "</span></td></tr>";
+  }).join("");
+  el("empty").hidden = res.rows.length > 0;
+  drawArc(res, inp);
+  if (typeof refreshHelp === "function") refreshHelp();
+  try { localStorage.setItem("subArcCalc", JSON.stringify(inp)); } catch (e) {}
+}
+
+function venueLines() {
+  var v = el("venue").value.trim(), n = el("setup").value.trim();
+  return (v ? "Venue: " + v + "\n" : "") + (n ? "Setup: " + n + "\n" : "");
+}
+function textFrom(inp, res, venue, setup) {
+  var head = "SUB SPACING / ARC DELAY\n" + (venue ? "Venue: " + venue + "\n" : "") + (setup ? "Setup: " + setup + "\n" : "") + IDS.map(function (id) { return LABELS[id] + ": " + String(inp[id]); }).join("\n");
+  var calc = "\nBox spacing: " + fmt(res.spacing) + " m\nRadius: " + fmt(res.R) + " m\nCentre-to-centre length: " + fmt(res.cc) + " m\nSpeed of sound: " + fmt(res.c) + " m/s\n";
+  var rows = ["Box\tPosition\tGap\tDist.\tDelay (ms)\tNorm. (ms)"].concat(res.rows.map(function (r) {
+    return [r.i, fmt(r.pos), r.gap === null ? "" : fmt(r.gap), r.virt === null ? "" : fmt(r.virt), r.delay === null ? "" : fmt(r.delay), r.norm === null ? "" : fmt(r.norm)].join("\t");
+  }));
+  return head + "\n" + calc + "\n" + rows.join("\n");
+}
+function summaryText() {
+  render();
+  return textFrom(last.inp, last.res, el("venue").value.trim(), el("setup").value.trim());
+}
+
+var statusTimer;
+function say(msg) { var s = el("status"); s.textContent = msg; clearTimeout(statusTimer); statusTimer = setTimeout(function () { s.textContent = ""; }, 3000); }
+
+function fallbackCopy(text) {
+  var ta = document.createElement("textarea");
+  ta.value = text; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.opacity = "0";
+  document.body.appendChild(ta); ta.select();
+  var ok = false;
+  try { ok = document.execCommand("copy"); } catch (e) {}
+  document.body.removeChild(ta);
+  return ok;
+}
+el("copy").addEventListener("click", function () {
+  var text = summaryText();
+  var done = function () { say("Copied."); };
+  var fail = function () { say(fallbackCopy(text) ? "Copied." : "Copy failed."); };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, fail); else fail();
+});
+
+var resetTimer, armed = false;
+el("reset").addEventListener("click", function () {
+  var b = el("reset");
+  if (!armed) {
+    armed = true; b.textContent = "Really reset?";
+    resetTimer = setTimeout(function () { armed = false; b.textContent = "Reset to defaults"; }, 3000);
+    return;
+  }
+  clearTimeout(resetTimer); armed = false; b.textContent = "Reset to defaults";
+  IDS.forEach(function (id) { el(id).value = DEFAULTS[id]; });
+  render(); say("Values reset.");
+});
+
+
+/* ---------- Saved setups ---------- */
+var items = [], mode = "local", dbc = null, LOCAL_KEY = "subArcSetups";
+var saveTimer;
+function saySave(msg) { var x = el("saveStatus"); x.textContent = msg; clearTimeout(saveTimer); saveTimer = setTimeout(function () { x.textContent = ""; }, 3500); }
+function hashId(v, n) {
+  var str = (v + "\n" + n).toLowerCase(), h1 = 5381, h2 = 52711;
+  for (var i = 0; i < str.length; i++) { var c = str.charCodeAt(i); h1 = ((h1 * 33) ^ c) >>> 0; h2 = ((h2 * 31) + c) >>> 0; }
+  return "s" + h1.toString(16) + h2.toString(16);
+}
+function localRead() { try { var a = JSON.parse(localStorage.getItem(LOCAL_KEY) || "[]"); return Array.isArray(a) ? a : []; } catch (e) { return []; } }
+function localWrite(a) { try { localStorage.setItem(LOCAL_KEY, JSON.stringify(a)); return true; } catch (e) { return false; } }
+function sortItems() { items.sort(function (a, b) { return String(b.savedAt).localeCompare(String(a.savedAt)); }); }
+
+function snapshot(inp, res, venue, setup) {
+  var r3 = function (x) { return Number.isFinite(x) ? Math.round(x * 1000) / 1000 : null; };
+  return {
+    venue: venue, setup: setup, savedAt: new Date().toISOString(),
+    inputs: inp,
+    results: {
+      spacing: r3(res.spacing), radius: r3(res.R), speedOfSound: r3(res.c), centreToCentre: r3(res.cc),
+      boxes: res.rows.map(function (r) { return { box: r.i, position: r3(r.pos), delayMs: r3(r.delay), normalizedMs: r3(r.norm) }; })
+    }
+  };
+}
+
+var ADJ = ["Grumpy", "Thunderous", "Wobbly", "Rumbling", "Sneaky", "Majestic", "Cardioid", "Phase-Aligned", "Low-Flying", "Sweaty", "Heroic", "Suspiciously Quiet", "Overexcited", "Polarity-Flipped", "Slightly Haunted", "Mighty", "Gentle", "Brave", "Vibrating", "Legendary"];
+var NOUN = ["Bass Cathedral", "Sub Arena", "Low-End Lounge", "Woofer Warehouse", "Rumble Hall", "Kick Drum Castle", "Cone Palace", "Boom Barn", "Subwoofer Shed", "Thump Theatre", "Decibel Dome", "Delay Tower", "Arc Amphitheatre", "Resonance Room", "Bass Bunker", "Limiter Lodge"];
+function nextUntitled() {
+  var used = {};
+  items.forEach(function (x) { used[String(x.venue || "").trim().toLowerCase()] = true; });
+  for (var i = 0; i < 60; i++) {
+    var n = ADJ[Math.floor(Math.random() * ADJ.length)] + " " + NOUN[Math.floor(Math.random() * NOUN.length)];
+    if (!used[n.toLowerCase()]) return n;
+  }
+  return "Mystery Venue " + (items.length + 1);
+}
+async function saveCurrent() {
+  var venue = el("venue").value.trim(), setup = el("setup").value.trim();
+  var autoNamed = false;
+  if (!venue) { venue = nextUntitled(); el("venue").value = venue; autoNamed = true; }
+  render();
+  var rec = snapshot(last.inp, last.res, venue, setup), id = hashId(venue, setup);
+  var existed = items.some(function (x) { return x.id === id; });
+  var btn = el("save"); btn.disabled = true;
+  try {
+    if (mode === "db" && dbc) {
+      await dbc.collection("setups").doc(id).set(rec);
+    } else {
+      var a = localRead().filter(function (x) { return x.id !== id; });
+      rec.id = id; a.push(rec);
+      if (!localWrite(a)) throw new Error("storage");
+      items = a; sortItems(); renderList();
+    }
+    saySave(autoNamed ? "Saved as “" + venue + "”." : (existed ? "Updated “" + (setup || venue) + "”." : "Saved."));
+  } catch (e) {
+    saySave(e && e.code === "quota_exceeded" ? "Storage is full. Delete some saved setups." : "Could not save. Try again.");
+  }
+  btn.disabled = false;
+}
+
+function loadItem(it) {
+  IDS.forEach(function (id) { if (it.inputs && Number.isFinite(it.inputs[id])) el(id).value = it.inputs[id]; });
+  el("venue").value = it.venue || ""; el("setup").value = it.setup || "";
+  render(); saySave("Loaded.");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function copyItem(it, btn) {
+  var inp = {}; IDS.forEach(function (id) { inp[id] = Number.isFinite(it.inputs && it.inputs[id]) ? it.inputs[id] : 0; });
+  var text = textFrom(inp, compute(inp), it.venue || "", it.setup || "");
+  var done = function () { btn.textContent = "Copied"; setTimeout(function () { btn.textContent = "Copy"; }, 1800); };
+  var fail = function () { if (fallbackCopy(text)) done(); else { btn.textContent = "Copy failed"; setTimeout(function () { btn.textContent = "Copy"; }, 1800); } };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, fail); else fail();
+}
+
+var confirmId = null, deleteErr = {}, deleting = {};
+async function deleteItem(it) {
+  if (deleting[it.id]) return;
+  deleting[it.id] = true; delete deleteErr[it.id]; renderList();
+  try {
+    if (mode === "db" && dbc) await dbc.collection("setups").doc(it.id).delete();
+    else { var a = localRead().filter(function (x) { return x.id !== it.id; }); if (!localWrite(a)) throw new Error("storage"); }
+    items = items.filter(function (x) { return x.id !== it.id; });
+    if (confirmId === it.id) confirmId = null;
+    saySave("Deleted.");
+  } catch (e) {
+    deleteErr[it.id] = "Could not delete" + (e && e.code ? " (" + e.code + ")" : "") + ". Try again.";
+  }
+  delete deleting[it.id];
+  renderList();
+}
+
+function fmtDate(iso) {
+  var d = new Date(iso);
+  if (isNaN(d)) return "";
+  try { return d.toLocaleString("en-GB", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" }); } catch (e) { return d.toISOString().slice(0, 16).replace("T", " "); }
+}
+function mk(tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text !== undefined) n.textContent = text; return n; }
+
+function renderList() {
+  var box = el("saved"); box.textContent = "";
+  if (!items.length) { box.appendChild(mk("div", "emptyList", "Nothing saved yet. Enter the venue and setup name above, then press Save results.")); return; }
+  items.forEach(function (it) {
+    var r = it.results || {}, inp = it.inputs || {};
+    var card = mk("div", "card");
+    card.appendChild(mk("h3", "", it.venue || "Untitled venue"));
+    if (it.setup) card.appendChild(mk("p", "setupName", it.setup));
+    card.appendChild(mk("p", "meta", fmtDate(it.savedAt) + " · " + Math.floor(inp.n || 0) + " boxes · " + (inp.l || 0) + " m line · " + (inp.arc || 0) + "° arc · " + (inp.t || 0) + " °C / " + (inp.h || 0) + " %"));
+    var st = mk("div", "stats");
+    [["Spacing", r.spacing, "m"], ["Radius", r.radius, "m"], ["Centre–centre", Number.isFinite(r.centreToCentre) ? r.centreToCentre : (inp.l - inp.w), "m"], ["Speed", r.speedOfSound, "m/s"]].forEach(function (x) {
+      var sp = mk("span"); sp.appendChild(document.createTextNode(x[0] + " ")); sp.appendChild(mk("b", "", fmt(x[1]) + " " + x[2])); st.appendChild(sp);
+    });
+    card.appendChild(st);
+    var row = mk("div", "row");
+    if (confirmId === it.id) {
+      row.appendChild(mk("span", "confirmText", deleting[it.id] ? "Deleting…" : "Delete this setup?"));
+      var by = mk("button", "btn sm danger", "Yes, delete"); by.type = "button"; by.disabled = !!deleting[it.id];
+      by.addEventListener("click", function () { deleteItem(it); });
+      var bn = mk("button", "btn sm", "Cancel"); bn.type = "button"; bn.disabled = !!deleting[it.id];
+      bn.addEventListener("click", function () { confirmId = null; delete deleteErr[it.id]; renderList(); });
+      row.appendChild(by); row.appendChild(bn);
+    } else {
+      var bl = mk("button", "btn sm main", "Load"); bl.type = "button"; bl.addEventListener("click", function () { loadItem(it); });
+      var bc = mk("button", "btn sm", "Copy"); bc.type = "button"; bc.addEventListener("click", function () { copyItem(it, bc); });
+      var bd = mk("button", "btn sm danger", "Delete"); bd.type = "button";
+      bd.addEventListener("click", function () { confirmId = it.id; delete deleteErr[it.id]; renderList(); });
+      row.appendChild(bl); row.appendChild(bc); row.appendChild(bd);
+    }
+    card.appendChild(row);
+    if (deleteErr[it.id]) card.appendChild(mk("p", "errText", deleteErr[it.id]));
+    box.appendChild(card);
+  });
+}
+
+function useLocal(note) {
+  mode = "local"; dbc = null;
+  items = localRead(); sortItems();
+  el("storeNote").textContent = note;
+  renderList();
+}
+async function initStore() {
+  var db = null;
+  try { if (window.claude && window.claude.use) db = await window.claude.use("db"); } catch (e) { db = null; }
+  if (!db) { useLocal("Saved on this device only."); return; }
+  mode = "db"; dbc = db;
+  el("storeNote").textContent = "Saved with this page, available on every device you open it on.";
+  try {
+    db.collection("setups").orderBy("savedAt", "desc").limit(200).onSnapshot(function (snap) {
+      items = snap.docs.map(function (d) { var o = Object.assign({}, d.data() || {}); o.id = d.id; return o; });
+      renderList();
+    }, function () { useLocal("Shared storage is unavailable. Saved on this device only."); });
+  } catch (e) { useLocal("Shared storage is unavailable. Saved on this device only."); }
+}
+el("save").addEventListener("click", saveCurrent);
+["venue", "setup"].forEach(function (id) { el(id).addEventListener("keydown", function (e) { if (e.key === "Enter") saveCurrent(); }); });
+renderList();
+initStore();
+
+/* ---------- Explanations ---------- */
+var HELP_GROUP = { spacing: "Stage", radius: "Stage", centre: "Stage", speed: "Stage", pos: "Table", gap: "Table", dist: "Table", delay: "Table", norm: "Table" };
+var helpOpen = { Stage: null, Table: null };
+function helpContent(key) {
+  var i = last.inp, r = last.res, N = r.N, rows = r.rows, r0 = rows[0], r1 = rows[1], L = i.l, w = i.w;
+  var f1 = function (x) { return fmt(x); };
+  switch (key) {
+    case "spacing": return { t: "Box spacing", f: "(line length − boxes × box width) ÷ (boxes − 1)", w: "(" + L + " − " + N + " × " + w + ") ÷ (" + N + " − 1) = " + f1(r.spacing) + " m", d: "The free gap between neighbouring boxes, so that the whole row is exactly as long as the line length. With one box it is 0." };
+    case "radius": return { t: "Radius", f: "(line length − box width) ÷ (2 × sin(arc angle ÷ 2))", w: "(" + L + " − " + w + ") ÷ (2 × sin(" + i.arc + "° ÷ 2)) = " + f1(r.R) + " m", d: "Radius of the virtual circle the row is bent onto. The centres of the first and last box lie on it, and together they span the arc angle." };
+    case "centre": return { t: "Centre–centre length", f: "line length − box width", w: L + " − " + w + " = " + f1(r.cc) + " m", d: "Distance between the centres of the first and last box. Each end box reaches half a box width past its centre, so this is shorter than the line length." };
+    case "speed": return { t: "Speed of sound", f: "331.3 + 0.606 × temperature + 0.0124 × humidity", w: "331.3 + 0.606 × " + i.t + " + 0.0124 × " + i.h + " = " + f1(r.c) + " m/s", d: "Approximate speed of sound in air at your temperature (°C) and relative humidity (%). It turns distance into delay time." };
+    case "pos": return { t: "Position", f: "−line length ÷ 2 + margin + box width ÷ 2 + (box − 1) × (box width + spacing)", w: r0 ? "Box 1: −" + L + " ÷ 2 + " + i.m + " + " + w + " ÷ 2 + 0 = " + f1(r0.pos) + " m" : "Enter at least one box.", d: "Where the centre of each box sits, measured from the middle of the line. Negative is left of the middle, positive is right. The edge margin shifts every box." };
+    case "gap": return { t: "Gap", f: "position of this box − position of the previous box", w: r1 ? "Box 2 − box 1: " + f1(r1.pos) + " − (" + f1(r0.pos) + ") = " + f1(r1.gap) + " m" : "Needs at least two boxes.", d: "Centre-to-centre distance between neighbouring boxes. It equals the box width plus the spacing." };
+    case "dist": return { t: "Distance (virtual)", f: "R − √(R² − position²)", w: r0 ? (r0.virt === null ? "Box 1 lies outside the arc, so there is no value." : "Box 1: " + f1(r.R) + " − √(" + f1(r.R) + "² − (" + f1(r0.pos) + ")²) = " + f1(r0.virt) + " m") : "Enter at least one box.", d: "How much farther back the arc places this box compared with the middle of the arc. It is 0 at the middle and grows towards the ends. Blank if the box lies outside the arc (|position| larger than the radius)." };
+    case "delay": return { t: "Delay", f: "distance ÷ speed of sound × 1000", w: r0 && r0.delay !== null ? "Box 1: " + f1(r0.virt) + " ÷ " + f1(r.c) + " × 1000 = " + f1(r0.delay) + " ms" : "Needs a box with a distance value.", d: "The time sound needs to cover that extra distance, in milliseconds." };
+    case "norm": return { t: "Normalized delay", f: "delay − smallest delay (first 18 boxes)", w: r0 && r0.norm !== null ? "Box 1: " + f1(r0.delay) + " − " + f1(r0.delay - r0.norm) + " = " + f1(r0.norm) + " ms" : "Needs a box with a delay value.", d: "The delay shifted so that the box with the smallest delay reads 0 ms. The others show how much later they play relative to it." };
+  }
+  return null;
+}
+function refreshHelp() {
+  ["Stage", "Table"].forEach(function (g) {
+    var box = el("help" + g), key = helpOpen[g];
+    document.querySelectorAll('[data-help]').forEach(function (b) { if (HELP_GROUP[b.getAttribute("data-help")] === g) b.setAttribute("aria-expanded", b.getAttribute("data-help") === key ? "true" : "false"); });
+    if (!key || !last) { box.hidden = true; box.textContent = ""; return; }
+    var c = helpContent(key); if (!c) { box.hidden = true; return; }
+    box.textContent = "";
+    box.appendChild(mk("h4", "", c.t));
+    box.appendChild(mk("span", "lab2", "Formula")); box.appendChild(mk("p", "formula", c.f));
+    box.appendChild(mk("span", "lab2", "With your numbers")); box.appendChild(mk("p", "work", c.w));
+    box.appendChild(mk("p", "", c.d));
+    var cl = mk("button", "btn sm close", "Close"); cl.type = "button";
+    cl.addEventListener("click", function () { helpOpen[g] = null; refreshHelp(); });
+    box.appendChild(cl);
+    box.hidden = false;
+  });
+}
+document.addEventListener("click", function (e) {
+  var b = e.target.closest && e.target.closest("[data-help]"); if (!b) return;
+  var key = b.getAttribute("data-help"), g = HELP_GROUP[key];
+  helpOpen[g] = helpOpen[g] === key ? null : key;
+  refreshHelp();
+  if (helpOpen[g]) { var box = el("help" + g); if (box.scrollIntoView) box.scrollIntoView({ block: "nearest", behavior: "smooth" }); }
+});
+
+try {
+  var saved = JSON.parse(localStorage.getItem("subArcCalc") || "null");
+  if (saved) IDS.forEach(function (id) { if (Number.isFinite(saved[id])) el(id).value = saved[id]; });
+} catch (e) {}
+IDS.forEach(function (id) { el(id).addEventListener("input", render); });
+render();
+</script>
+</body>
+</html>
