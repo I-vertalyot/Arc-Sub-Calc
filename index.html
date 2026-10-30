@@ -3,6 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#c9482e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Arc Sub Calc">
 <style>
 :root { color-scheme: light; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
 html, body { margin: 0; }
@@ -233,20 +241,16 @@ td:last-child { border-radius: 0 16px 16px 0; padding-right: 10px; }
 .btn.sm.danger { color: var(--warn); }
 .confirmText { align-self: center; font-size: 14px; font-weight: 600; margin-right: 4px; }
 .errText { margin: 10px 2px 0; font-size: 13px; font-weight: 600; color: var(--warn); }
-.qbtn { appearance: none; border: 0; cursor: pointer; width: 22px; height: 22px; padding: 0; border-radius: 50%; background: var(--surface); color: var(--terra); font: 700 13px/22px var(--font-display); text-align: center; box-shadow: 4px 5px 10px var(--shade), -3px -3px 8px var(--lite); position: absolute; z-index: 4; }
+.qbtn { appearance: none; border: 0; cursor: pointer; width: 22px; height: 22px; padding: 0; border-radius: 50%; background: var(--terra); color: #fff; font: 700 13px/22px var(--font-display); text-align: center; box-shadow: 4px 5px 10px var(--shade), -3px -3px 8px var(--lite); position: absolute; z-index: 4; }
 .qbtn::after { content: ""; position: absolute; inset: -8px; }
-.qbtn[aria-expanded="true"] { background: var(--terra); color: var(--on-terra); }
+.qbtn[aria-expanded="true"] { background: #8f2a16; color: #fff; }
 .qbtn:focus-visible { outline: 2px solid var(--terra); outline-offset: 2px; }
 .qbtn.inline { position: relative; display: inline-block; vertical-align: middle; margin-left: 4px; box-shadow: 3px 4px 8px var(--shade), -2px -2px 6px var(--lite); width: 20px; height: 20px; font-size: 12px; line-height: 20px; }
-.hero .qbtn { top: 13%; right: 13%; }
+.hero .qbtn { top: 13%; right: 13%; background: #9c2f1a; }
 .chip .qbtn { top: 5%; right: 7%; }
-.help { margin-top: 18px; background: var(--well); border-radius: 26px; padding: 16px 18px; box-shadow: inset 5px 6px 12px var(--shade), inset -4px -4px 10px var(--lite); font-size: 14px; }
-.help h4 { margin: 0 0 6px; font-family: var(--font-display); font-size: 16px; font-weight: 600; }
-.help p { margin: 6px 0 0; overflow-wrap: anywhere; }
-.help .formula { font-weight: 600; }
-.help .work { font-variant-numeric: tabular-nums; }
-.help .lab2 { display: block; font-size: 11.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink-soft); margin-top: 10px; }
-.help .close { margin-top: 10px; }
+.pop { position: absolute; z-index: 30; width: 250px; max-width: calc(100vw - 24px); background: var(--surface); color: var(--ink); border-radius: 20px; padding: 12px 15px 13px; box-shadow: 10px 14px 30px var(--shade), -4px -4px 12px var(--lite), 0 0 0 1px var(--panel-edge); font-size: 13.5px; line-height: 1.4; }
+.pop h4 { margin: 0 0 4px; font-family: var(--font-display); font-size: 15px; font-weight: 600; }
+.pop p { margin: 0; }
 .emptyList { color: var(--ink-soft); padding: 4px 6px; }
 @media (prefers-reduced-motion: no-preference) { .btn { transition: box-shadow 0.15s; } }
 </style>
@@ -264,7 +268,7 @@ td:last-child { border-radius: 0 16px 16px 0; padding-right: 10px; }
         <div class="orb" aria-hidden="true"></div>
         <b id="speed">347.231 m/s</b>
         <span id="speedSub">25 °C · 63 %</span>
-        <span>speed of sound <button class="qbtn inline" type="button" data-help="speed" aria-expanded="false" aria-label="How is speed of sound calculated?">?</button></span>
+        <span>speed of sound <button class="qbtn inline" type="button" data-help="speed" aria-expanded="false" aria-label="What is speed of sound?">i</button></span>
       </div>
     </div>
 
@@ -274,14 +278,13 @@ td:last-child { border-radius: 0 16px 16px 0; padding-right: 10px; }
         <div class="big"><span id="spacing">0.469</span><i>m</i></div>
         <div class="sub" id="heroSub">between boxes in the line</div>
         <div class="warn" id="warn" hidden>Boxes do not fit in the line</div>
-        <button class="qbtn" type="button" data-help="spacing" aria-expanded="false" aria-label="How is box spacing calculated?">?</button>
+        <button class="qbtn" type="button" data-help="spacing" aria-expanded="false" aria-label="What is box spacing?">i</button>
       </div>
-      <div class="chip a"><div><div class="lab">Radius</div><div class="val"><span id="radius">11.781</span><i>m</i></div></div><button class="qbtn" type="button" data-help="radius" aria-expanded="false" aria-label="How is radius calculated?">?</button></div>
-      <div class="chip b"><div><div class="lab">Centre–centre</div><div class="val"><span id="length">12.660</span><i>m</i></div></div><button class="qbtn" type="button" data-help="centre" aria-expanded="false" aria-label="How is centre-to-centre length calculated?">?</button></div>
+      <div class="chip a"><div><div class="lab">Radius</div><div class="val"><span id="radius">11.781</span><i>m</i></div></div><button class="qbtn" type="button" data-help="radius" aria-expanded="false" aria-label="What is radius?">i</button></div>
+      <div class="chip b"><div><div class="lab">Centre–centre</div><div class="val"><span id="length">12.660</span><i>m</i></div></div><button class="qbtn" type="button" data-help="centre" aria-expanded="false" aria-label="What is centre-to-centre length?">i</button></div>
       <div class="dot" aria-hidden="true"></div>
       <div class="lens"><svg id="arcsvg" viewBox="0 0 200 200" role="img" aria-label="Diagram of the box line and the virtual arc"></svg></div>
     </div>
-    <div class="help" id="helpStage" hidden></div>
   </div>
 
   <div class="panel">
@@ -303,12 +306,11 @@ td:last-child { border-radius: 0 16px 16px 0; padding-right: 10px; }
       <h2>Delay per box</h2>
       <div class="tablewrap">
         <table>
-          <thead><tr><th>Box</th><th>Position (m) <button class="qbtn inline" type="button" data-help="pos" aria-expanded="false" aria-label="How is position calculated?">?</button></th><th>Gap (m) <button class="qbtn inline" type="button" data-help="gap" aria-expanded="false" aria-label="How is gap calculated?">?</button></th><th>Dist. (m) <button class="qbtn inline" type="button" data-help="dist" aria-expanded="false" aria-label="How is dist. calculated?">?</button></th><th>Delay (ms) <button class="qbtn inline" type="button" data-help="delay" aria-expanded="false" aria-label="How is delay calculated?">?</button></th><th>Norm. (ms) <button class="qbtn inline" type="button" data-help="norm" aria-expanded="false" aria-label="How is norm. calculated?">?</button></th></tr></thead>
+          <thead><tr><th>Box</th><th>Position (m) <button class="qbtn inline" type="button" data-help="pos" aria-expanded="false" aria-label="What is position?">i</button></th><th>Gap (m) <button class="qbtn inline" type="button" data-help="gap" aria-expanded="false" aria-label="What is gap?">i</button></th><th>Dist. (m) <button class="qbtn inline" type="button" data-help="dist" aria-expanded="false" aria-label="What is dist.?">i</button></th><th>Delay (ms) <button class="qbtn inline" type="button" data-help="delay" aria-expanded="false" aria-label="What is delay?">i</button></th><th>Norm. (ms) <button class="qbtn inline" type="button" data-help="norm" aria-expanded="false" aria-label="What is norm.?">i</button></th></tr></thead>
           <tbody id="body"></tbody>
         </table>
         <div class="empty" id="empty" hidden>Enter at least one box.</div>
       </div>
-      <div class="help" id="helpTable" hidden></div>
     </section>
 
     <section>
@@ -336,6 +338,8 @@ td:last-child { border-radius: 0 16px 16px 0; padding-right: 10px; }
     </section>
   </div>
 </div>
+
+<div class="pop" id="pop" role="dialog" aria-live="polite" hidden></div>
 
 <script>
 var IDS = ["n", "w", "l", "arc", "t", "h", "m"];
@@ -628,48 +632,53 @@ renderList();
 initStore();
 
 /* ---------- Explanations ---------- */
-var HELP_GROUP = { spacing: "Stage", radius: "Stage", centre: "Stage", speed: "Stage", pos: "Table", gap: "Table", dist: "Table", delay: "Table", norm: "Table" };
-var helpOpen = { Stage: null, Table: null };
-function helpContent(key) {
-  var i = last.inp, r = last.res, N = r.N, rows = r.rows, r0 = rows[0], r1 = rows[1], L = i.l, w = i.w;
-  var f1 = function (x) { return fmt(x); };
-  switch (key) {
-    case "spacing": return { t: "Box spacing", f: "(line length − boxes × box width) ÷ (boxes − 1)", w: "(" + L + " − " + N + " × " + w + ") ÷ (" + N + " − 1) = " + f1(r.spacing) + " m", d: "The free gap between neighbouring boxes, so that the whole row is exactly as long as the line length. With one box it is 0." };
-    case "radius": return { t: "Radius", f: "(line length − box width) ÷ (2 × sin(arc angle ÷ 2))", w: "(" + L + " − " + w + ") ÷ (2 × sin(" + i.arc + "° ÷ 2)) = " + f1(r.R) + " m", d: "Radius of the virtual circle the row is bent onto. The centres of the first and last box lie on it, and together they span the arc angle." };
-    case "centre": return { t: "Centre–centre length", f: "line length − box width", w: L + " − " + w + " = " + f1(r.cc) + " m", d: "Distance between the centres of the first and last box. Each end box reaches half a box width past its centre, so this is shorter than the line length." };
-    case "speed": return { t: "Speed of sound", f: "331.3 + 0.606 × temperature + 0.0124 × humidity", w: "331.3 + 0.606 × " + i.t + " + 0.0124 × " + i.h + " = " + f1(r.c) + " m/s", d: "Approximate speed of sound in air at your temperature (°C) and relative humidity (%). It turns distance into delay time." };
-    case "pos": return { t: "Position", f: "−line length ÷ 2 + margin + box width ÷ 2 + (box − 1) × (box width + spacing)", w: r0 ? "Box 1: −" + L + " ÷ 2 + " + i.m + " + " + w + " ÷ 2 + 0 = " + f1(r0.pos) + " m" : "Enter at least one box.", d: "Where the centre of each box sits, measured from the middle of the line. Negative is left of the middle, positive is right. The edge margin shifts every box." };
-    case "gap": return { t: "Gap", f: "position of this box − position of the previous box", w: r1 ? "Box 2 − box 1: " + f1(r1.pos) + " − (" + f1(r0.pos) + ") = " + f1(r1.gap) + " m" : "Needs at least two boxes.", d: "Centre-to-centre distance between neighbouring boxes. It equals the box width plus the spacing." };
-    case "dist": return { t: "Distance (virtual)", f: "R − √(R² − position²)", w: r0 ? (r0.virt === null ? "Box 1 lies outside the arc, so there is no value." : "Box 1: " + f1(r.R) + " − √(" + f1(r.R) + "² − (" + f1(r0.pos) + ")²) = " + f1(r0.virt) + " m") : "Enter at least one box.", d: "How much farther back the arc places this box compared with the middle of the arc. It is 0 at the middle and grows towards the ends. Blank if the box lies outside the arc (|position| larger than the radius)." };
-    case "delay": return { t: "Delay", f: "distance ÷ speed of sound × 1000", w: r0 && r0.delay !== null ? "Box 1: " + f1(r0.virt) + " ÷ " + f1(r.c) + " × 1000 = " + f1(r0.delay) + " ms" : "Needs a box with a distance value.", d: "The time sound needs to cover that extra distance, in milliseconds." };
-    case "norm": return { t: "Normalized delay", f: "delay − smallest delay (first 18 boxes)", w: r0 && r0.norm !== null ? "Box 1: " + f1(r0.delay) + " − " + f1(r0.delay - r0.norm) + " = " + f1(r0.norm) + " ms" : "Needs a box with a delay value.", d: "The delay shifted so that the box with the smallest delay reads 0 ms. The others show how much later they play relative to it." };
-  }
-  return null;
+/* ---------- Info bubbles ---------- */
+var HELP_TEXT = {
+  spacing: ["Box spacing", "The free gap between neighbouring boxes along the line."],
+  radius: ["Radius", "The radius of the virtual circle the row of boxes is bent onto."],
+  centre: ["Centre–centre length", "The distance between the centres of the first and last box."],
+  speed: ["Speed of sound", "The speed of sound in air at your temperature and humidity."],
+  pos: ["Position", "Where each box centre sits, measured from the middle of the line. Negative is left, positive is right."],
+  gap: ["Gap", "The distance between the centres of neighbouring boxes."],
+  dist: ["Distance", "How far back the arc places each box compared with the middle of the arc."],
+  delay: ["Delay", "The time the sound needs to cover that extra distance, in milliseconds."],
+  norm: ["Normalized delay", "The delay shifted so the box with the smallest delay reads 0 ms."]
+};
+function helpContent(key) { var h = HELP_TEXT[key]; return h ? { t: h[0], d: h[1] } : null; }
+var popKey = null, popBtn = null;
+function placePop() {
+  var pop = el("pop"); if (pop.hidden || !popBtn) return;
+  var r = popBtn.getBoundingClientRect(), sx = window.pageXOffset, sy = window.pageYOffset;
+  var vw = document.documentElement.clientWidth, vh = window.innerHeight;
+  var w = pop.offsetWidth, h = pop.offsetHeight, gap = 10;
+  var left = r.left + sx + r.width / 2 - w / 2;
+  left = Math.max(sx + 12, Math.min(left, sx + vw - w - 12));
+  var below = r.bottom + gap + h <= vh || r.top - gap - h < 0;
+  var top = below ? r.bottom + sy + gap : r.top + sy - h - gap;
+  pop.style.left = Math.round(left) + "px"; pop.style.top = Math.round(top) + "px";
 }
-function refreshHelp() {
-  ["Stage", "Table"].forEach(function (g) {
-    var box = el("help" + g), key = helpOpen[g];
-    document.querySelectorAll('[data-help]').forEach(function (b) { if (HELP_GROUP[b.getAttribute("data-help")] === g) b.setAttribute("aria-expanded", b.getAttribute("data-help") === key ? "true" : "false"); });
-    if (!key || !last) { box.hidden = true; box.textContent = ""; return; }
-    var c = helpContent(key); if (!c) { box.hidden = true; return; }
-    box.textContent = "";
-    box.appendChild(mk("h4", "", c.t));
-    box.appendChild(mk("span", "lab2", "Formula")); box.appendChild(mk("p", "formula", c.f));
-    box.appendChild(mk("span", "lab2", "With your numbers")); box.appendChild(mk("p", "work", c.w));
-    box.appendChild(mk("p", "", c.d));
-    var cl = mk("button", "btn sm close", "Close"); cl.type = "button";
-    cl.addEventListener("click", function () { helpOpen[g] = null; refreshHelp(); });
-    box.appendChild(cl);
-    box.hidden = false;
-  });
+function closePop() {
+  popKey = null; popBtn = null;
+  el("pop").hidden = true;
+  document.querySelectorAll("[data-help]").forEach(function (b) { b.setAttribute("aria-expanded", "false"); });
 }
+function openPop(btn) {
+  var key = btn.getAttribute("data-help"), c = helpContent(key), pop = el("pop");
+  if (!c) return;
+  document.querySelectorAll("[data-help]").forEach(function (b) { b.setAttribute("aria-expanded", b === btn ? "true" : "false"); });
+  pop.textContent = "";
+  pop.appendChild(mk("h4", "", c.t)); pop.appendChild(mk("p", "", c.d));
+  popKey = key; popBtn = btn; pop.hidden = false;
+  placePop();
+}
+function refreshHelp() { placePop(); }
 document.addEventListener("click", function (e) {
-  var b = e.target.closest && e.target.closest("[data-help]"); if (!b) return;
-  var key = b.getAttribute("data-help"), g = HELP_GROUP[key];
-  helpOpen[g] = helpOpen[g] === key ? null : key;
-  refreshHelp();
-  if (helpOpen[g]) { var box = el("help" + g); if (box.scrollIntoView) box.scrollIntoView({ block: "nearest", behavior: "smooth" }); }
+  var b = e.target.closest && e.target.closest("[data-help]");
+  if (b) { if (popBtn === b) closePop(); else openPop(b); return; }
+  if (!(e.target.closest && e.target.closest("#pop"))) closePop();
 });
+document.addEventListener("keydown", function (e) { if (e.key === "Escape" && popKey) { var b = popBtn; closePop(); if (b) b.focus(); } });
+window.addEventListener("resize", placePop);
 
 try {
   var saved = JSON.parse(localStorage.getItem("subArcCalc") || "null");
