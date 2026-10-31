@@ -7,12 +7,12 @@
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#c9482e">
+<meta name="theme-color" content="#0e0a08">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Arc Sub Calc">
 <style>
-:root { color-scheme: light; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
 html, body { margin: 0; }
 img { max-width: 100%; }
 [hidden] { display: none !important; }
@@ -22,66 +22,26 @@ img { max-width: 100%; }
 <style>
 /* Layout: soft raised panel with overlapping round widgets (hero result circle, small stat circles, glass ring with the arc drawing); inputs, delay table and actions in a second panel. */
 :root {
-  --ground: #ecd2bf;
-  --ground-2: #f6e2d4;
-  --panel: #f0d9c9;
-  --panel-edge: #fbeee4;
-  --surface: #f6e6da;
-  --well: #e6c8b4;
-  --ink: #1b1210;
-  --ink-soft: #6c5143;
-  --terra: #c9482e;
-  --terra-hi: #e2755c;
-  --on-terra: #fff6f0;
-  --lens-a: #fbeadc;
-  --lens-b: #e8b49b;
-  --lite: rgba(255, 250, 245, 0.85);
-  --shade: rgba(160, 100, 75, 0.34);
-  --halo: rgba(240, 120, 90, 0.38);
-  --warn: #a3341f;
-  --font-display: "Outfit", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --ground: #0e0a08;
+  --ground-2: #1b110b;
+  --panel: #1e1511;
+  --panel-edge: #30221a;
+  --surface: #2b1f18;
+  --well: #140d0a;
+  --ink: #f7ebe0;
+  --ink-soft: #bba592;
+  --terra: #f26a1b;
+  --terra-hi: #ff8f3a;
+  --terra-btn: #c2470a;
+  --on-terra: #1b0c04;
+  --lens-a: #3c2417;
+  --lens-b: #1d120c;
+  --lite: rgba(255, 215, 180, 0.05);
+  --shade: rgba(0, 0, 0, 0.6);
+  --halo: rgba(255, 120, 30, 0.30);
+  --warn: #ffab85;
+  --font-display: "Outfit", "Avenir Next", "Segoe UI", system-ui, -apple-system, sans-serif;
   --font-body: "Figtree", "Segoe UI", system-ui, -apple-system, sans-serif;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --ground: #1a110e;
-    --ground-2: #241713;
-    --panel: #2a1c17;
-    --panel-edge: #3a2820;
-    --surface: #37251e;
-    --well: #1f1410;
-    --ink: #f7e8de;
-    --ink-soft: #c9ad9d;
-    --terra: #c9482e;
-    --terra-hi: #e8795f;
-    --on-terra: #fff6f0;
-    --lens-a: #4b2f25;
-    --lens-b: #2b1b15;
-    --lite: rgba(255, 220, 200, 0.07);
-    --shade: rgba(0, 0, 0, 0.55);
-    --halo: rgba(232, 100, 70, 0.28);
-    --warn: #ff9a85;
-    color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --ground: #1a110e;
-  --ground-2: #241713;
-  --panel: #2a1c17;
-  --panel-edge: #3a2820;
-  --surface: #37251e;
-  --well: #1f1410;
-  --ink: #f7e8de;
-  --ink-soft: #c9ad9d;
-  --terra: #c9482e;
-  --terra-hi: #e8795f;
-  --on-terra: #fff6f0;
-  --lens-a: #4b2f25;
-  --lens-b: #2b1b15;
-  --lite: rgba(255, 220, 200, 0.07);
-  --shade: rgba(0, 0, 0, 0.55);
-  --halo: rgba(232, 100, 70, 0.28);
-  --warn: #ff9a85;
   color-scheme: dark;
 }
 
@@ -105,6 +65,11 @@ body {
   display: grid;
   gap: 22px;
   align-items: start;
+}
+@media (max-width: 979px) {
+  .layout { gap: 0; }
+  .layout > .panel:first-child { border-bottom-left-radius: 0; border-bottom-right-radius: 0; padding-bottom: 34px; box-shadow: 22px 0 60px var(--shade), -14px -14px 40px var(--lite); }
+  .layout > .panel:last-child { border-top-left-radius: 0; border-top-right-radius: 0; background: linear-gradient(to bottom, color-mix(in srgb, var(--shade) 22%, transparent), transparent 80px), var(--panel); padding-top: 8px; box-shadow: 22px 28px 60px var(--shade); }
 }
 @media (min-width: 980px) {
   .layout { max-width: 980px; grid-template-columns: 440px minmax(0, 1fr); gap: 28px; }
@@ -136,8 +101,8 @@ h1 {
 .speed { text-align: left; min-width: 0; flex: 0 0 auto; }
 .orb {
   width: 54px; height: 54px; border-radius: 50%;
-  background: radial-gradient(circle at 34% 28%, #ffd08c 0%, #ee6a48 48%, #a92d1a 100%);
-  box-shadow: 8px 10px 20px var(--shade), inset -4px -6px 10px rgba(120, 20, 10, 0.35), inset 3px 3px 8px rgba(255, 230, 190, 0.6);
+  background: radial-gradient(circle at 34% 28%, #ffe2b0 0%, #ff8f3a 48%, #b8450a 100%);
+  box-shadow: 8px 10px 20px var(--shade), inset -4px -6px 10px rgba(110, 40, 5, 0.45), inset 3px 3px 8px rgba(255, 235, 200, 0.6);
   margin-left: auto;
 }
 .speed b { display: block; margin-top: 14px; font-family: var(--font-display); font-size: 24px; font-weight: 600; font-variant-numeric: tabular-nums; line-height: 1; }
@@ -158,7 +123,7 @@ h1 {
 .hero .big { font-family: var(--font-display); font-size: 17cqw; font-weight: 700; letter-spacing: -0.03em; line-height: 1; font-variant-numeric: tabular-nums; margin-top: 1cqw; }
 .hero .big i { font-style: normal; font-size: 6.5cqw; font-weight: 600; margin-left: 1.2cqw; }
 .hero .sub { font-size: 3.8cqw; font-weight: 500; margin-top: 2cqw; opacity: 0.95; }
-.hero .warn { margin-top: 2cqw; font-size: 3.6cqw; font-weight: 600; background: rgba(0, 0, 0, 0.22); border-radius: 99px; padding: 0.8cqw 2.4cqw; width: fit-content; }
+.hero .warn { margin-top: 2cqw; font-size: 3.6cqw; font-weight: 600; background: #1b0c04; color: #ffb27a; border-radius: 99px; padding: 0.8cqw 2.4cqw; width: fit-content; }
 .chip {
   background: var(--surface);
   display: grid; place-content: center; text-align: center;
@@ -204,8 +169,9 @@ section + section { margin-top: 26px; }
 .hint { margin: 14px 6px 0; font-size: 12.5px; color: var(--ink-soft); }
 
 .tablewrap { overflow-x: auto; margin: 0 -6px; padding: 4px 6px 10px; }
-table { border-collapse: separate; border-spacing: 0 6px; width: 100%; min-width: 540px; font-variant-numeric: tabular-nums; }
-th { font-size: 11.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink-soft); padding: 2px 8px; text-align: right; white-space: nowrap; }
+table { border-collapse: separate; border-spacing: 0 6px; width: 100%; min-width: 400px; font-variant-numeric: tabular-nums; }
+.u { display: block; text-transform: none; letter-spacing: 0; font-weight: 500; opacity: 0.8; }
+th { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink-soft); padding: 2px 8px; text-align: right; white-space: nowrap; }
 th:first-child, td:first-child { text-align: center; }
 td { padding: 9px 8px; text-align: right; background: var(--surface); font-size: 14px; }
 td:first-child { border-radius: 16px 0 0 16px; font-family: var(--font-display); font-weight: 600; }
@@ -241,17 +207,31 @@ td:last-child { border-radius: 0 16px 16px 0; padding-right: 10px; }
 .btn.sm.danger { color: var(--warn); }
 .confirmText { align-self: center; font-size: 14px; font-weight: 600; margin-right: 4px; }
 .errText { margin: 10px 2px 0; font-size: 13px; font-weight: 600; color: var(--warn); }
-.qbtn { appearance: none; border: 0; cursor: pointer; width: 22px; height: 22px; padding: 0; border-radius: 50%; background: var(--terra); color: #fff; font: 700 13px/22px var(--font-display); text-align: center; box-shadow: 4px 5px 10px var(--shade), -3px -3px 8px var(--lite); position: absolute; z-index: 4; }
+.qbtn { appearance: none; border: 0; cursor: pointer; width: 22px; height: 22px; padding: 0; border-radius: 50%; background: var(--terra-btn); color: #fff; font: 700 13px/22px var(--font-display); text-align: center; box-shadow: 4px 5px 10px var(--shade), -3px -3px 8px var(--lite); position: absolute; z-index: 4; }
 .qbtn::after { content: ""; position: absolute; inset: -8px; }
-.qbtn[aria-expanded="true"] { background: #8f2a16; color: #fff; }
+.qbtn[aria-expanded="true"] { background: #7a2e06; color: #fff; }
 .qbtn:focus-visible { outline: 2px solid var(--terra); outline-offset: 2px; }
 .qbtn.inline { position: relative; display: inline-block; vertical-align: middle; margin-left: 4px; box-shadow: 3px 4px 8px var(--shade), -2px -2px 6px var(--lite); width: 20px; height: 20px; font-size: 12px; line-height: 20px; }
-.hero .qbtn { top: 13%; right: 13%; background: #9c2f1a; }
+.hero .qbtn { top: 13%; right: 13%; background: #6e2705; }
 .chip .qbtn { top: 5%; right: 7%; }
 .pop { position: absolute; z-index: 30; width: 250px; max-width: calc(100vw - 24px); background: var(--surface); color: var(--ink); border-radius: 20px; padding: 12px 15px 13px; box-shadow: 10px 14px 30px var(--shade), -4px -4px 12px var(--lite), 0 0 0 1px var(--panel-edge); font-size: 13.5px; line-height: 1.4; }
 .pop h4 { margin: 0 0 4px; font-family: var(--font-display); font-size: 15px; font-weight: 600; }
 .pop p { margin: 0; }
 .emptyList { color: var(--ink-soft); padding: 4px 6px; }
+@media (max-width: 979px) {
+  table { min-width: 0; }
+  th { font-size: 9.5px; letter-spacing: 0.02em; padding: 2px 3px; }
+  td { font-size: 12.5px; padding: 8px 3px; }
+  td:last-child { padding-right: 4px; }
+  .norm { min-width: 0; padding: 3px 7px; }
+  .qbtn.inline { margin-left: 2px; width: 17px; height: 17px; font-size: 10.5px; line-height: 17px; }
+}
+@media (max-width: 420px) {
+  th { font-size: 9px; padding: 2px 2px; }
+  td { font-size: 12px; padding: 8px 2px; }
+  .norm { padding: 3px 6px; }
+  .qbtn.inline { margin-left: 1px; width: 16px; height: 16px; font-size: 10px; line-height: 16px; }
+}
 @media (prefers-reduced-motion: no-preference) { .btn { transition: box-shadow 0.15s; } }
 </style>
 
@@ -306,7 +286,7 @@ td:last-child { border-radius: 0 16px 16px 0; padding-right: 10px; }
       <h2>Delay per box</h2>
       <div class="tablewrap">
         <table>
-          <thead><tr><th>Box</th><th>Position (m) <button class="qbtn inline" type="button" data-help="pos" aria-expanded="false" aria-label="What is position?">i</button></th><th>Gap (m) <button class="qbtn inline" type="button" data-help="gap" aria-expanded="false" aria-label="What is gap?">i</button></th><th>Dist. (m) <button class="qbtn inline" type="button" data-help="dist" aria-expanded="false" aria-label="What is dist.?">i</button></th><th>Delay (ms) <button class="qbtn inline" type="button" data-help="delay" aria-expanded="false" aria-label="What is delay?">i</button></th><th>Norm. (ms) <button class="qbtn inline" type="button" data-help="norm" aria-expanded="false" aria-label="What is norm.?">i</button></th></tr></thead>
+          <thead><tr><th>Box</th><th>Position <button class="qbtn inline" type="button" data-help="pos" aria-expanded="false" aria-label="What is position?">i</button><span class="u">(m)</span></th><th>Gap <button class="qbtn inline" type="button" data-help="gap" aria-expanded="false" aria-label="What is gap?">i</button><span class="u">(m)</span></th><th>Dist. <button class="qbtn inline" type="button" data-help="dist" aria-expanded="false" aria-label="What is dist.?">i</button><span class="u">(m)</span></th><th>Delay <button class="qbtn inline" type="button" data-help="delay" aria-expanded="false" aria-label="What is delay?">i</button><span class="u">(ms)</span></th><th>Norm. <button class="qbtn inline" type="button" data-help="norm" aria-expanded="false" aria-label="What is norm.?">i</button><span class="u">(ms)</span></th></tr></thead>
           <tbody id="body"></tbody>
         </table>
         <div class="empty" id="empty" hidden>Enter at least one box.</div>
