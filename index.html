@@ -220,6 +220,13 @@ section + section { margin-top: 28px; }
   padding: 10px 12px;
 }
 .field input:focus-visible { outline: none; border-bottom-color: var(--terra); }
+.inw { position: relative; }
+.field input { padding-right: 38px; }
+.field input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+.field input::-webkit-outer-spin-button, .field input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.clr { appearance: none; cursor: pointer; position: absolute; right: 6px; top: 50%; width: 26px; height: 26px; margin-top: -13px; padding: 0; border: 2px solid var(--ink-soft); border-radius: 2px; background: transparent; color: var(--ink-soft); font: 700 16px/1 var(--font-body); display: grid; place-items: center; }
+.clr:hover { border-color: var(--terra); color: var(--ink); }
+.field input:placeholder-shown + .clr { display: none; }
 .hint { margin: 14px 0 0; font-size: 12.5px; color: var(--ink-soft); }
 
 .tablewrap { overflow-x: auto; margin: 0 -6px; padding: 4px 6px 10px; }
@@ -232,6 +239,10 @@ td:first-child { border-left: 4px solid var(--terra); font-family: var(--font-di
 td:last-child { padding-right: 10px; }
 .norm { display: inline-block; min-width: 56px; padding: 3px 10px; border-radius: 2px; font-weight: 700; text-align: center; background: var(--terra); color: var(--on-terra); }
 .norm.zero { background: transparent; color: var(--ink-soft); box-shadow: inset 0 0 0 2px var(--ink-soft); }
+.thb { appearance: none; background: none; border: 0; border-bottom: 1.5px dotted var(--ink-soft); padding: 0 0 1px; margin: 0; font: inherit; letter-spacing: inherit; text-transform: inherit; color: inherit; cursor: pointer; }
+.thb:hover, .thb[aria-expanded="true"] { color: var(--ink); border-bottom-color: var(--terra); }
+.thb:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+th .u { margin-top: 4px; font-size: 10px; font-weight: 500; letter-spacing: 0.04em; text-transform: none; opacity: 0.75; }
 .empty { padding: 18px 6px; color: var(--ink-soft); }
 
 .actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
@@ -246,7 +257,8 @@ td:last-child { padding-right: 10px; }
 .btn:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
 .status { font-size: 13px; color: var(--ink-soft); min-height: 1.3em; }
 .field input.txt { font-family: var(--font-body); font-size: 16px; font-weight: 500; }
-.field input.txt::placeholder { color: var(--ink-soft); opacity: 0.7; }
+.field input.txt { text-overflow: ellipsis; }
+.field input.txt::placeholder { color: var(--ink-soft); opacity: 0.9; }
 .saveRow { margin-top: 16px; }
 .nomargin { margin: -4px 0 12px; }
 .saved { display: grid; gap: 12px; }
@@ -346,7 +358,7 @@ td:last-child { padding-right: 10px; }
       <h2>Delay per box</h2>
       <div class="tablewrap">
         <table>
-          <thead><tr><th>Box</th><th>Position <button class="qbtn inline" type="button" data-help="pos" aria-expanded="false" aria-label="What is position?">i</button><span class="u">(m)</span></th><th>Gap <button class="qbtn inline" type="button" data-help="gap" aria-expanded="false" aria-label="What is gap?">i</button><span class="u">(m)</span></th><th>Dist. <button class="qbtn inline" type="button" data-help="dist" aria-expanded="false" aria-label="What is dist.?">i</button><span class="u">(m)</span></th><th>Delay <button class="qbtn inline" type="button" data-help="delay" aria-expanded="false" aria-label="What is delay?">i</button><span class="u">(ms)</span></th><th>Norm. <button class="qbtn inline" type="button" data-help="norm" aria-expanded="false" aria-label="What is norm.?">i</button><span class="u">(ms)</span></th></tr></thead>
+          <thead><tr><th>Box</th><th><button class="thb" type="button" data-help="pos" aria-expanded="false" aria-label="What is position?">Position</button><span class="u">m</span></th><th><button class="thb" type="button" data-help="gap" aria-expanded="false" aria-label="What is gap?">Gap</button><span class="u">m</span></th><th><button class="thb" type="button" data-help="dist" aria-expanded="false" aria-label="What is distance?">Dist.</button><span class="u">m</span></th><th><button class="thb" type="button" data-help="delay" aria-expanded="false" aria-label="What is delay?">Delay</button><span class="u">ms</span></th><th><button class="thb" type="button" data-help="norm" aria-expanded="false" aria-label="What is normalized delay?">Norm.</button><span class="u">ms</span></th></tr></thead>
           <tbody id="body"></tbody>
         </table>
         <div class="empty" id="empty" hidden>Enter at least one box.</div>
@@ -356,8 +368,8 @@ td:last-child { padding-right: 10px; }
     <section>
       <h2>Save setup</h2>
       <div class="fields">
-        <div class="field"><label for="venue">Venue</label><input id="venue" class="txt" type="text" maxlength="80" autocomplete="off" placeholder="e.g. Lucerna Great Hall (empty = funny name)"></div>
-        <div class="field"><label for="setup">Setup name</label><input id="setup" class="txt" type="text" maxlength="80" autocomplete="off" placeholder="e.g. Main sub arc, 8 boxes"></div>
+        <div class="field wide"><label for="venue">Venue</label><input id="venue" class="txt" type="text" maxlength="80" autocomplete="off" placeholder="Phase-Aligned Pink Noise Pub"></div>
+        <div class="field wide"><label for="setup">Setup name</label><input id="setup" class="txt" type="text" maxlength="80" autocomplete="off" placeholder="e.g. Main sub arc, 8 boxes"></div>
       </div>
       <div class="actions saveRow">
         <button class="btn main" id="save" type="button">Save results</button>
@@ -371,11 +383,6 @@ td:last-child { padding-right: 10px; }
       <div class="saved" id="saved"></div>
     </section>
 
-    <section class="actions">
-      <button class="btn main" id="copy" type="button">Copy results</button>
-      <button class="btn" id="reset" type="button">Reset to defaults</button>
-      <span class="status" id="status" role="status" aria-live="polite"></span>
-    </section>
   </div>
 </div>
 
@@ -392,7 +399,7 @@ td:last-child { padding-right: 10px; }
       <li><b>Set the delays.</b> In the table, type each box's Norm. delay into your processor. The box with the smallest delay reads 0.</li>
       <li><b>Save it.</b> Add a venue and a setup name, then press Save results. Load, copy or delete it later under Saved setups.</li>
     </ol>
-    <p class="guideTip">Tap any small <b>i</b> to see what a value means.</p>
+    <p class="guideTip">Tap any small <b>i</b> or underlined column name to see what it means.</p>
     <button class="btn main" id="guideOk" type="button">Got it</button>
   </div>
 </div>
@@ -428,6 +435,7 @@ function compute(inp) {
 function num(x) { var v = parseFloat(x); return Number.isFinite(v) ? v : 0; }
 function fmt(x, d) { if (d === undefined) d = 3; return Number.isFinite(x) ? x.toFixed(d) : "—"; }
 function el(id) { return document.getElementById(id); }
+var setupAuto = true; /* setup name follows the inputs until the user types their own */
 function readInputs() { var o = {}; IDS.forEach(function (id) { o[id] = num(el(id).value); }); return o; }
 
 function drawArc(res, inp) {
@@ -467,6 +475,7 @@ function render() {
   el("radius").textContent = fmt(res.R);
   el("length").textContent = fmt(res.cc);
   el("sum1").textContent = res.N + " boxes · " + fmt(inp.l, 2).replace(/\.?0+$/, "") + " m · " + fmt(inp.arc, 0) + "°";
+  if (setupAuto) el("setup").value = el("sum1").textContent;
   el("warn").hidden = !(res.spacing !== null && res.spacing < 0);
   var body = el("body");
   body.innerHTML = res.rows.map(function (r) {
@@ -496,8 +505,6 @@ function summaryText() {
   return textFrom(last.inp, last.res, el("venue").value.trim(), el("setup").value.trim());
 }
 
-var statusTimer;
-function say(msg) { var s = el("status"); s.textContent = msg; clearTimeout(statusTimer); statusTimer = setTimeout(function () { s.textContent = ""; }, 3000); }
 
 function fallbackCopy(text) {
   var ta = document.createElement("textarea");
@@ -508,27 +515,6 @@ function fallbackCopy(text) {
   document.body.removeChild(ta);
   return ok;
 }
-el("copy").addEventListener("click", function () {
-  var text = summaryText();
-  var done = function () { say("Copied."); };
-  var fail = function () { say(fallbackCopy(text) ? "Copied." : "Copy failed."); };
-  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, fail); else fail();
-});
-
-var resetTimer, armed = false;
-el("reset").addEventListener("click", function () {
-  var b = el("reset");
-  if (!armed) {
-    armed = true; b.textContent = "Really reset?";
-    resetTimer = setTimeout(function () { armed = false; b.textContent = "Reset to defaults"; }, 3000);
-    return;
-  }
-  clearTimeout(resetTimer); armed = false; b.textContent = "Reset to defaults";
-  IDS.forEach(function (id) { el(id).value = DEFAULTS[id]; });
-  render(); say("Values reset.");
-});
-
-
 /* ---------- Saved setups ---------- */
 var items = [], mode = "local", dbc = null, LOCAL_KEY = "subArcSetups";
 var saveTimer;
@@ -554,8 +540,8 @@ function snapshot(inp, res, venue, setup) {
   };
 }
 
-var ADJ = ["Grumpy", "Thunderous", "Wobbly", "Rumbling", "Sneaky", "Majestic", "Cardioid", "Phase-Aligned", "Low-Flying", "Sweaty", "Heroic", "Suspiciously Quiet", "Overexcited", "Polarity-Flipped", "Slightly Haunted", "Mighty", "Gentle", "Brave", "Vibrating", "Legendary"];
-var NOUN = ["Bass Cathedral", "Sub Arena", "Low-End Lounge", "Woofer Warehouse", "Rumble Hall", "Kick Drum Castle", "Cone Palace", "Boom Barn", "Subwoofer Shed", "Thump Theatre", "Decibel Dome", "Delay Tower", "Arc Amphitheatre", "Resonance Room", "Bass Bunker", "Limiter Lodge"];
+var ADJ = ["Grumpy", "Thunderous", "Wobbly", "Rumbling", "Sneaky", "Majestic", "Cardioid", "Phase-Aligned", "Low-Flying", "Sweaty", "Heroic", "Suspiciously Quiet", "Overexcited", "Polarity-Flipped", "Slightly Haunted", "Mighty", "Gentle", "Brave", "Vibrating", "Legendary", "Moody", "Caffeinated", "Dramatic", "Flirty", "Tipsy", "Sleepy", "Chonky", "Fluffy", "Turbo", "Ancient", "Forbidden", "Cosmic", "Unplugged", "Overdriven", "Clipping", "Feedbacking", "Over-Limited", "Bass-Heavy", "Totally Legit", "Questionable", "Dancing", "Screaming", "Whispering", "Rebellious", "Dizzy", "Hungry", "Ninja", "Pirate", "Royal", "Cursed", "Blessed", "Squeaky", "Funky", "Out-of-Phase", "Underrated", "Radioactive", "Epic", "Unstoppable", "Mysterious", "Sassy"];
+var NOUN = ["Bass Cathedral", "Sub Arena", "Low-End Lounge", "Woofer Warehouse", "Rumble Hall", "Kick Drum Castle", "Cone Palace", "Boom Barn", "Subwoofer Shed", "Thump Theatre", "Decibel Dome", "Delay Tower", "Arc Amphitheatre", "Resonance Room", "Bass Bunker", "Limiter Lodge", "Groove Garage", "Thump Temple", "Rumble Ranch", "Boom Bistro", "Low-End Lair", "Hertz Hotel", "Phase Palace", "Cabinet Colosseum", "Crossover Café", "Sine Wave Saloon", "Gain Stage Gym", "Rigging Retreat", "Roadie Rest Stop", "Fader Fortress", "Subwoofer Speakeasy", "Bassline Bay", "Bumpy Basement", "Headroom Hideout", "Pink Noise Pub", "Monitor Mansion", "Stack Station", "Soundcheck Studio", "Cable Cabin", "Truss Tavern", "Quake Quarter", "Dub Dungeon", "Sub-Zero Stadium", "Kickdrum Kingdom", "Wavefront Warehouse", "Low-Frequency Loft", "Rumble Resort", "Subterranean Showroom"];
 function nextUntitled() {
   var used = {};
   items.forEach(function (x) { used[String(x.venue || "").trim().toLowerCase()] = true; });
@@ -565,6 +551,36 @@ function nextUntitled() {
   }
   return "Mystery Venue " + (items.length + 1);
 }
+el("setup").addEventListener("input", function () { if (el("setup").value.trim()) setupAuto = false; });
+el("setup").addEventListener("blur", function () { if (!el("setup").value.trim()) { setupAuto = true; render(); } });
+/* x button inside every input: clears the box for quick retyping */
+document.querySelectorAll(".field input").forEach(function (inp) {
+  if (!inp.placeholder) inp.placeholder = " ";
+  var wrap = document.createElement("div"); wrap.className = "inw";
+  inp.parentNode.insertBefore(wrap, inp); wrap.appendChild(inp);
+  var lab = document.querySelector('label[for="' + inp.id + '"]');
+  var b = document.createElement("button"); b.type = "button"; b.className = "clr"; b.tabIndex = -1; b.textContent = "×";
+  b.setAttribute("aria-label", "Clear " + (lab ? lab.textContent : "field"));
+  b.addEventListener("pointerdown", function (e) { e.preventDefault(); });
+  b.addEventListener("click", function () { inp.value = ""; inp.dispatchEvent(new Event("input", { bubbles: true })); inp.focus(); });
+  wrap.appendChild(b);
+});
+/* the empty venue box suggests a new funny name every second */
+(function () {
+  var v = el("venue"), timer = null, prev = "";
+  function suggest() {
+    var n = nextUntitled(), t = 0;
+    while (n === prev && t++ < 5) n = nextUntitled();
+    prev = n; v.placeholder = n;
+  }
+  function start() { if (timer || v.value || document.activeElement === v) return; suggest(); timer = setInterval(suggest, 1000); }
+  function stop() { clearInterval(timer); timer = null; }
+  v.addEventListener("focus", stop);
+  v.addEventListener("blur", function () { if (!v.value) start(); });
+  v.addEventListener("input", function () { if (v.value) stop(); });
+  document.addEventListener("visibilitychange", function () { if (document.hidden) stop(); else start(); });
+  if (!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches)) start(); else suggest();
+})();
 async function saveCurrent() {
   var venue = el("venue").value.trim(), setup = el("setup").value.trim();
   var autoNamed = false;
@@ -591,7 +607,7 @@ async function saveCurrent() {
 
 function loadItem(it) {
   IDS.forEach(function (id) { if (it.inputs && Number.isFinite(it.inputs[id])) el(id).value = it.inputs[id]; });
-  el("venue").value = it.venue || ""; el("setup").value = it.setup || "";
+  el("venue").value = it.venue || ""; el("setup").value = it.setup || ""; setupAuto = !it.setup;
   render(); saySave("Loaded.");
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
