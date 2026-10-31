@@ -283,7 +283,7 @@ td:last-child { padding-right: 10px; }
     <div class="top">
       <div>
         <h1>Arc Sub<br>Calc</h1>
-        <p class="summary"><span id="sum1">8 boxes · 14 m · 65°</span><small id="sum2">centre-to-centre 12.660 m</small></p>
+        <p class="summary"><span id="sum1">8 boxes · 14 m · 65°</span></p>
       </div>
       <div class="speed">
         <div class="ctrls">
@@ -435,7 +435,6 @@ function render() {
   el("radius").textContent = fmt(res.R);
   el("length").textContent = fmt(res.cc);
   el("sum1").textContent = res.N + " boxes · " + fmt(inp.l, 2).replace(/\.?0+$/, "") + " m · " + fmt(inp.arc, 0) + "°";
-  el("sum2").textContent = "centre-to-centre " + fmt(res.cc) + " m";
   el("warn").hidden = !(res.spacing !== null && res.spacing < 0);
   var body = el("body");
   body.innerHTML = res.rows.map(function (r) {
