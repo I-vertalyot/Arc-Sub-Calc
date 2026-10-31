@@ -40,6 +40,10 @@ img { max-width: 100%; }
   --shade: rgba(0, 0, 0, 0.6);
   --halo: rgba(255, 120, 30, 0.30);
   --warn: #ffab85;
+  --pill-bg: #1b0c04;
+  --pill-fg: #ffb27a;
+  --qhero: #6e2705;
+  --qopen: #7a2e06;
   --font-display: "Outfit", "Avenir Next", "Segoe UI", system-ui, -apple-system, sans-serif;
   --font-body: "Figtree", "Segoe UI", system-ui, -apple-system, sans-serif;
   color-scheme: dark;
@@ -99,12 +103,25 @@ h1 {
 .summary { margin: 0; font-size: 16px; font-weight: 500; font-variant-numeric: tabular-nums; }
 .summary small { display: block; color: var(--ink-soft); font-size: 13px; margin-top: 2px; }
 .speed { text-align: left; min-width: 0; flex: 0 0 auto; }
-.orb {
-  width: 54px; height: 54px; border-radius: 50%;
-  background: radial-gradient(circle at 34% 28%, #ffe2b0 0%, #ff8f3a 48%, #b8450a 100%);
-  box-shadow: 8px 10px 20px var(--shade), inset -4px -6px 10px rgba(110, 40, 5, 0.45), inset 3px 3px 8px rgba(255, 235, 200, 0.6);
-  margin-left: auto;
-}
+.ctrls { display: flex; justify-content: flex-end; align-items: center; gap: 10px; }
+.themeSwitch { appearance: none; border: 0; cursor: pointer; position: relative; display: block; flex: none; width: 62px; height: 32px; padding: 0; border-radius: 99px; background: var(--well); box-shadow: inset 0 2px 6px var(--shade), inset 0 -2px 5px var(--lite); }
+.themeSwitch .bg { position: absolute; top: 50%; width: 14px; height: 14px; margin-top: -7px; color: var(--ink-soft); opacity: 0.55; display: block; }
+.themeSwitch .bg.l { left: 9px; }
+.themeSwitch .bg.r { right: 9px; }
+.themeSwitch .knob { position: absolute; top: 50%; left: 3px; width: 26px; height: 26px; margin-top: -13px; border-radius: 50%; background: linear-gradient(180deg, var(--terra-hi), var(--terra)); color: var(--on-terra); display: grid; place-items: center; box-shadow: 0 2px 6px var(--shade); transition: transform 0.2s ease; }
+.themeSwitch[aria-checked="true"] .knob { transform: translateX(30px); }
+.knob svg { width: 16px; height: 16px; display: block; }
+.knob .moon { display: none; }
+.themeSwitch[aria-checked="true"] .knob .moon { display: block; }
+.themeSwitch[aria-checked="true"] .knob .sun { display: none; }
+.bgBtn { appearance: none; cursor: pointer; flex: none; width: 32px; height: 32px; padding: 0; border-radius: 50%; border: 2px solid var(--ink-soft); background: var(--swatch, var(--panel)); box-shadow: 3px 4px 8px var(--shade), -2px -2px 6px var(--lite); }
+.bgBtn[aria-expanded="true"] { border-color: var(--terra); }
+.themeSwitch:focus-visible, .bgBtn:focus-visible, .swatch:focus-visible { outline: 2px solid var(--terra); outline-offset: 3px; }
+.swatches { display: flex; gap: 10px; margin: 10px 0 6px; }
+.swatch { appearance: none; cursor: pointer; flex: none; width: 34px; height: 34px; padding: 0; border-radius: 50%; border: 2px solid transparent; background: var(--sw); box-shadow: 0 0 0 1px var(--ink-soft), 3px 4px 8px var(--shade); }
+.swatch[aria-pressed="true"] { border-color: var(--terra); box-shadow: 0 0 0 2px var(--terra), 3px 4px 8px var(--shade); }
+.pop .cap { font-size: 12.5px; color: var(--ink-soft); }
+@media (prefers-reduced-motion: reduce) { .themeSwitch .knob { transition: none; } }
 .speed b { display: block; margin-top: 14px; font-family: var(--font-display); font-size: 24px; font-weight: 600; font-variant-numeric: tabular-nums; line-height: 1; }
 .speed span { display: block; font-size: 12px; color: var(--ink-soft); margin-top: 4px; font-variant-numeric: tabular-nums; }
 
@@ -123,7 +140,7 @@ h1 {
 .hero .big { font-family: var(--font-display); font-size: 17cqw; font-weight: 700; letter-spacing: -0.03em; line-height: 1; font-variant-numeric: tabular-nums; margin-top: 1cqw; }
 .hero .big i { font-style: normal; font-size: 6.5cqw; font-weight: 600; margin-left: 1.2cqw; }
 .hero .sub { font-size: 3.8cqw; font-weight: 500; margin-top: 2cqw; opacity: 0.95; }
-.hero .warn { margin-top: 2cqw; font-size: 3.6cqw; font-weight: 600; background: #1b0c04; color: #ffb27a; border-radius: 99px; padding: 0.8cqw 2.4cqw; width: fit-content; }
+.hero .warn { margin-top: 2cqw; font-size: 3.6cqw; font-weight: 600; background: var(--pill-bg); color: var(--pill-fg); border-radius: 99px; padding: 0.8cqw 2.4cqw; width: fit-content; }
 .chip {
   background: var(--surface);
   display: grid; place-content: center; text-align: center;
@@ -209,10 +226,10 @@ td:last-child { border-radius: 0 16px 16px 0; padding-right: 10px; }
 .errText { margin: 10px 2px 0; font-size: 13px; font-weight: 600; color: var(--warn); }
 .qbtn { appearance: none; border: 0; cursor: pointer; width: 22px; height: 22px; padding: 0; border-radius: 50%; background: var(--terra-btn); color: #fff; font: 700 13px/22px var(--font-display); text-align: center; box-shadow: 4px 5px 10px var(--shade), -3px -3px 8px var(--lite); position: absolute; z-index: 4; }
 .qbtn::after { content: ""; position: absolute; inset: -8px; }
-.qbtn[aria-expanded="true"] { background: #7a2e06; color: #fff; }
+.qbtn[aria-expanded="true"] { background: var(--qopen); color: #fff; }
 .qbtn:focus-visible { outline: 2px solid var(--terra); outline-offset: 2px; }
 .qbtn.inline { position: relative; display: inline-block; vertical-align: middle; margin-left: 4px; box-shadow: 3px 4px 8px var(--shade), -2px -2px 6px var(--lite); width: 20px; height: 20px; font-size: 12px; line-height: 20px; }
-.hero .qbtn { top: 13%; right: 13%; background: #6e2705; }
+.hero .qbtn { top: 13%; right: 13%; background: var(--qhero); }
 .chip .qbtn { top: 5%; right: 7%; }
 .pop { position: absolute; z-index: 30; width: 250px; max-width: calc(100vw - 24px); background: var(--surface); color: var(--ink); border-radius: 20px; padding: 12px 15px 13px; box-shadow: 10px 14px 30px var(--shade), -4px -4px 12px var(--lite), 0 0 0 1px var(--panel-edge); font-size: 13.5px; line-height: 1.4; }
 .pop h4 { margin: 0 0 4px; font-family: var(--font-display); font-size: 15px; font-weight: 600; }
@@ -235,8 +252,7 @@ td:last-child { border-radius: 0 16px 16px 0; padding-right: 10px; }
 @media (prefers-reduced-motion: no-preference) { .btn { transition: box-shadow 0.15s; } }
 </style>
 
-</head>
-<body>
+</head><body>
 <div class="layout">
   <div class="panel">
     <div class="top">
@@ -245,7 +261,13 @@ td:last-child { border-radius: 0 16px 16px 0; padding-right: 10px; }
         <p class="summary"><span id="sum1">8 boxes · 14 m · 65°</span><small id="sum2">centre-to-centre 12.660 m</small></p>
       </div>
       <div class="speed">
-        <div class="orb" aria-hidden="true"></div>
+        <div class="ctrls">
+          <button class="bgBtn" id="bgBtn" type="button" aria-label="Change background" aria-expanded="false" title="Background"></button>
+          <button class="themeSwitch" id="themeSwitch" type="button" role="switch" aria-checked="true" aria-label="Dark mode" title="Dark / light mode"><svg class="bg l" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.6M12 18.9v2.6M2.5 12h2.6M18.9 12h2.6M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></svg><svg class="bg r" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7z"/></svg><span class="knob">
+            <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.6M12 18.9v2.6M2.5 12h2.6M18.9 12h2.6M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></svg>
+            <svg class="moon" viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7z"/></svg>
+          </span></button>
+        </div>
         <b id="speed">347.231 m/s</b>
         <span id="speedSub">25 °C · 63 %</span>
         <span>speed of sound <button class="qbtn inline" type="button" data-help="speed" aria-expanded="false" aria-label="What is speed of sound?">i</button></span>
@@ -640,6 +662,7 @@ function placePop() {
 function closePop() {
   popKey = null; popBtn = null;
   el("pop").hidden = true;
+  if (el("bgBtn")) el("bgBtn").setAttribute("aria-expanded", "false");
   document.querySelectorAll("[data-help]").forEach(function (b) { b.setAttribute("aria-expanded", "false"); });
 }
 function openPop(btn) {
@@ -660,6 +683,72 @@ document.addEventListener("click", function (e) {
 document.addEventListener("keydown", function (e) { if (e.key === "Escape" && popKey) { var b = popBtn; closePop(); if (b) b.focus(); } });
 window.addEventListener("resize", placePop);
 
+/* ---------- Theme: dark / light and background ---------- */
+var KEYS = ["--ground", "--ground-2", "--panel", "--panel-edge", "--surface", "--well", "--lens-a", "--lens-b", "--ink", "--ink-soft", "--shade", "--lite"];
+var PRESETS = [
+  { id: "warm", name: "Warm",
+    dark:  ["#0e0a08", "#1b110b", "#1e1511", "#30221a", "#2b1f18", "#140d0a", "#3c2417", "#1d120c", "#f7ebe0", "#bba592", "rgba(0,0,0,0.6)", "rgba(255,215,180,0.05)"],
+    light: ["#ecd2bf", "#f6e2d4", "#f0d9c9", "#fbeee4", "#f6e6da", "#e6c8b4", "#fbeadc", "#e8b49b", "#1b1210", "#6c5143", "rgba(160,100,75,0.34)", "rgba(255,250,245,0.85)"] },
+  { id: "neutral", name: "Neutral",
+    dark:  ["#0b0b0c", "#17181a", "#1a1b1d", "#2a2c2f", "#262829", "#111213", "#34363a", "#1a1b1d", "#f1f1f0", "#a6a8ab", "rgba(0,0,0,0.6)", "rgba(255,255,255,0.045)"],
+    light: ["#e4e1dc", "#f1efeb", "#ebe8e3", "#f8f6f3", "#f4f2ee", "#d9d5ce", "#f6f4f0", "#d4cfc7", "#1c1a18", "#6b665f", "rgba(90,80,70,0.30)", "rgba(255,255,255,0.85)"] },
+  { id: "blue", name: "Blue",
+    dark:  ["#070b14", "#0f1a2e", "#111a2b", "#1d2b45", "#1a2640", "#0b1220", "#223557", "#0f1829", "#eaf0fb", "#9fb0cc", "rgba(0,0,0,0.6)", "rgba(180,210,255,0.05)"],
+    light: ["#cfdceb", "#e3edf7", "#d9e5f1", "#f0f6fb", "#e8f0f8", "#c4d4e5", "#eef5fb", "#a9c1dc", "#101826", "#53647c", "rgba(60,90,130,0.30)", "rgba(255,255,255,0.85)"] },
+  { id: "green", name: "Green",
+    dark:  ["#060d09", "#0f1f16", "#121c16", "#1e3025", "#1b2b21", "#0b140e", "#223a2b", "#101c14", "#e9f4ec", "#9fb8a8", "rgba(0,0,0,0.6)", "rgba(190,255,210,0.045)"],
+    light: ["#cfe3d6", "#e2f0e7", "#d7e8dd", "#eff8f2", "#e6f2eb", "#c1d8c9", "#edf7f1", "#a6c9b3", "#10231a", "#4f6a5a", "rgba(60,110,80,0.28)", "rgba(255,255,255,0.85)"] },
+  { id: "purple", name: "Purple",
+    dark:  ["#0d0710", "#1d1024", "#1a1220", "#2c1d35", "#271a30", "#120a17", "#3a2347", "#1a0f20", "#f6ebfa", "#b9a3c4", "rgba(0,0,0,0.6)", "rgba(240,200,255,0.05)"],
+    light: ["#dccfe8", "#ece3f4", "#e3d8ee", "#f5eefa", "#ede4f5", "#cfc0de", "#f4eefa", "#bba6d0", "#1e1228", "#65537a", "rgba(100,70,130,0.30)", "rgba(255,255,255,0.85)"] }
+];
+var ACCENT = {
+  dark:  { "--terra": "#f26a1b", "--terra-hi": "#ff8f3a", "--terra-btn": "#c2470a", "--on-terra": "#1b0c04", "--halo": "rgba(255,120,30,0.30)", "--warn": "#ffab85", "--pill-bg": "#1b0c04", "--pill-fg": "#ffb27a", "--qhero": "#6e2705", "--qopen": "#7a2e06" },
+  light: { "--terra": "#b83d24", "--terra-hi": "#d4563a", "--terra-btn": "#b83d24", "--on-terra": "#fff6f0", "--halo": "rgba(240,120,90,0.38)", "--warn": "#a3341f", "--pill-bg": "rgba(40,10,0,0.55)", "--pill-fg": "#ffffff", "--qhero": "#8a2512", "--qopen": "#8a2512" }
+};
+var theme = { mode: "dark", bg: "warm" };
+function presetById(id) { for (var i = 0; i < PRESETS.length; i++) if (PRESETS[i].id === id) return PRESETS[i]; return PRESETS[0]; }
+function applyTheme(save) {
+  var root = document.documentElement, pr = presetById(theme.bg), vals = pr[theme.mode], acc = ACCENT[theme.mode];
+  KEYS.forEach(function (k, i) { root.style.setProperty(k, vals[i]); });
+  Object.keys(acc).forEach(function (k) { root.style.setProperty(k, acc[k]); });
+  root.style.colorScheme = theme.mode;
+  root.setAttribute("data-theme", theme.mode);
+  var sw = el("themeSwitch"); sw.setAttribute("aria-checked", theme.mode === "dark" ? "true" : "false");
+  el("bgBtn").style.setProperty("--swatch", "linear-gradient(135deg, " + vals[3] + ", " + vals[0] + ")");
+  var meta = document.querySelector('meta[name="theme-color"]'); if (meta) meta.setAttribute("content", vals[0]);
+  if (popKey === "bg") buildBgPop();
+  if (save) { try { localStorage.setItem("subArcTheme", JSON.stringify(theme)); } catch (e) {} }
+}
+function buildBgPop() {
+  var pop = el("pop"); pop.textContent = "";
+  pop.appendChild(mk("h4", "", "Background"));
+  var row = mk("div", "swatches");
+  PRESETS.forEach(function (p) {
+    var v = p[theme.mode], b = mk("button", "swatch"); b.type = "button";
+    b.style.setProperty("--sw", "linear-gradient(135deg, " + v[3] + ", " + v[0] + ")");
+    b.setAttribute("aria-label", p.name + " background"); b.setAttribute("title", p.name);
+    b.setAttribute("aria-pressed", p.id === theme.bg ? "true" : "false");
+    b.addEventListener("click", function (e) { e.stopPropagation(); theme.bg = p.id; applyTheme(true); });
+    row.appendChild(b);
+  });
+  pop.appendChild(row);
+  pop.appendChild(mk("p", "cap", presetById(theme.bg).name + " · " + (theme.mode === "dark" ? "dark" : "light")));
+}
+function openBgPop() {
+  document.querySelectorAll("[data-help]").forEach(function (b) { b.setAttribute("aria-expanded", "false"); });
+  popKey = "bg"; popBtn = el("bgBtn"); el("bgBtn").setAttribute("aria-expanded", "true");
+  buildBgPop(); el("pop").hidden = false; placePop();
+}
+el("themeSwitch").addEventListener("click", function () { theme.mode = theme.mode === "dark" ? "light" : "dark"; applyTheme(true); });
+el("bgBtn").addEventListener("click", function (e) { e.stopPropagation(); if (popKey === "bg") closePop(); else openBgPop(); });
+try {
+  var st = JSON.parse(localStorage.getItem("subArcTheme") || "null");
+  if (st && (st.mode === "dark" || st.mode === "light")) theme.mode = st.mode;
+  if (st && PRESETS.some(function (p) { return p.id === st.bg; })) theme.bg = st.bg;
+} catch (e) {}
+applyTheme(false);
+
 try {
   var saved = JSON.parse(localStorage.getItem("subArcCalc") || "null");
   if (saved) IDS.forEach(function (id) { if (Number.isFinite(saved[id])) el(id).value = saved[id]; });
@@ -667,5 +756,5 @@ try {
 IDS.forEach(function (id) { el(id).addEventListener("input", render); });
 render();
 </script>
-</body>
-</html>
+
+</body></html>
