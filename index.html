@@ -224,6 +224,15 @@ section + section { margin-top: 28px; }
 .field input { padding-right: 38px; }
 .field input[type=number] { -moz-appearance: textfield; appearance: textfield; }
 .field input::-webkit-outer-spin-button, .field input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.inw.num input { padding-right: 76px; }
+.inw.num .clr { right: 36px; }
+.stp { position: absolute; right: 6px; top: 50%; width: 26px; height: 30px; margin-top: -15px; display: grid; grid-template-rows: 1fr 1fr; gap: 2px; }
+.stp button { appearance: none; cursor: pointer; padding: 0; border: 2px solid var(--ink-soft); border-radius: 2px; background: transparent; color: var(--ink-soft); display: grid; place-items: center; touch-action: manipulation; }
+.stp button::before { content: ""; width: 0; height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent; }
+.stp .up::before { border-bottom: 5px solid currentColor; }
+.stp .dn::before { border-top: 5px solid currentColor; }
+.stp button:hover { border-color: var(--terra); color: var(--ink); }
+.stp button:active { background: var(--terra); color: var(--on-terra); border-color: var(--terra); }
 .clr { appearance: none; cursor: pointer; position: absolute; right: 6px; top: 50%; width: 26px; height: 26px; margin-top: -13px; padding: 0; border: 2px solid var(--ink-soft); border-radius: 2px; background: transparent; color: var(--ink-soft); font: 700 16px/1 var(--font-body); display: grid; place-items: center; }
 .clr:hover { border-color: var(--terra); color: var(--ink); }
 .field input:placeholder-shown + .clr { display: none; }
@@ -565,6 +574,34 @@ document.querySelectorAll(".field input").forEach(function (inp) {
   b.addEventListener("click", function () { inp.value = ""; inp.dispatchEvent(new Event("input", { bubbles: true })); inp.focus(); });
   wrap.appendChild(b);
 });
+/* up / down buttons on the number inputs (hold to repeat) */
+(function () {
+  var STEP = { n: 1, w: 0.1, l: 0.5, arc: 1, t: 1, h: 1, m: 0.1 };
+  var LIM = { n: [0, 999], w: [0, 99], l: [0, 999], arc: [0, 360], t: [-60, 80], h: [0, 100], m: [0, 99] };
+  Object.keys(STEP).forEach(function (id) {
+    var inp = el(id), wrap = inp.parentNode, box = document.createElement("div");
+    wrap.classList.add("num"); box.className = "stp";
+    var dec = (String(STEP[id]).split(".")[1] || "").length;
+    function bump(dir) {
+      var v = parseFloat(String(inp.value).replace(",", ".")); if (!isFinite(v)) v = 0;
+      var cd = (String(inp.value).replace(",", ".").split(".")[1] || "").length, dd = Math.min(6, Math.max(dec, cd));
+      v = Math.min(LIM[id][1], Math.max(LIM[id][0], +(v + dir * STEP[id]).toFixed(dd)));
+      inp.value = String(v); inp.dispatchEvent(new Event("input", { bubbles: true }));
+    }
+    var lab = document.querySelector('label[for="' + id + '"]'), name = lab ? lab.textContent : id;
+    [["up", 1, "Increase "], ["dn", -1, "Decrease "]].forEach(function (d) {
+      var b = document.createElement("button"); b.type = "button"; b.className = d[0]; b.tabIndex = -1;
+      b.setAttribute("aria-label", d[2] + name);
+      var t1 = null, t2 = null;
+      function stop() { clearTimeout(t1); clearInterval(t2); t1 = t2 = null; }
+      b.addEventListener("pointerdown", function (e) { e.preventDefault(); bump(d[1]); stop(); t1 = setTimeout(function () { t2 = setInterval(function () { bump(d[1]); }, 70); }, 420); });
+      ["pointerup", "pointerleave", "pointercancel"].forEach(function (ev) { b.addEventListener(ev, stop); });
+      b.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); bump(d[1]); } });
+      box.appendChild(b);
+    });
+    wrap.appendChild(box);
+  });
+})();
 /* the empty venue box suggests a new funny name every second */
 (function () {
   var v = el("venue"), timer = null, prev = "";
