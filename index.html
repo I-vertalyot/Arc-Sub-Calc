@@ -132,6 +132,20 @@ h1 {
 .bgBtn { appearance: none; cursor: pointer; flex: none; width: 32px; height: 32px; padding: 0; border-radius: 50%; border: 3px solid var(--ink-soft); background: var(--swatch, var(--panel)); }
 .bgBtn[aria-expanded="true"] { border-color: var(--terra); }
 .themeSwitch:focus-visible, .bgBtn:focus-visible, .swatch:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+.helpBtn { appearance: none; cursor: pointer; flex: none; width: 32px; height: 32px; padding: 0; border-radius: 50%; border: 3px solid var(--ink-soft); background: var(--well); color: var(--ink); font: 700 16px/1 var(--font-display); }
+.helpBtn:hover, .helpBtn[aria-expanded="true"] { border-color: var(--terra); }
+.helpBtn:focus-visible, .guideClose:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+.guideBack { position: fixed; inset: 0; z-index: 100; background: rgba(20, 19, 15, 0.72); display: flex; align-items: center; justify-content: center; padding: 16px; overflow-y: auto; }
+.guideBack[hidden] { display: none; }
+.guideBox { position: relative; width: 100%; max-width: 440px; max-height: calc(100vh - 32px); overflow-y: auto; background: var(--panel); color: var(--ink); border: 3px solid var(--ink); border-radius: 4px; box-shadow: 8px 8px 0 var(--shade); padding: 26px 22px 22px; }
+.guideBox h2 { margin-right: 36px; }
+.guideLead { margin: 0 0 14px; font-size: 14.5px; }
+.guideSteps { margin: 0 0 14px; padding: 0; list-style: none; counter-reset: g; display: grid; gap: 10px; }
+.guideSteps li { counter-increment: g; position: relative; padding-left: 38px; font-size: 14px; line-height: 1.4; }
+.guideSteps li::before { content: counter(g); position: absolute; left: 0; top: 0; width: 26px; height: 26px; display: grid; place-items: center; background: var(--terra); color: var(--on-terra); font: 700 14px var(--font-display); border-radius: 2px; }
+.guideSteps b { font-weight: 700; }
+.guideTip { margin: 0 0 16px; font-size: 13px; color: var(--ink-soft); }
+.guideClose { appearance: none; cursor: pointer; position: absolute; top: 12px; right: 12px; width: 32px; height: 32px; padding: 0; border: 2px solid var(--ink-soft); border-radius: 2px; background: var(--well); color: var(--ink); font: 700 20px/1 var(--font-body); }
 .swatches { display: flex; gap: 10px; margin: 10px 0 6px; }
 .swatch { appearance: none; cursor: pointer; flex: none; width: 34px; height: 34px; padding: 0; border-radius: 50%; border: 3px solid var(--panel-edge); background: var(--sw); box-shadow: 0 0 0 1px var(--ink-soft); }
 .swatch[aria-pressed="true"] { border-color: var(--ink); box-shadow: 0 0 0 3px var(--terra); }
@@ -287,6 +301,7 @@ td:last-child { padding-right: 10px; }
       </div>
       <div class="speed">
         <div class="ctrls">
+          <button class="helpBtn" id="helpBtn" type="button" aria-haspopup="dialog" aria-label="How to use this app" title="How to use">?</button>
           <button class="bgBtn" id="bgBtn" type="button" aria-label="Change background" aria-expanded="false" title="Background"></button>
           <button class="themeSwitch" id="themeSwitch" type="button" role="switch" aria-checked="true" aria-label="Dark mode" title="Dark / light mode"><svg class="bg l" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.6M12 18.9v2.6M2.5 12h2.6M18.9 12h2.6M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></svg><svg class="bg r" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7z"/></svg><span class="knob">
             <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.6M12 18.9v2.6M2.5 12h2.6M18.9 12h2.6M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></svg>
@@ -364,6 +379,23 @@ td:last-child { padding-right: 10px; }
   </div>
 </div>
 
+<div class="guideBack" id="guide" hidden>
+  <div class="guideBox" role="dialog" aria-modal="true" aria-labelledby="guideTitle">
+    <button class="guideClose" id="guideClose" type="button" aria-label="Close">×</button>
+    <h2 id="guideTitle">How to use</h2>
+    <p class="guideLead">Arc Sub Calc helps you line up subwoofers so they work as an arc. Enter your boxes and the room, and it gives you the spacing between boxes, the radius of the arc, and the delay each box needs.</p>
+    <ol class="guideSteps">
+      <li><b>Enter your setup.</b> Number of boxes, box width, line length and arc angle.</li>
+      <li><b>Add the air.</b> Temperature and humidity change the speed of sound, so the delays stay accurate.</li>
+      <li><b>Optional margin.</b> Edge margin moves the boxes in from the ends and does not change the spacing.</li>
+      <li><b>Read the result.</b> The big circle shows the box spacing. The small circles show radius and centre-to-centre length. The drawing previews the arc.</li>
+      <li><b>Set the delays.</b> In the table, type each box's Norm. delay into your processor. The box with the smallest delay reads 0.</li>
+      <li><b>Save it.</b> Add a venue and a setup name, then press Save results. Load, copy or delete it later under Saved setups.</li>
+    </ol>
+    <p class="guideTip">Tap any small <b>i</b> to see what a value means.</p>
+    <button class="btn main" id="guideOk" type="button">Got it</button>
+  </div>
+</div>
 <div class="pop" id="pop" role="dialog" aria-live="polite" hidden></div>
 
 <script>
@@ -762,6 +794,16 @@ function openBgPop() {
   popKey = "bg"; popBtn = el("bgBtn"); el("bgBtn").setAttribute("aria-expanded", "true");
   buildBgPop(); el("pop").hidden = false; placePop();
 }
+(function () {
+  var g = el("guide"), openBtn = el("helpBtn"), last = null;
+  function openGuide() { closePop(); last = document.activeElement; g.hidden = false; openBtn.setAttribute("aria-expanded", "true"); el("guideClose").focus(); }
+  function closeGuide() { g.hidden = true; openBtn.setAttribute("aria-expanded", "false"); if (last && last.focus) last.focus(); }
+  openBtn.addEventListener("click", openGuide);
+  el("guideClose").addEventListener("click", closeGuide);
+  el("guideOk").addEventListener("click", closeGuide);
+  g.addEventListener("click", function (e) { if (e.target === g) closeGuide(); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !g.hidden) closeGuide(); });
+})();
 el("themeSwitch").addEventListener("click", function () { theme.mode = theme.mode === "dark" ? "light" : "dark"; applyTheme(true); });
 el("bgBtn").addEventListener("click", function (e) { e.stopPropagation(); if (popKey === "bg") closePop(); else openBgPop(); });
 try {
