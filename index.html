@@ -584,7 +584,7 @@ document.querySelectorAll(".field input").forEach(function (inp) {
 });
 /* roller on the number inputs: press, hold and drag up / down to change the value */
 (function () {
-  var STEP = { n: 1, w: 0.1, l: 0.5, arc: 1, t: 1, h: 1, m: 0.1 };
+  var STEP = { n: 1, w: 0.01, l: 0.01, arc: 1, t: 1, h: 1, m: 0.01 };
   var DISP = { n: [1, 40], w: [0.3, 3], l: [1, 60], arc: [0, 180], t: [-10, 45], h: [0, 100], m: [0, 5] }; /* fader travel only; real limits are LIM */
   var LIM = { n: [0, 999], w: [0, 99], l: [0, 999], arc: [0, 360], t: [-60, 80], h: [0, 100], m: [0, 99] };
   Object.keys(STEP).forEach(function (id) {
