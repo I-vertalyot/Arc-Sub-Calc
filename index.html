@@ -139,6 +139,8 @@ h1 {
 @media (prefers-reduced-motion: reduce) { .themeSwitch .knob { transition: none; } }
 .speed b { display: block; margin-top: 14px; font-family: var(--font-display); font-size: 24px; font-weight: 600; font-variant-numeric: tabular-nums; line-height: 1; }
 .speed span { display: block; font-size: 12px; color: var(--ink-soft); margin-top: 4px; font-variant-numeric: tabular-nums; }
+@media (max-width: 480px) { .speed b { font-size: 19px; } }
+.speed b span { display: inline; font-size: inherit; color: inherit; margin: 0; }
 
 /* stage: the iris (red disc in a cream ring), small stat circles, the arc lens */
 .stage { position: relative; container-type: inline-size; aspect-ratio: 1 / 1.3; margin-top: 18px; }
@@ -291,9 +293,8 @@ td:last-child { padding-right: 10px; }
             <svg class="moon" viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7z"/></svg>
           </span></button>
         </div>
-        <b id="speed">347.231 m/s</b>
+        <b><span id="speed">347.231 m/s</span> <button class="qbtn inline" type="button" data-help="speed" aria-expanded="false" aria-label="What is speed of sound?">i</button></b>
         <span id="speedSub">25 °C · 63 %</span>
-        <span>speed of sound <button class="qbtn inline" type="button" data-help="speed" aria-expanded="false" aria-label="What is speed of sound?">i</button></span>
       </div>
     </div>
 
@@ -303,7 +304,6 @@ td:last-child { padding-right: 10px; }
         <div class="big"><span id="spacing">0.469</span><i>m</i></div>
         <div class="sub" id="heroSub">between boxes in the line</div>
         <div class="warn" id="warn" hidden>Boxes do not fit in the line</div>
-        <button class="qbtn" type="button" data-help="spacing" aria-expanded="false" aria-label="What is box spacing?">i</button>
       </div>
       <div class="chip a"><div><div class="lab">Radius</div><div class="val"><span id="radius">11.781</span><i>m</i></div></div><button class="qbtn" type="button" data-help="radius" aria-expanded="false" aria-label="What is radius?">i</button></div>
       <div class="chip b"><div><div class="lab">Centre–centre</div><div class="val"><span id="length">12.660</span><i>m</i></div></div><button class="qbtn" type="button" data-help="centre" aria-expanded="false" aria-label="What is centre-to-centre length?">i</button></div>
@@ -428,12 +428,12 @@ function drawArc(res, inp) {
 var last = null;
 function render() {
   var inp = readInputs(), res = compute(inp);
+  el("speed").textContent = fmt(res.c) + " m/s";
+  el("speedSub").textContent = fmt(inp.t, 0).replace("—", "0") + " °C · " + fmt(inp.h, 0).replace("—", "0") + " %";
   last = { inp: inp, res: res };
   el("spacing").textContent = res.spacing === null ? "—" : fmt(res.spacing);
   el("radius").textContent = fmt(res.R);
   el("length").textContent = fmt(res.cc);
-  el("speed").textContent = fmt(res.c) + " m/s";
-  el("speedSub").textContent = fmt(inp.t, 0).replace("—", "0") + " °C · " + fmt(inp.h, 0).replace("—", "0") + " %";
   el("sum1").textContent = res.N + " boxes · " + fmt(inp.l, 2).replace(/\.?0+$/, "") + " m · " + fmt(inp.arc, 0) + "°";
   el("sum2").textContent = "centre-to-centre " + fmt(res.cc) + " m";
   el("warn").hidden = !(res.spacing !== null && res.spacing < 0);
