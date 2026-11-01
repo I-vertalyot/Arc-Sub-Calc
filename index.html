@@ -632,7 +632,7 @@ document.querySelectorAll(".field input").forEach(function (inp) {
     wrap.appendChild(r);
   });
 })();
-/* the empty venue box suggests a new funny name every second */
+/* the empty venue box suggests a new funny name every 2 seconds */
 (function () {
   var v = el("venue"), timer = null, prev = "";
   function suggest() {
@@ -640,7 +640,7 @@ document.querySelectorAll(".field input").forEach(function (inp) {
     while (n === prev && t++ < 5) n = nextUntitled();
     prev = n; v.placeholder = n;
   }
-  function start() { if (timer || v.value || document.activeElement === v) return; suggest(); timer = setInterval(suggest, 1000); }
+  function start() { if (timer || v.value || document.activeElement === v) return; suggest(); timer = setInterval(suggest, 2000); }
   function stop() { clearInterval(timer); timer = null; }
   v.addEventListener("focus", stop);
   v.addEventListener("blur", function () { if (!v.value) start(); });
