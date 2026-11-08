@@ -144,6 +144,7 @@ h1 {
 .guideSteps li { counter-increment: g; position: relative; padding-left: 38px; font-size: 14px; line-height: 1.4; }
 .guideSteps li::before { content: counter(g); position: absolute; left: 0; top: 0; width: 26px; height: 26px; display: grid; place-items: center; background: var(--terra); color: var(--on-terra); font: 700 14px var(--font-display); border-radius: 2px; }
 .guideSteps b { font-weight: 700; }
+#installBtn { margin-left: 10px; }
 .guideTip { margin: 0 0 16px; font-size: 13px; color: var(--ink-soft); }
 .guideClose { appearance: none; cursor: pointer; position: absolute; top: 12px; right: 12px; width: 32px; height: 32px; padding: 0; border: 2px solid var(--ink-soft); border-radius: 2px; background: var(--well); color: var(--ink); font: 700 20px/1 var(--font-body); }
 .swatches { display: flex; gap: 10px; margin: 10px 0 6px; }
@@ -417,7 +418,9 @@ th .u { margin-top: 4px; font-size: 10px; font-weight: 500; letter-spacing: 0.04
       <li><b>Save it.</b> Add a venue and a setup name, then press Save results. Load, copy or delete it later under Saved setups.</li>
     </ol>
     <p class="guideTip">Press and drag the little fader at the right of a number up or down to change it. Tap any small <b>i</b> or underlined column name to see what it means.</p>
+    <p class="guideTip" id="installTip">Use it like a regular app: in Chrome on Android tap the ⋮ menu → <b>Install app</b> (or press the Install button here when it appears).</p>
     <button class="btn main" id="guideOk" type="button">Got it</button>
+    <button class="btn" id="installBtn" type="button" hidden>Install app</button>
   </div>
 </div>
 <div class="pop" id="pop" role="dialog" aria-live="polite" hidden></div>
@@ -886,6 +889,19 @@ function openBgPop() {
   el("guideOk").addEventListener("click", closeGuide);
   g.addEventListener("click", function (e) { if (e.target === g) closeGuide(); });
   document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !g.hidden) closeGuide(); });
+})();
+/* Install as an app (Chrome / Android): show an Install button when the browser offers it */
+(function () {
+  var deferred = null, btn = el("installBtn"), tip = el("installTip");
+  var standalone = (window.matchMedia && matchMedia("(display-mode: standalone)").matches) || navigator.standalone;
+  if (standalone) { tip.hidden = true; return; }
+  window.addEventListener("beforeinstallprompt", function (e) { e.preventDefault(); deferred = e; btn.hidden = false; });
+  btn.addEventListener("click", function () {
+    if (!deferred) return;
+    deferred.prompt();
+    deferred.userChoice.then(function () { deferred = null; btn.hidden = true; });
+  });
+  window.addEventListener("appinstalled", function () { deferred = null; btn.hidden = true; tip.hidden = true; });
 })();
 el("themeSwitch").addEventListener("click", function () { theme.mode = theme.mode === "dark" ? "light" : "dark"; applyTheme(true); });
 el("bgBtn").addEventListener("click", function (e) { e.stopPropagation(); if (popKey === "bg") closePop(); else openBgPop(); });

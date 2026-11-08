@@ -1,13 +1,24 @@
 {
+  "id": "./",
   "name": "Arc Sub Calc",
   "short_name": "Arc Sub Calc",
   "description": "Calculator for the spacing and delays of an arc subwoofer line.",
-  "start_url": ".",
-  "scope": ".",
+  "lang": "en",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
   "orientation": "any",
   "background_color": "#ec4f3a",
   "theme_color": "#ec4f3a",
+  "categories": [
+    "music",
+    "utilities",
+    "productivity"
+  ],
   "icons": [
     {
       "src": "icon-192.png",
@@ -32,6 +43,29 @@
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "screenshots/phone-1.png",
+      "sizes": "540x960",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Spacing, radius and delay at a glance"
+    },
+    {
+      "src": "screenshots/phone-2.png",
+      "sizes": "540x960",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Inputs and the delay table"
+    },
+    {
+      "src": "screenshots/desktop.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Arc Sub Calc on a large screen"
     }
   ]
 }
