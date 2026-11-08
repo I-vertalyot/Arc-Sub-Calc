@@ -369,7 +369,7 @@ th .u { margin-top: 4px; font-size: 10px; font-weight: 500; letter-spacing: 0.04
         <div class="field"><label for="h">Humidity (%)</label><input id="h" type="number" inputmode="decimal" step="any" value="63"></div>
         <div class="field wide"><label for="m">Edge margin each end (m)</label><input id="m" type="number" inputmode="decimal" step="any" value="0"></div>
       </div>
-      <p class="hint">Spacing is calculated from the line length, box count and box width. The margin only shifts box positions and does not change the spacing.</p>
+      <p class="hint">Spacing is calculated from the line length, box count and box width. The edge margin is kept free at both ends of the line, so the boxes are squeezed closer together.</p>
     </section>
 
     <section>
@@ -412,7 +412,7 @@ th .u { margin-top: 4px; font-size: 10px; font-weight: 500; letter-spacing: 0.04
     <ol class="guideSteps">
       <li><b>Enter your setup.</b> Number of boxes, box width, line length and arc angle.</li>
       <li><b>Add the air.</b> Temperature and humidity change the speed of sound, so the delays stay accurate.</li>
-      <li><b>Optional margin.</b> Edge margin moves the boxes in from the ends and does not change the spacing.</li>
+      <li><b>Optional margin.</b> Edge margin keeps the ends of the line free, so the boxes sit closer together.</li>
       <li><b>Read the result.</b> The big circle shows the box spacing. The small circles show radius and centre-to-centre length. The drawing previews the arc.</li>
       <li><b>Set the delays.</b> In the table, type each box's Norm. delay into your processor. The box with the smallest delay reads 0.</li>
       <li><b>Save it.</b> Add a venue name, then press Save results. Load, copy or delete it later under Saved setups.</li>
@@ -433,8 +433,8 @@ var LABELS = { n: "Number of boxes", w: "Box width (m)", l: "Line length (m)", a
 function compute(inp) {
   var N = Math.floor(inp.n), w = inp.w, L = inp.l, arc = inp.arc, T = inp.t, H = inp.h, M = inp.m;
   var c = 0.606 * T + 0.0124 * H + 331.3;
-  var spacing = N !== 1 ? (L - N * w) / (N - 1) : 0;
-  var cc = L - w;
+  var spacing = N !== 1 ? (L - 2 * M - N * w) / (N - 1) : 0;
+  var cc = L - 2 * M - w;
   var s = Math.sin(arc / 2 * Math.PI / 180);
   var R = s ? cc / (2 * s) : 0;
   var rows = [];
