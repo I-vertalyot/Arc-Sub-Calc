@@ -495,7 +495,7 @@ function render() {
   el("radius").textContent = fmt(res.R);
   el("length").textContent = fmt(res.cc);
   el("sum1").textContent = res.N + " boxes · " + fmt(inp.l, 2).replace(/\.?0+$/, "") + " m · " + fmt(inp.arc, 0) + "°";
-  if (setupAuto) el("setup").value = el("sum1").textContent;
+  if (setupAuto) el("setup").value = res.N + " boxes · centre–centre " + fmt(res.cc, 2) + " m · spacing " + fmt(res.spacing, 3) + " m";
   el("warn").hidden = !(res.spacing !== null && res.spacing < 0);
   var body = el("body");
   body.innerHTML = res.rows.map(function (r) {
