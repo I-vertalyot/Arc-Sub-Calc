@@ -721,7 +721,7 @@ function renderList() {
     var r = it.results || {}, inp = it.inputs || {};
     var card = mk("div", "card");
     card.appendChild(mk("h3", "", it.venue || "Untitled venue"));
-    if (it.setup) card.appendChild(mk("p", "setupName", it.setup));
+    if (it.setup && !/^\d+ boxes ·/.test(it.setup)) card.appendChild(mk("p", "setupName", it.setup));
     card.appendChild(mk("p", "meta", fmtDate(it.savedAt) + " · " + Math.floor(inp.n || 0) + " boxes · " + (inp.l || 0) + " m line · " + (inp.arc || 0) + "° arc · " + (inp.t || 0) + " °C / " + (inp.h || 0) + " %"));
     var st = mk("div", "stats");
     [["Spacing", r.spacing, "m"], ["Radius", r.radius, "m"], ["Centre–centre", Number.isFinite(r.centreToCentre) ? r.centreToCentre : (inp.l - inp.w), "m"], ["Speed", r.speedOfSound, "m/s"]].forEach(function (x) {
