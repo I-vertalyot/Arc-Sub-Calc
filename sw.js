@@ -1,7 +1,7 @@
 /* Arc Sub Calc service worker: lets the app install and open offline.
    Pages: network first (so updates show up), cached copy when offline.
    Icons / fonts: cached after first use. */
-const CACHE = "arc-sub-calc-v2";
+const CACHE = "arc-sub-calc-v3";
 const SHELL = ["./", "index.html", "manifest.webmanifest", "favicon.svg", "favicon-32.png", "apple-touch-icon.png", "icon-192.png", "icon-512.png", "icon-maskable-512.png"];
 
 self.addEventListener("install", (e) => {
