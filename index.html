@@ -387,7 +387,7 @@ th .u { margin-top: 4px; font-size: 10px; font-weight: 500; letter-spacing: 0.04
       <h2>Save setup</h2>
       <div class="fields">
         <div class="field wide"><label for="venue">Venue</label><input id="venue" class="txt" type="text" maxlength="80" autocomplete="off" placeholder="Phase-Aligned Pink Noise Pub"></div>
-        <div class="field wide"><label for="setup">Setup name</label><input id="setup" class="txt" type="text" maxlength="80" autocomplete="off" placeholder="e.g. Main sub arc, 8 boxes"></div>
+        <div class="field wide"><label for="setup">Setup details</label><input id="setup" class="txt" type="text" maxlength="80" autocomplete="off" placeholder="e.g. Main arc, 8 boxes, stage left"></div>
       </div>
       <div class="actions saveRow">
         <button class="btn main" id="save" type="button">Save results</button>
@@ -415,7 +415,7 @@ th .u { margin-top: 4px; font-size: 10px; font-weight: 500; letter-spacing: 0.04
       <li><b>Optional margin.</b> Edge margin moves the boxes in from the ends and does not change the spacing.</li>
       <li><b>Read the result.</b> The big circle shows the box spacing. The small circles show radius and centre-to-centre length. The drawing previews the arc.</li>
       <li><b>Set the delays.</b> In the table, type each box's Norm. delay into your processor. The box with the smallest delay reads 0.</li>
-      <li><b>Save it.</b> Add a venue and a setup name, then press Save results. Load, copy or delete it later under Saved setups.</li>
+      <li><b>Save it.</b> Add a venue and setup details, then press Save results. Load, copy or delete it later under Saved setups.</li>
     </ol>
     <p class="guideTip">Press and drag the little fader at the right of a number up or down to change it. Tap any small <b>i</b> or underlined column name to see what it means.</p>
     <p class="guideTip" id="installTip">Use it like a regular app: in Chrome on Android tap the ⋮ menu → <b>Install app</b> (or press the Install button here when it appears).</p>
@@ -716,7 +716,7 @@ function mk(tag, cls, text) { var n = document.createElement(tag); if (cls) n.cl
 
 function renderList() {
   var box = el("saved"); box.textContent = "";
-  if (!items.length) { box.appendChild(mk("div", "emptyList", "Nothing saved yet. Enter the venue and setup name above, then press Save results.")); return; }
+  if (!items.length) { box.appendChild(mk("div", "emptyList", "Nothing saved yet. Enter the venue and setup details above, then press Save results.")); return; }
   items.forEach(function (it) {
     var r = it.results || {}, inp = it.inputs || {};
     var card = mk("div", "card");
