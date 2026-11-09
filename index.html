@@ -1072,26 +1072,26 @@ if ("serviceWorker" in navigator && (location.protocol === "https:" || location.
 /* Background: soft glow plus rings that spread out like sound waves in the air */
 (function () {
   var cv = document.getElementById("bgwave"); if (!cv || !cv.getContext) return;
-  var ctx = cv.getContext("2d"), W = 0, H = 0, dpr = 1, col = [236, 79, 58], t0 = performance.now(), raf = 0, last = 0, lastCol = 0;
+  var ctx = cv.getContext("2d"), W = 0, H = 0, dpr = 1, col = [140, 140, 140], gnd = [0, 0, 0], t0 = performance.now(), raf = 0, last = 0, lastCol = 0;
   function rgb(s) {
     s = String(s).trim(); var m = /^#([0-9a-f]{6})$/i.exec(s);
     if (m) return [parseInt(m[1].slice(0, 2), 16), parseInt(m[1].slice(2, 4), 16), parseInt(m[1].slice(4, 6), 16)];
     m = /^#([0-9a-f]{3})$/i.exec(s); if (m) return m[1].split("").map(function (c) { return parseInt(c + c, 16); });
     return null;
   }
-  function readCol() { var c = rgb(getComputedStyle(document.documentElement).getPropertyValue("--ink-soft")); if (c) { var g = Math.round((c[0] + c[1] + c[2]) / 3); col = [g, g, g]; } }
+  function readCol() { var c = rgb(getComputedStyle(document.documentElement).getPropertyValue("--ink-soft")); if (c) { var g = Math.round((c[0] + c[1] + c[2]) / 3); col = [g, g, g]; } var d = rgb(getComputedStyle(document.documentElement).getPropertyValue("--ground")); if (d) gnd = d; }
   function size() { dpr = Math.min(window.devicePixelRatio || 1, 1.5); W = window.innerWidth; H = window.innerHeight; cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); }
   function draw(now) {
     var t = (now - t0) / 1000, c = "rgba(" + col[0] + "," + col[1] + "," + col[2] + ",";
     ctx.clearRect(0, 0, W, H);
-    var cx = W * (0.5 + 0.12 * Math.sin(t * 0.13)), cy = H * (0.88 + 0.04 * Math.sin(t * 0.17)), maxR = Math.hypot(W, H) * 0.95;
+    var S = Math.max(90, Math.min(150, Math.min(W, H) * 0.2)), cx = W / 2, cy = H - S * 0.78, maxR = Math.hypot(W, H) * 0.95, r0 = S * 0.42;
     var g = ctx.createRadialGradient(cx, cy, 0, cx, cy, maxR * 0.8);
     g.addColorStop(0, c + "0.30)"); g.addColorStop(0.5, c + "0.10)"); g.addColorStop(1, c + "0)");
     ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
-    var N = 9, gap = maxR / N, speed = maxR / 18;
+    var N = 9, span = maxR - r0, gap = span / N, speed = span / 18, period = gap / speed;
     ctx.lineJoin = "round"; ctx.lineCap = "round";
     for (var i = 0; i < N + 1; i++) {
-      var r = (t * speed + i * gap) % maxR, k = r / maxR, a = Math.pow(1 - k, 1.6) * Math.min(1, k * 8) * 0.85;
+      var r = r0 + (t * speed + i * gap) % span, k = (r - r0) / span, a = Math.pow(1 - k, 1.6) * Math.min(1, k * 8) * 0.85;
       if (a < 0.01) continue;
       var pts = [];
       for (var s = 0; s <= 120; s++) {
@@ -1104,6 +1104,20 @@ if ("serviceWorker" in navigator && (location.protocol === "https:" || location.
         ctx.stroke();
       });
     }
+    /* the subwoofer: cabinet, surround and a cone that pushes out as each wave leaves */
+    var gc = "rgba(" + gnd[0] + "," + gnd[1] + "," + gnd[2] + ",1)", push = 0.5 + 0.5 * Math.sin(t * 2 * Math.PI / period), x0 = cx - S / 2, y0 = cy - S / 2;
+    ctx.lineJoin = "round";
+    ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x0, y0, S, S, S * 0.09) : ctx.rect(x0, y0, S, S);
+    ctx.fillStyle = gc; ctx.fill(); ctx.fillStyle = c + "0.14)"; ctx.fill();
+    ctx.lineWidth = 2; ctx.strokeStyle = c + "0.55)"; ctx.stroke();
+    [[x0 + S * 0.09, y0 + S * 0.09], [x0 + S * 0.91, y0 + S * 0.09], [x0 + S * 0.09, y0 + S * 0.91], [x0 + S * 0.91, y0 + S * 0.91]].forEach(function (q) {
+      ctx.beginPath(); ctx.arc(q[0], q[1], S * 0.025, 0, 7); ctx.fillStyle = c + "0.5)"; ctx.fill();
+    });
+    ctx.beginPath(); ctx.arc(cx, cy, S * 0.4, 0, 7); ctx.lineWidth = 3; ctx.strokeStyle = c + "0.6)"; ctx.stroke();
+    var cone = S * (0.31 + 0.025 * push);
+    ctx.beginPath(); ctx.arc(cx, cy, cone, 0, 7); ctx.fillStyle = c + (0.16 + 0.1 * push).toFixed(2) + ")"; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = c + "0.55)"; ctx.stroke();
+    ctx.beginPath(); ctx.arc(cx, cy, cone * 0.55, 0, 7); ctx.lineWidth = 1.5; ctx.strokeStyle = c + "0.3)"; ctx.stroke();
+    ctx.beginPath(); ctx.arc(cx, cy, S * (0.1 + 0.015 * push), 0, 7); ctx.fillStyle = c + "0.5)"; ctx.fill();
   }
   function frame(now) {
     raf = requestAnimationFrame(frame);
