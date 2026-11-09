@@ -18,7 +18,7 @@ img { max-width: 100%; }
 [hidden] { display: none !important; }
 </style>
 <title>Sub ARC Calc</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Oxanium:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Oxanium:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
 <style>
 /* Poster style (after the "1984" cover): flat vermilion / cream / ink-olive, hard edges and offset shadows, halftone dots and print grain, squared display type. */
 :root {
@@ -319,6 +319,71 @@ th .u { margin-top: 4px; font-size: 10px; font-weight: 500; letter-spacing: 0.04
   .qbtn.inline { margin-left: 1px; width: 16px; height: 16px; font-size: 10px; line-height: 12px; }
 }
 @media (prefers-reduced-motion: no-preference) { .btn { transition: transform 0.08s, box-shadow 0.08s; } }
+
+/* ---------- Style switch: Console and Rack Panel looks (the poster look above stays the default) ---------- */
+html[data-style="console"], html[data-style="rack"] { --font-display: "IBM Plex Mono", ui-monospace, Menlo, monospace; --font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif; }
+html[data-style="console"] body::before, html[data-style="console"] body::after, html[data-style="rack"] body::before, html[data-style="rack"] body::after { display: none; }
+html[data-style="console"] .panel, html[data-style="rack"] .panel { box-shadow: none !important; border-width: 1px; border-radius: 4px; }
+html[data-style="console"] .layout, html[data-style="rack"] .layout { gap: 16px; }
+@media (max-width: 979px) {
+  html[data-style="console"] .layout, html[data-style="rack"] .layout { gap: 14px; }
+  html[data-style="console"] .layout > .panel, html[data-style="rack"] .layout > .panel { border: 1px solid var(--panel-edge) !important; padding: 20px 16px; }
+}
+html[data-style="console"] h1, html[data-style="rack"] h1 { font-size: 30px; font-weight: 600; letter-spacing: 0.02em; line-height: 1.05; margin-bottom: 6px; }
+html[data-style="rack"] h1 { font-weight: 700; letter-spacing: 0.14em; font-size: 24px; }
+html[data-style="console"] h2, html[data-style="rack"] h2 { font-family: var(--font-body); font-size: 13px; font-weight: 600; letter-spacing: 0.14em; margin-bottom: 12px; }
+html[data-style="console"] h2::after, html[data-style="rack"] h2::after { height: 1px; width: 100%; margin-top: 6px; background: var(--panel-edge); }
+html[data-style="console"] .summary, html[data-style="rack"] .summary { font-family: var(--font-display); font-size: 12px; color: var(--ink-soft); }
+html[data-style="console"] .speed b, html[data-style="rack"] .speed b { font-size: 15px; font-weight: 500; }
+html[data-style="console"] .stage, html[data-style="rack"] .stage { aspect-ratio: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; container-type: normal; }
+html[data-style="console"] .stage > *, html[data-style="rack"] .stage > * { position: static; border-radius: 3px; width: auto; aspect-ratio: auto; box-shadow: none; }
+html[data-style="console"] .hero, html[data-style="rack"] .hero { grid-column: 1 / -1; padding: 12px 14px; place-content: start; background: var(--well); color: var(--terra); border: 1px solid var(--panel-edge); overflow: visible; }
+html[data-style="console"] .hero::before, html[data-style="rack"] .hero::before, html[data-style="console"] .lens::after, html[data-style="rack"] .lens::after, html[data-style="console"] .dot, html[data-style="rack"] .dot { display: none; }
+html[data-style="console"] .hero .lab, html[data-style="rack"] .hero .lab, html[data-style="console"] .chip .lab, html[data-style="rack"] .chip .lab { font-size: 10.5px; letter-spacing: 0.1em; color: var(--ink-soft); }
+html[data-style="console"] .hero .big, html[data-style="rack"] .hero .big { font-size: 44px; font-weight: 500; margin-top: 4px; }
+html[data-style="console"] .hero .big i, html[data-style="rack"] .hero .big i { font-size: 15px; margin-left: 4px; color: var(--ink-soft); }
+html[data-style="console"] .hero .sub, html[data-style="rack"] .hero .sub { font-size: 12px; color: var(--ink-soft); font-weight: 500; margin-top: 4px; }
+html[data-style="console"] .hero .warn, html[data-style="rack"] .hero .warn { font-size: 12px; padding: 3px 10px; margin-top: 8px; }
+html[data-style="console"] .chip, html[data-style="rack"] .chip { position: relative; padding: 10px 12px; place-content: start; text-align: left; background: var(--well); border: 1px solid var(--panel-edge); }
+html[data-style="console"] .chip .val, html[data-style="rack"] .chip .val { font-size: 24px; font-weight: 500; margin-top: 2px; color: var(--terra); }
+html[data-style="console"] .chip .val i, html[data-style="rack"] .chip .val i { font-size: 12px; }
+html[data-style="console"] .chip .qbtn, html[data-style="rack"] .chip .qbtn { top: 8px; right: 8px; }
+html[data-style="console"] .lens, html[data-style="rack"] .lens { grid-column: 1 / -1; aspect-ratio: 7 / 5 !important; background: var(--well); border: 1px solid var(--panel-edge); box-shadow: none; overflow: hidden; }
+html[data-style="console"] .field input, html[data-style="rack"] .field input { border: 1px solid var(--panel-edge); border-bottom-width: 1px; border-radius: 3px; font-weight: 500; }
+html[data-style="console"] .field input:focus-visible, html[data-style="rack"] .field input:focus-visible { border-color: var(--terra); }
+html[data-style="console"] .field label, html[data-style="rack"] .field label { font-size: 10.5px; letter-spacing: 0.1em; }
+html[data-style="console"] .btn, html[data-style="rack"] .btn { box-shadow: none; border-width: 1px; border-radius: 3px; }
+html[data-style="console"] .btn:active, html[data-style="rack"] .btn:active { transform: translateY(1px); }
+html[data-style="console"] .card, html[data-style="rack"] .card { box-shadow: none; border-width: 1px; border-left-width: 3px; border-radius: 3px; }
+html[data-style="console"] .btn.sm, html[data-style="rack"] .btn.sm { box-shadow: none; }
+html[data-style="console"] .pop, html[data-style="rack"] .pop, html[data-style="console"] .guideBox, html[data-style="rack"] .guideBox { box-shadow: none; border-width: 1px; border-radius: 4px; }
+html[data-style="console"] td:first-child, html[data-style="rack"] td:first-child { border-left-width: 3px; font-weight: 600; }
+html[data-style="console"] td, html[data-style="rack"] td { font-family: var(--font-display); font-size: 13px; }
+html[data-style="console"] .norm, html[data-style="rack"] .norm { border-radius: 2px; font-weight: 600; }
+html[data-style="console"] .themeSwitch, html[data-style="console"] .bgBtn, html[data-style="rack"] .themeSwitch, html[data-style="rack"] .bgBtn { display: none; }
+/* Rack Panel only: grey faceplate, dark segment display, physical keys */
+html[data-style="rack"] .hero .big, html[data-style="rack"] .chip .val, html[data-style="rack"] .speed b { text-shadow: 0 0 6px color-mix(in srgb, var(--terra) 45%, transparent); }
+html[data-style="rack"] .hero, html[data-style="rack"] .chip, html[data-style="rack"] .lens { box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.7) !important; border: 2px solid #6c7175; }
+html[data-style="rack"] .panel { border-width: 2px; box-shadow: inset 0 0 0 4px #b9bcbf !important; }
+html[data-style="rack"] .field input { box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.25); }
+html[data-style="rack"] .btn { border-bottom-width: 3px; text-transform: uppercase; letter-spacing: 0.1em; }
+html[data-style="rack"] .btn.main { background: #e1e3e4; color: var(--ink); border-color: #6c7175; }
+html[data-style="rack"] .hero .lab, html[data-style="rack"] .chip .lab, html[data-style="rack"] .hero .big i, html[data-style="rack"] .chip .val i, html[data-style="rack"] .hero .sub { color: #8c9a6a; }
+html[data-style="rack"] .lens .cap { fill: #8c9a6a; }
+html[data-style="rack"] .lens .st { stroke: #8c9a6a; }
+html[data-style="rack"] .lens .pt { fill: #e9ffa0; }
+.styleBtn { appearance: none; cursor: pointer; flex: none; width: 32px; height: 32px; padding: 0; border-radius: 50%; border: 3px solid var(--ink-soft); background: var(--well); color: var(--ink); font: 700 12px/1 var(--font-display); letter-spacing: -0.02em; }
+.styleBtn:hover, .styleBtn[aria-expanded="true"] { border-color: var(--terra); }
+.styleBtn:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+.styleList { display: grid; gap: 6px; margin: 8px 0 2px; }
+.styleOpt { appearance: none; cursor: pointer; text-align: left; font: 600 13px var(--font-body); color: var(--ink); background: var(--well); border: 2px solid var(--ink-soft); border-radius: 3px; padding: 8px 10px; }
+.styleOpt[aria-pressed="true"] { border-color: var(--terra); box-shadow: inset 4px 0 0 var(--terra); }
+.styleOpt span { display: block; font-weight: 400; font-size: 12px; color: var(--ink-soft); }
+html[data-style="console"] .chip, html[data-style="rack"] .chip { left: auto !important; right: auto !important; top: auto !important; }
+html[data-style="rack"] .field input { background: #dcdfe0; color: #23262a; }
+html[data-style="rack"] .field input.txt::placeholder { color: #4a4f54; }
+html[data-style="rack"] .helpBtn, html[data-style="rack"] .styleBtn { background: #dcdfe0; color: #23262a; border-color: #6c7175; }
+html[data-style="rack"] .clr { color: #4a4f54; border-color: #6c7175; }
 </style>
 
 </head><body>
@@ -332,6 +397,7 @@ th .u { margin-top: 4px; font-size: 10px; font-weight: 500; letter-spacing: 0.04
       <div class="speed">
         <div class="ctrls">
           <button class="helpBtn" id="helpBtn" type="button" aria-haspopup="dialog" aria-label="How to use this app" title="How to use">?</button>
+          <button class="styleBtn" id="styleBtn" type="button" aria-label="Change style" aria-expanded="false" title="Style">Aa</button>
           <button class="bgBtn" id="bgBtn" type="button" aria-label="Change background" aria-expanded="false" title="Background"></button>
           <button class="themeSwitch" id="themeSwitch" type="button" role="switch" aria-checked="true" aria-label="Dark mode" title="Dark / light mode"><svg class="bg l" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.6M12 18.9v2.6M2.5 12h2.6M18.9 12h2.6M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></svg><svg class="bg r" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7z"/></svg><span class="knob">
             <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.6M12 18.9v2.6M2.5 12h2.6M18.9 12h2.6M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></svg>
@@ -353,7 +419,7 @@ th .u { margin-top: 4px; font-size: 10px; font-weight: 500; letter-spacing: 0.04
       <div class="chip a"><div><div class="lab">Radius</div><div class="val"><span id="radius">11.781</span><i>m</i></div></div><button class="qbtn" type="button" data-help="radius" aria-expanded="false" aria-label="What is radius?">i</button></div>
       <div class="chip b"><div><div class="lab">Centre–centre</div><div class="val"><span id="length">12.660</span><i>m</i></div></div><button class="qbtn" type="button" data-help="centre" aria-expanded="false" aria-label="What is centre-to-centre length?">i</button></div>
       <div class="dot" aria-hidden="true"></div>
-      <div class="lens"><svg id="arcsvg" viewBox="0 0 200 200" role="img" aria-label="Diagram of the box line and the virtual arc"></svg></div>
+      <div class="lens"><svg id="arcsvg" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Diagram of the box line and the virtual arc"></svg></div>
     </div>
   </div>
 
@@ -803,6 +869,7 @@ function closePop() {
   popKey = null; popBtn = null;
   el("pop").hidden = true;
   if (el("bgBtn")) el("bgBtn").setAttribute("aria-expanded", "false");
+  if (el("styleBtn")) el("styleBtn").setAttribute("aria-expanded", "false");
   document.querySelectorAll("[data-help]").forEach(function (b) { b.setAttribute("aria-expanded", "false"); });
 }
 function openPop(btn) {
@@ -846,19 +913,52 @@ var ACCENT = {
   dark:  { "--terra": "#ee5540", "--terra-hi": "#ee5540", "--terra-btn": "#ee5540", "--on-terra": "#1f1d19", "--halo": "#e5e2d0", "--warn": "#ff8f7a", "--pill-bg": "#1f1d19", "--pill-fg": "#ece8d6", "--qhero": "#1f1d19", "--qopen": "#ece8d6" },
   light: { "--terra": "#c83b27", "--terra-hi": "#c83b27", "--terra-btn": "#c83b27", "--on-terra": "#f4f0e0", "--halo": "#2e2b25", "--warn": "#a3341f", "--pill-bg": "#2e2b25", "--pill-fg": "#f4f0e0", "--qhero": "#2e2b25", "--qopen": "#2e2b25" }
 };
-var theme = { mode: "dark", bg: "poster" };
+var STYLES = [
+  { id: "poster", name: "Poster", note: "Bold colour blocks, current look" },
+  { id: "console", name: "Console", note: "Dark graphite, cyan readouts" },
+  { id: "rack", name: "Rack Panel", note: "Grey faceplate, green display" }
+];
+var FIXED = {
+  console: { colors: ["#0e1013", "#0e1013", "#15181b", "#2a3035", "#1b1f23", "#0e1013", "#0e1013", "#0e1013", "#d7dde2", "#8a959d", "transparent", "transparent"],
+    acc: { "--terra": "#5fd4e8", "--terra-hi": "#5fd4e8", "--terra-btn": "#5fd4e8", "--on-terra": "#0e1013", "--halo": "#2a3035", "--warn": "#ffb86b", "--pill-bg": "#5fd4e8", "--pill-fg": "#0e1013", "--qhero": "#2a3035", "--qopen": "#d7dde2" }, mode: "dark", theme: "#0e1013" },
+  rack: { colors: ["#6f7478", "#6f7478", "#c9ccce", "#6c7175", "#dcdfe0", "#1a1d16", "#1a1d16", "#1a1d16", "#23262a", "#4a4f54", "transparent", "transparent"],
+    acc: { "--terra": "#d6ff5a", "--terra-hi": "#d6ff5a", "--terra-btn": "#d6ff5a", "--on-terra": "#14170d", "--halo": "#6c7175", "--warn": "#b3361f", "--pill-bg": "#14170d", "--pill-fg": "#d6ff5a", "--qhero": "#14170d", "--qopen": "#23262a" }, mode: "light", theme: "#6f7478" }
+};
+var theme = { mode: "dark", bg: "poster", style: "poster" };
 function presetById(id) { for (var i = 0; i < PRESETS.length; i++) if (PRESETS[i].id === id) return PRESETS[i]; return PRESETS[0]; }
 function applyTheme(save) {
-  var root = document.documentElement, pr = presetById(theme.bg), vals = pr[theme.mode], acc = ACCENT[theme.mode];
+  var root = document.documentElement, fx = FIXED[theme.style];
+  var pr = presetById(theme.bg), mode = fx ? fx.mode : theme.mode, vals = fx ? fx.colors : pr[theme.mode], acc = fx ? fx.acc : ACCENT[theme.mode];
   KEYS.forEach(function (k, i) { root.style.setProperty(k, vals[i]); });
   Object.keys(acc).forEach(function (k) { root.style.setProperty(k, acc[k]); });
-  root.style.colorScheme = theme.mode;
-  root.setAttribute("data-theme", theme.mode);
+  root.style.colorScheme = mode;
+  root.setAttribute("data-theme", mode);
+  root.setAttribute("data-style", theme.style);
   var sw = el("themeSwitch"); sw.setAttribute("aria-checked", theme.mode === "dark" ? "true" : "false");
   el("bgBtn").style.setProperty("--swatch", "linear-gradient(135deg, " + vals[0] + " 50%, " + vals[2] + " 50%)");
-  var meta = document.querySelector('meta[name="theme-color"]'); if (meta) meta.setAttribute("content", vals[0]);
+  var meta = document.querySelector('meta[name="theme-color"]'); if (meta) meta.setAttribute("content", fx ? fx.theme : vals[0]);
   if (popKey === "bg") buildBgPop();
+  if (popKey === "style") buildStylePop();
   if (save) { try { localStorage.setItem("subArcTheme", JSON.stringify(theme)); } catch (e) {} }
+}
+function buildStylePop() {
+  var pop = el("pop"); pop.textContent = "";
+  pop.appendChild(mk("h4", "", "Style"));
+  var list = mk("div", "styleList");
+  STYLES.forEach(function (x) {
+    var b = mk("button", "styleOpt", x.name); b.type = "button";
+    b.appendChild(mk("span", "", x.note));
+    b.setAttribute("aria-pressed", x.id === theme.style ? "true" : "false");
+    b.addEventListener("click", function (e) { e.stopPropagation(); theme.style = x.id; applyTheme(true); placePop(); });
+    list.appendChild(b);
+  });
+  pop.appendChild(list);
+  pop.appendChild(mk("p", "cap", "Console and Rack Panel use their own colours."));
+}
+function openStylePop() {
+  document.querySelectorAll("[data-help]").forEach(function (b) { b.setAttribute("aria-expanded", "false"); });
+  popKey = "style"; popBtn = el("styleBtn"); el("styleBtn").setAttribute("aria-expanded", "true");
+  buildStylePop(); el("pop").hidden = false; placePop();
 }
 function buildBgPop() {
   var pop = el("pop"); pop.textContent = "";
@@ -904,11 +1004,13 @@ function openBgPop() {
   window.addEventListener("appinstalled", function () { deferred = null; btn.hidden = true; tip.hidden = true; });
 })();
 el("themeSwitch").addEventListener("click", function () { theme.mode = theme.mode === "dark" ? "light" : "dark"; applyTheme(true); });
+el("styleBtn").addEventListener("click", function (e) { e.stopPropagation(); if (popKey === "style") closePop(); else openStylePop(); });
 el("bgBtn").addEventListener("click", function (e) { e.stopPropagation(); if (popKey === "bg") closePop(); else openBgPop(); });
 try {
   var st = JSON.parse(localStorage.getItem("subArcTheme") || "null");
   if (st && (st.mode === "dark" || st.mode === "light")) theme.mode = st.mode;
   if (st && PRESETS.some(function (p) { return p.id === st.bg; })) theme.bg = st.bg;
+  if (st && STYLES.some(function (x) { return x.id === st.style; })) theme.style = st.style;
 } catch (e) {}
 applyTheme(false);
 
