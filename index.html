@@ -376,9 +376,10 @@ html[data-style="rack"] .lens .pt { fill: #e9ffa0; }
 .styleBtn:hover, .styleBtn[aria-expanded="true"] { border-color: var(--terra); }
 .styleBtn:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
 .styleList { display: grid; gap: 6px; margin: 8px 0 2px; }
-.styleOpt { appearance: none; cursor: pointer; text-align: left; font: 600 13px var(--font-body); color: var(--ink); background: var(--well); border: 2px solid var(--ink-soft); border-radius: 3px; padding: 8px 10px; }
+.styleOpt { appearance: none; cursor: pointer; text-align: left; font: 600 13px var(--font-body); color: var(--ink); background: var(--surface); border: 2px solid var(--ink-soft); border-radius: 3px; padding: 8px 10px; }
 .styleOpt[aria-pressed="true"] { border-color: var(--terra); box-shadow: inset 4px 0 0 var(--terra); }
 .styleOpt span { display: block; font-weight: 400; font-size: 12px; color: var(--ink-soft); }
+html[data-style="rack"] .styleOpt[aria-pressed="true"] { border-color: #23262a; box-shadow: inset 4px 0 0 #23262a; }
 html[data-style="console"] .chip, html[data-style="rack"] .chip, html[data-style="datasheet"] .chip, html[data-style="night"] .chip { left: auto !important; right: auto !important; top: auto !important; }
 html[data-style="rack"] .field input { background: #dcdfe0; color: #23262a; }
 html[data-style="rack"] .field input.txt::placeholder { color: #4a4f54; }
