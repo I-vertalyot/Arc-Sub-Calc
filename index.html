@@ -579,7 +579,7 @@ function drawArc(res, inp) {
   });
   if (pts.length > 1) out += '<path class="arc" d="M' + pts.map(function (p) { return p[0].toFixed(1) + " " + p[1].toFixed(1); }).join(" L") + '"/>';
   pts.forEach(function (p) { out += '<circle class="pt" cx="' + p[0].toFixed(1) + '" cy="' + p[1].toFixed(1) + '" r="2"/>'; });
-  out += '<text class="cap" x="100" y="160">' + (pts.length ? "virtual arc, height ×" + fmt(k, 1) : "arc cannot be calculated") + "</text>";
+  if (!pts.length) out += '<text class="cap" x="100" y="160">arc cannot be calculated</text>';
   svg.innerHTML = out;
 }
 
