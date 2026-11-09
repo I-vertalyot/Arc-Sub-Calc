@@ -18,7 +18,7 @@ img { max-width: 100%; }
 [hidden] { display: none !important; }
 </style>
 <title>Sub ARC Calc</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Oxanium:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Oxanium:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap">
 <style>
 /* Poster style (after the "1984" cover): flat vermilion / cream / ink-olive, hard edges and offset shadows, halftone dots and print grain, squared display type. */
 :root {
@@ -321,46 +321,46 @@ th .u { margin-top: 4px; font-size: 10px; font-weight: 500; letter-spacing: 0.04
 @media (prefers-reduced-motion: no-preference) { .btn { transition: transform 0.08s, box-shadow 0.08s; } }
 
 /* ---------- Style switch: Console and Rack Panel looks (the poster look above stays the default) ---------- */
-html[data-style="console"], html[data-style="rack"] { --font-display: "IBM Plex Mono", ui-monospace, Menlo, monospace; --font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif; }
-html[data-style="console"] body::before, html[data-style="console"] body::after, html[data-style="rack"] body::before, html[data-style="rack"] body::after { display: none; }
-html[data-style="console"] .panel, html[data-style="rack"] .panel { box-shadow: none !important; border-width: 1px; border-radius: 4px; }
-html[data-style="console"] .layout, html[data-style="rack"] .layout { gap: 16px; }
+html[data-style="console"], html[data-style="rack"], html[data-style="datasheet"], html[data-style="night"] { --font-display: "IBM Plex Mono", ui-monospace, Menlo, monospace; --font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif; }
+html[data-style="console"] body::before, html[data-style="console"] body::after, html[data-style="rack"] body::before, html[data-style="rack"] body::after, html[data-style="datasheet"] body::before, html[data-style="night"] body::before, html[data-style="datasheet"] body::after, html[data-style="night"] body::after { display: none; }
+html[data-style="console"] .panel, html[data-style="rack"] .panel, html[data-style="datasheet"] .panel, html[data-style="night"] .panel { box-shadow: none !important; border-width: 1px; border-radius: 4px; }
+html[data-style="console"] .layout, html[data-style="rack"] .layout, html[data-style="datasheet"] .layout, html[data-style="night"] .layout { gap: 16px; }
 @media (max-width: 979px) {
   html[data-style="console"] .layout, html[data-style="rack"] .layout { gap: 14px; }
   html[data-style="console"] .layout > .panel, html[data-style="rack"] .layout > .panel { border: 1px solid var(--panel-edge) !important; padding: 20px 16px; }
 }
-html[data-style="console"] h1, html[data-style="rack"] h1 { font-size: 30px; font-weight: 600; letter-spacing: 0.02em; line-height: 1.05; margin-bottom: 6px; }
+html[data-style="console"] h1, html[data-style="rack"] h1, html[data-style="datasheet"] h1, html[data-style="night"] h1 { font-size: 30px; font-weight: 600; letter-spacing: 0.02em; line-height: 1.05; margin-bottom: 6px; }
 html[data-style="rack"] h1 { font-weight: 700; letter-spacing: 0.14em; font-size: 24px; }
-html[data-style="console"] h2, html[data-style="rack"] h2 { font-family: var(--font-body); font-size: 13px; font-weight: 600; letter-spacing: 0.14em; margin-bottom: 12px; }
-html[data-style="console"] h2::after, html[data-style="rack"] h2::after { height: 1px; width: 100%; margin-top: 6px; background: var(--panel-edge); }
-html[data-style="console"] .summary, html[data-style="rack"] .summary { font-family: var(--font-display); font-size: 12px; color: var(--ink-soft); }
-html[data-style="console"] .speed b, html[data-style="rack"] .speed b { font-size: 15px; font-weight: 500; }
-html[data-style="console"] .stage, html[data-style="rack"] .stage { aspect-ratio: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; container-type: normal; }
-html[data-style="console"] .stage > *, html[data-style="rack"] .stage > * { position: static; border-radius: 3px; width: auto; aspect-ratio: auto; box-shadow: none; }
-html[data-style="console"] .hero, html[data-style="rack"] .hero { grid-column: 1 / -1; padding: 12px 14px; place-content: start; background: var(--well); color: var(--terra); border: 1px solid var(--panel-edge); overflow: visible; }
-html[data-style="console"] .hero::before, html[data-style="rack"] .hero::before, html[data-style="console"] .lens::after, html[data-style="rack"] .lens::after, html[data-style="console"] .dot, html[data-style="rack"] .dot { display: none; }
-html[data-style="console"] .hero .lab, html[data-style="rack"] .hero .lab, html[data-style="console"] .chip .lab, html[data-style="rack"] .chip .lab { font-size: 10.5px; letter-spacing: 0.1em; color: var(--ink-soft); }
-html[data-style="console"] .hero .big, html[data-style="rack"] .hero .big { font-size: 44px; font-weight: 500; margin-top: 4px; }
-html[data-style="console"] .hero .big i, html[data-style="rack"] .hero .big i { font-size: 15px; margin-left: 4px; color: var(--ink-soft); }
-html[data-style="console"] .hero .sub, html[data-style="rack"] .hero .sub { font-size: 12px; color: var(--ink-soft); font-weight: 500; margin-top: 4px; }
-html[data-style="console"] .hero .warn, html[data-style="rack"] .hero .warn { font-size: 12px; padding: 3px 10px; margin-top: 8px; }
-html[data-style="console"] .chip, html[data-style="rack"] .chip { position: relative; padding: 10px 12px; place-content: start; text-align: left; background: var(--well); border: 1px solid var(--panel-edge); }
-html[data-style="console"] .chip .val, html[data-style="rack"] .chip .val { font-size: 24px; font-weight: 500; margin-top: 2px; color: var(--terra); }
-html[data-style="console"] .chip .val i, html[data-style="rack"] .chip .val i { font-size: 12px; }
-html[data-style="console"] .chip .qbtn, html[data-style="rack"] .chip .qbtn { top: 8px; right: 8px; }
-html[data-style="console"] .lens, html[data-style="rack"] .lens { grid-column: 1 / -1; aspect-ratio: 7 / 5 !important; background: var(--well); border: 1px solid var(--panel-edge); box-shadow: none; overflow: hidden; }
-html[data-style="console"] .field input, html[data-style="rack"] .field input { border: 1px solid var(--panel-edge); border-bottom-width: 1px; border-radius: 3px; font-weight: 500; }
-html[data-style="console"] .field input:focus-visible, html[data-style="rack"] .field input:focus-visible { border-color: var(--terra); }
-html[data-style="console"] .field label, html[data-style="rack"] .field label { font-size: 10.5px; letter-spacing: 0.1em; }
-html[data-style="console"] .btn, html[data-style="rack"] .btn { box-shadow: none; border-width: 1px; border-radius: 3px; }
-html[data-style="console"] .btn:active, html[data-style="rack"] .btn:active { transform: translateY(1px); }
-html[data-style="console"] .card, html[data-style="rack"] .card { box-shadow: none; border-width: 1px; border-left-width: 3px; border-radius: 3px; }
-html[data-style="console"] .btn.sm, html[data-style="rack"] .btn.sm { box-shadow: none; }
-html[data-style="console"] .pop, html[data-style="rack"] .pop, html[data-style="console"] .guideBox, html[data-style="rack"] .guideBox { box-shadow: none; border-width: 1px; border-radius: 4px; }
-html[data-style="console"] td:first-child, html[data-style="rack"] td:first-child { border-left-width: 3px; font-weight: 600; }
-html[data-style="console"] td, html[data-style="rack"] td { font-family: var(--font-display); font-size: 13px; }
-html[data-style="console"] .norm, html[data-style="rack"] .norm { border-radius: 2px; font-weight: 600; }
-html[data-style="console"] .themeSwitch, html[data-style="console"] .bgBtn, html[data-style="rack"] .themeSwitch, html[data-style="rack"] .bgBtn { display: none; }
+html[data-style="console"] h2, html[data-style="rack"] h2, html[data-style="datasheet"] h2, html[data-style="night"] h2 { font-family: var(--font-body); font-size: 13px; font-weight: 600; letter-spacing: 0.14em; margin-bottom: 12px; }
+html[data-style="console"] h2::after, html[data-style="rack"] h2::after, html[data-style="datasheet"] h2::after, html[data-style="night"] h2::after { height: 1px; width: 100%; margin-top: 6px; background: var(--panel-edge); }
+html[data-style="console"] .summary, html[data-style="rack"] .summary, html[data-style="datasheet"] .summary, html[data-style="night"] .summary { font-family: var(--font-display); font-size: 12px; color: var(--ink-soft); }
+html[data-style="console"] .speed b, html[data-style="rack"] .speed b, html[data-style="datasheet"] .speed b, html[data-style="night"] .speed b { font-size: 15px; font-weight: 500; }
+html[data-style="console"] .stage, html[data-style="rack"] .stage, html[data-style="datasheet"] .stage, html[data-style="night"] .stage { aspect-ratio: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; container-type: normal; }
+html[data-style="console"] .stage > *, html[data-style="rack"] .stage > *, html[data-style="datasheet"] .stage > *, html[data-style="night"] .stage > * { position: static; border-radius: 3px; width: auto; aspect-ratio: auto; box-shadow: none; }
+html[data-style="console"] .hero, html[data-style="rack"] .hero, html[data-style="datasheet"] .hero, html[data-style="night"] .hero { grid-column: 1 / -1; padding: 12px 14px; place-content: start; background: var(--well); color: var(--terra); border: 1px solid var(--panel-edge); overflow: visible; }
+html[data-style="console"] .hero::before, html[data-style="rack"] .hero::before, html[data-style="console"] .lens::after, html[data-style="rack"] .lens::after, html[data-style="console"] .dot, html[data-style="rack"] .dot, html[data-style="datasheet"] .hero::before, html[data-style="night"] .hero::before, html[data-style="datasheet"] .lens::after, html[data-style="night"] .lens::after, html[data-style="datasheet"] .dot, html[data-style="night"] .dot { display: none; }
+html[data-style="console"] .hero .lab, html[data-style="rack"] .hero .lab, html[data-style="console"] .chip .lab, html[data-style="rack"] .chip .lab, html[data-style="datasheet"] .hero .lab, html[data-style="night"] .hero .lab, html[data-style="datasheet"] .chip .lab, html[data-style="night"] .chip .lab { font-size: 10.5px; letter-spacing: 0.1em; color: var(--ink-soft); }
+html[data-style="console"] .hero .big, html[data-style="rack"] .hero .big, html[data-style="datasheet"] .hero .big, html[data-style="night"] .hero .big { font-size: 44px; font-weight: 500; margin-top: 4px; }
+html[data-style="console"] .hero .big i, html[data-style="rack"] .hero .big i, html[data-style="datasheet"] .hero .big i, html[data-style="night"] .hero .big i { font-size: 15px; margin-left: 4px; color: var(--ink-soft); }
+html[data-style="console"] .hero .sub, html[data-style="rack"] .hero .sub, html[data-style="datasheet"] .hero .sub, html[data-style="night"] .hero .sub { font-size: 12px; color: var(--ink-soft); font-weight: 500; margin-top: 4px; }
+html[data-style="console"] .hero .warn, html[data-style="rack"] .hero .warn, html[data-style="datasheet"] .hero .warn, html[data-style="night"] .hero .warn { font-size: 12px; padding: 3px 10px; margin-top: 8px; }
+html[data-style="console"] .chip, html[data-style="rack"] .chip, html[data-style="datasheet"] .chip, html[data-style="night"] .chip { position: relative; padding: 10px 12px; place-content: start; text-align: left; background: var(--well); border: 1px solid var(--panel-edge); }
+html[data-style="console"] .chip .val, html[data-style="rack"] .chip .val, html[data-style="datasheet"] .chip .val, html[data-style="night"] .chip .val { font-size: 24px; font-weight: 500; margin-top: 2px; color: var(--terra); }
+html[data-style="console"] .chip .val i, html[data-style="rack"] .chip .val i, html[data-style="datasheet"] .chip .val i, html[data-style="night"] .chip .val i { font-size: 12px; }
+html[data-style="console"] .chip .qbtn, html[data-style="rack"] .chip .qbtn, html[data-style="datasheet"] .chip .qbtn, html[data-style="night"] .chip .qbtn { top: 8px; right: 8px; }
+html[data-style="console"] .lens, html[data-style="rack"] .lens, html[data-style="datasheet"] .lens, html[data-style="night"] .lens { grid-column: 1 / -1; aspect-ratio: 7 / 5 !important; background: var(--well); border: 1px solid var(--panel-edge); box-shadow: none; overflow: hidden; }
+html[data-style="console"] .field input, html[data-style="rack"] .field input, html[data-style="datasheet"] .field input, html[data-style="night"] .field input { border: 1px solid var(--panel-edge); border-bottom-width: 1px; border-radius: 3px; font-weight: 500; }
+html[data-style="console"] .field input:focus-visible, html[data-style="rack"] .field input:focus-visible, html[data-style="datasheet"] .field input:focus-visible, html[data-style="night"] .field input:focus-visible { border-color: var(--terra); }
+html[data-style="console"] .field label, html[data-style="rack"] .field label, html[data-style="datasheet"] .field label, html[data-style="night"] .field label { font-size: 10.5px; letter-spacing: 0.1em; }
+html[data-style="console"] .btn, html[data-style="rack"] .btn, html[data-style="datasheet"] .btn, html[data-style="night"] .btn { box-shadow: none; border-width: 1px; border-radius: 3px; }
+html[data-style="console"] .btn:active, html[data-style="rack"] .btn:active, html[data-style="datasheet"] .btn:active, html[data-style="night"] .btn:active { transform: translateY(1px); }
+html[data-style="console"] .card, html[data-style="rack"] .card, html[data-style="datasheet"] .card, html[data-style="night"] .card { box-shadow: none; border-width: 1px; border-left-width: 3px; border-radius: 3px; }
+html[data-style="console"] .btn.sm, html[data-style="rack"] .btn.sm, html[data-style="datasheet"] .btn.sm, html[data-style="night"] .btn.sm { box-shadow: none; }
+html[data-style="console"] .pop, html[data-style="rack"] .pop, html[data-style="console"] .guideBox, html[data-style="rack"] .guideBox, html[data-style="datasheet"] .pop, html[data-style="night"] .pop, html[data-style="datasheet"] .guideBox, html[data-style="night"] .guideBox { box-shadow: none; border-width: 1px; border-radius: 4px; }
+html[data-style="console"] td:first-child, html[data-style="rack"] td:first-child, html[data-style="datasheet"] td:first-child, html[data-style="night"] td:first-child { border-left-width: 3px; font-weight: 600; }
+html[data-style="console"] td, html[data-style="rack"] td, html[data-style="datasheet"] td, html[data-style="night"] td { font-family: var(--font-display); font-size: 13px; }
+html[data-style="console"] .norm, html[data-style="rack"] .norm, html[data-style="datasheet"] .norm, html[data-style="night"] .norm { border-radius: 2px; font-weight: 600; }
+html[data-style="console"] .themeSwitch, html[data-style="console"] .bgBtn, html[data-style="rack"] .themeSwitch, html[data-style="rack"] .bgBtn, html[data-style="datasheet"] .themeSwitch, html[data-style="night"] .themeSwitch, html[data-style="datasheet"] .bgBtn, html[data-style="night"] .bgBtn { display: none; }
 /* Rack Panel only: grey faceplate, dark segment display, physical keys */
 html[data-style="rack"] .hero .big, html[data-style="rack"] .chip .val, html[data-style="rack"] .speed b { text-shadow: 0 0 6px color-mix(in srgb, var(--terra) 45%, transparent); }
 html[data-style="rack"] .hero, html[data-style="rack"] .chip, html[data-style="rack"] .lens { box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.7) !important; border: 2px solid #6c7175; }
@@ -379,11 +379,43 @@ html[data-style="rack"] .lens .pt { fill: #e9ffa0; }
 .styleOpt { appearance: none; cursor: pointer; text-align: left; font: 600 13px var(--font-body); color: var(--ink); background: var(--well); border: 2px solid var(--ink-soft); border-radius: 3px; padding: 8px 10px; }
 .styleOpt[aria-pressed="true"] { border-color: var(--terra); box-shadow: inset 4px 0 0 var(--terra); }
 .styleOpt span { display: block; font-weight: 400; font-size: 12px; color: var(--ink-soft); }
-html[data-style="console"] .chip, html[data-style="rack"] .chip { left: auto !important; right: auto !important; top: auto !important; }
+html[data-style="console"] .chip, html[data-style="rack"] .chip, html[data-style="datasheet"] .chip, html[data-style="night"] .chip { left: auto !important; right: auto !important; top: auto !important; }
 html[data-style="rack"] .field input { background: #dcdfe0; color: #23262a; }
 html[data-style="rack"] .field input.txt::placeholder { color: #4a4f54; }
 html[data-style="rack"] .helpBtn, html[data-style="rack"] .styleBtn { background: #dcdfe0; color: #23262a; border-color: #6c7175; }
 html[data-style="rack"] .clr { color: #4a4f54; border-color: #6c7175; }
+/* Datasheet: white page, one strong blue */
+html[data-style="datasheet"] h1 { text-transform: none; font-weight: 700; letter-spacing: 0; font-size: 28px; }
+html[data-style="datasheet"] .hero { background: var(--terra); color: var(--on-terra); border-color: var(--terra); }
+html[data-style="datasheet"] .hero .lab, html[data-style="datasheet"] .hero .big i, html[data-style="datasheet"] .hero .sub { color: #cfe0fb; }
+html[data-style="datasheet"] .chip, html[data-style="datasheet"] .lens { background: var(--surface); border-color: var(--panel-edge); }
+html[data-style="datasheet"] .field input { border-color: #9aa3ab; font-weight: 600; }
+html[data-style="datasheet"] th { color: #3c444b; font-weight: 600; }
+html[data-style="datasheet"] .lens .st { stroke: #8a949c; }
+html[data-style="datasheet"] .lens .pt { fill: #1b1f23; }
+html[data-style="datasheet"] .helpBtn, html[data-style="datasheet"] .styleBtn { background: #fff; }
+/* Night Stage: black, dim red, large touch targets */
+html[data-style="night"] h1 { color: var(--terra); font-size: 34px; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
+html[data-style="night"] .panel { background: #000; }
+html[data-style="night"] .hero { background: #000; border-color: #2a1512; }
+html[data-style="night"] .hero .big { font-size: 76px; font-weight: 600; line-height: 1; }
+html[data-style="night"] .chip .val { font-size: 34px; font-weight: 600; }
+html[data-style="night"] .inw.num input { min-height: 60px; font-size: 28px; font-weight: 600; }
+html[data-style="night"] .field input { border: 1px solid #3a1f1a; border-radius: 8px; background: #0b0504; }
+html[data-style="night"] .field input.txt { min-height: 52px; font-size: 18px; }
+html[data-style="night"] .btn { border-radius: 8px; font-family: var(--font-display); font-size: 17px; padding: 14px 24px; letter-spacing: 0.08em; }
+html[data-style="night"] .btn.sm { font-size: 14px; padding: 9px 14px; }
+html[data-style="night"] td { font-size: 17px; font-weight: 600; padding-top: 10px; padding-bottom: 10px; }
+html[data-style="night"] .lens .st { stroke: #5a2a22; }
+html[data-style="night"] .lens .pt { fill: #f1e3df; }
+html[data-style="night"] .lens .bx { fill: #5a2a22; }
+html[data-style="night"] .lens .bn { fill: #f1e3df; }
+html[data-style="night"] { --font-display: "Barlow Condensed", "Arial Narrow", sans-serif; --font-body: "Barlow", system-ui, sans-serif; }
+html[data-style="night"] .inw.num input { font-size: 26px; padding-right: 92px; padding-left: 10px; }
+html[data-style="night"] td { font-size: 18px; padding-left: 2px; padding-right: 2px; }
+html[data-style="night"] .roller { width: 46px; }
+html[data-style="night"] .inw.num input { padding-right: 96px; }
+html[data-style="night"] .inw.num .clr { right: 58px; }
 </style>
 
 </head><body>
@@ -916,13 +948,19 @@ var ACCENT = {
 var STYLES = [
   { id: "poster", name: "Poster", note: "Bold colour blocks, current look" },
   { id: "console", name: "Console", note: "Dark graphite, cyan readouts" },
-  { id: "rack", name: "Rack Panel", note: "Grey faceplate, green display" }
+  { id: "rack", name: "Rack Panel", note: "Grey faceplate, green display" },
+  { id: "datasheet", name: "Datasheet", note: "White, strong blue, best in sunlight" },
+  { id: "night", name: "Night Stage", note: "Black and dim red, low glare, big fields" }
 ];
 var FIXED = {
   console: { colors: ["#0e1013", "#0e1013", "#15181b", "#2a3035", "#1b1f23", "#0e1013", "#0e1013", "#0e1013", "#d7dde2", "#8a959d", "transparent", "transparent"],
     acc: { "--terra": "#5fd4e8", "--terra-hi": "#5fd4e8", "--terra-btn": "#5fd4e8", "--on-terra": "#0e1013", "--halo": "#2a3035", "--warn": "#ffb86b", "--pill-bg": "#5fd4e8", "--pill-fg": "#0e1013", "--qhero": "#2a3035", "--qopen": "#d7dde2" }, mode: "dark", theme: "#0e1013" },
   rack: { colors: ["#6f7478", "#6f7478", "#c9ccce", "#6c7175", "#dcdfe0", "#1a1d16", "#1a1d16", "#1a1d16", "#23262a", "#4a4f54", "transparent", "transparent"],
-    acc: { "--terra": "#d6ff5a", "--terra-hi": "#d6ff5a", "--terra-btn": "#d6ff5a", "--on-terra": "#14170d", "--halo": "#6c7175", "--warn": "#b3361f", "--pill-bg": "#14170d", "--pill-fg": "#d6ff5a", "--qhero": "#14170d", "--qopen": "#23262a" }, mode: "light", theme: "#6f7478" }
+    acc: { "--terra": "#d6ff5a", "--terra-hi": "#d6ff5a", "--terra-btn": "#d6ff5a", "--on-terra": "#14170d", "--halo": "#6c7175", "--warn": "#b3361f", "--pill-bg": "#14170d", "--pill-fg": "#d6ff5a", "--qhero": "#14170d", "--qopen": "#23262a" }, mode: "light", theme: "#6f7478" },
+  datasheet: { colors: ["#e9edf0", "#e9edf0", "#ffffff", "#c9ced3", "#f5f7f9", "#ffffff", "#f5f7f9", "#f5f7f9", "#1b1f23", "#5b636b", "transparent", "transparent"],
+    acc: { "--terra": "#0f4fb8", "--terra-hi": "#0f4fb8", "--terra-btn": "#0f4fb8", "--on-terra": "#ffffff", "--halo": "#c9ced3", "--warn": "#b3361f", "--pill-bg": "#ffffff", "--pill-fg": "#0f4fb8", "--qhero": "#ffffff", "--qopen": "#1b1f23" }, mode: "light", theme: "#e9edf0" },
+  night: { colors: ["#000000", "#000000", "#000000", "#2a1512", "#0b0504", "#0b0504", "#000000", "#000000", "#f1e3df", "#9a817b", "transparent", "transparent"],
+    acc: { "--terra": "#ff6a4d", "--terra-hi": "#ff6a4d", "--terra-btn": "#ff6a4d", "--on-terra": "#000000", "--halo": "#2a1512", "--warn": "#ff9a85", "--pill-bg": "#ff6a4d", "--pill-fg": "#000000", "--qhero": "#2a1512", "--qopen": "#f1e3df" }, mode: "dark", theme: "#000000" }
 };
 var theme = { mode: "dark", bg: "poster", style: "poster" };
 function presetById(id) { for (var i = 0; i < PRESETS.length; i++) if (PRESETS[i].id === id) return PRESETS[i]; return PRESETS[0]; }
@@ -953,7 +991,7 @@ function buildStylePop() {
     list.appendChild(b);
   });
   pop.appendChild(list);
-  pop.appendChild(mk("p", "cap", "Console and Rack Panel use their own colours."));
+  pop.appendChild(mk("p", "cap", "The four new looks use their own colours."));
 }
 function openStylePop() {
   document.querySelectorAll("[data-help]").forEach(function (b) { b.setAttribute("aria-expanded", "false"); });
