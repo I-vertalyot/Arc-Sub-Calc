@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-style="night">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -7,7 +7,7 @@
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#ec4f3a">
+<meta name="theme-color" content="#000000">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Arc Sub Calc">
@@ -962,7 +962,7 @@ var FIXED = {
   night: { colors: ["#000000", "#000000", "#000000", "#2a1512", "#0b0504", "#0b0504", "#000000", "#000000", "#f1e3df", "#9a817b", "transparent", "transparent"],
     acc: { "--terra": "#ff6a4d", "--terra-hi": "#ff6a4d", "--terra-btn": "#ff6a4d", "--on-terra": "#000000", "--halo": "#2a1512", "--warn": "#ff9a85", "--pill-bg": "#ff6a4d", "--pill-fg": "#000000", "--qhero": "#2a1512", "--qopen": "#f1e3df" }, mode: "dark", theme: "#000000" }
 };
-var theme = { mode: "dark", bg: "poster", style: "poster" };
+var theme = { mode: "dark", bg: "poster", style: "night" };
 function presetById(id) { for (var i = 0; i < PRESETS.length; i++) if (PRESETS[i].id === id) return PRESETS[i]; return PRESETS[0]; }
 function applyTheme(save) {
   var root = document.documentElement, fx = FIXED[theme.style];
