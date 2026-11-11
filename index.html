@@ -486,6 +486,8 @@ html[data-style="poster"] .chip.a .lab { font-size: 2.45cqw; letter-spacing: 0.0
 .brand h1 .calc{display:block;margin-top:2px}
 .brand h1{position:relative;top:-6px}
 @media (max-width:350px){.brand .spk{width:36px}}
+html .field input { color: var(--inkIn, var(--ink)) !important; -webkit-text-fill-color: var(--inkIn, var(--ink)) !important; }
+html .field input::placeholder { color: var(--inkIn, var(--ink)) !important; opacity: 0.6; -webkit-text-fill-color: var(--inkIn, var(--ink)); }
 </style>
 
 </head><body>
@@ -1330,6 +1332,18 @@ if ("serviceWorker" in navigator && (location.protocol === "https:" || location.
   document.addEventListener("visibilitychange", function () { if (document.hidden) stop(); else if (!still) start(); });
   size(); readCol();
   if (still) draw(performance.now()); else start();
+})();
+/* input text always readable: pick light or dark text from the real background of the field */
+(function () {
+  function lum(c) { var m = /rgba?\((\d+),\s*(\d+),\s*(\d+)/.exec(c); if (m) return (0.2126 * m[1] + 0.7152 * m[2] + 0.0722 * m[3]) / 255; m = /color\(srgb\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)/.exec(c); if (m) return 0.2126 * m[1] + 0.7152 * m[2] + 0.0722 * m[3]; return null; }
+  function fix() {
+    var inp = document.querySelector(".field input"); if (!inp) return;
+    var l = lum(getComputedStyle(inp).backgroundColor); if (l === null) return;
+    var v = l < 0.5 ? "#f3efe6" : "#16181a", r = document.documentElement;
+    if (r.style.getPropertyValue("--inkIn") !== v) r.style.setProperty("--inkIn", v);
+  }
+  fix(); window.addEventListener("load", fix); setInterval(fix, 500);
+  document.addEventListener("click", function () { setTimeout(fix, 60); setTimeout(fix, 400); }, true);
 })();
 </script>
 </body></html>
