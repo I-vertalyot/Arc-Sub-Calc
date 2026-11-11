@@ -483,6 +483,8 @@ html[data-style="poster"] .chip.a .lab { font-size: 2.45cqw; letter-spacing: 0.0
 @keyframes splashIn { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: none; } }
 @keyframes splashOut { to { opacity: 0; visibility: hidden; pointer-events: none; } }
 @media (prefers-reduced-motion: reduce) { #splash img { animation: none; } #splash { animation-duration: 0.01s; animation-delay: 0.6s; } }
+/* room at the end of the page so the background speaker is fully visible when scrolled to the bottom */
+.layout { padding-bottom: 190px !important; }
 </style>
 
 </head><body>
