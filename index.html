@@ -802,7 +802,7 @@ document.querySelectorAll(".field input").forEach(function (inp) {
       y0 = yl = e.clientY; sx = e.clientX; pid = e.pointerId; acc = 0;
       if (e.pointerType === "mouse") { e.preventDefault(); activate(); return; }
       /* touch: hold for a moment before the fader grabs, so a swipe that only scrolls the page never changes a value */
-      clearTimeout(pend); pend = setTimeout(activate, 230);
+      clearTimeout(pend); pend = setTimeout(activate, 110);
     });
     r.addEventListener("mousedown", function (e) { e.preventDefault(); });
     r.addEventListener("contextmenu", function (e) { e.preventDefault(); });
