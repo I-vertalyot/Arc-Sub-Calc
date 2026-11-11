@@ -115,8 +115,11 @@ h1 {
   text-transform: uppercase;
   text-wrap: balance;
 }
-.titleBlock { margin-top: 16px; }
-.titleBlock h1 { margin-bottom: 4px; }
+.lens .titleBlock { position: absolute; left: 0; right: 0; bottom: 5%; z-index: 2; text-align: center; margin: 0; pointer-events: none; }
+.lens .titleBlock h1 { margin: 0 0 3px !important; font-size: clamp(15px, 5.2vw, 22px) !important; letter-spacing: 0.06em; line-height: 1.1 !important; white-space: nowrap; text-shadow: none; }
+html[data-style="poster"] .lens .titleBlock { bottom: 12%; }
+html[data-style="poster"] .lens .titleBlock h1 { font-size: 17px !important; }
+.lens .titleBlock .summary { font-size: 11px !important; color: var(--ink-soft); }
 .summary { margin: 0; font-size: 15px; font-weight: 500; font-variant-numeric: tabular-nums; }
 .summary small { display: block; color: var(--ink-soft); font-size: 13px; margin-top: 2px; }
 .speed { text-align: left; min-width: 0; flex: 0 0 auto; }
@@ -476,11 +479,7 @@ html[data-style="console"] .colorRow, html[data-style="rack"] .colorRow, html[da
       <div class="chip a"><div><div class="lab">Radius</div><div class="val"><span id="radius">11.781</span><i>m</i></div></div><button class="qbtn" type="button" data-help="radius" aria-expanded="false" aria-label="What is radius?">i</button></div>
       <div class="chip b"><div><div class="lab">Centre–centre</div><div class="val"><span id="length">12.660</span><i>m</i></div></div><button class="qbtn" type="button" data-help="centre" aria-expanded="false" aria-label="What is centre-to-centre length?">i</button></div>
       <div class="dot" aria-hidden="true"></div>
-      <div class="lens"><svg id="arcsvg" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Diagram of the box line and the virtual arc"></svg></div>
-    </div>
-    <div class="titleBlock">
-      <h1>Sub Arc Calc</h1>
-      <p class="summary"><span id="sum1">8 boxes · 14 m · 65°</span></p>
+      <div class="lens"><svg id="arcsvg" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Diagram of the box line and the virtual arc"></svg><div class="titleBlock"><h1>Sub Arc Calc</h1><p class="summary"><span id="sum1">8 boxes · 14 m · 65°</span></p></div></div>
     </div>
   </div>
 
