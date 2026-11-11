@@ -654,9 +654,9 @@ function render() {
   el("speedSub").textContent = fmt(inp.t, 0).replace("—", "0") + " °C · " + fmt(inp.h, 0).replace("—", "0") + " %";
   last = { inp: inp, res: res };
   el("spacing").textContent = res.spacing === null ? "—" : Lf(res.spacing, 2);
-  el("lineLen").textContent = Lf(inp.l);
+  el("lineLen").textContent = Lf(inp.l, 2);
   if (!ccDriving && document.activeElement !== el("cc")) el("cc").value = Number.isFinite(res.cc) ? String(toDisp("cc", res.cc)) : "";
-  el("length").textContent = Lf(res.cc);
+  el("length").textContent = Lf(res.cc, 2);
   el("sum1").textContent = res.N + " boxes · " + Lf(inp.l, 2).replace(/\.?0+$/, "") + " " + UNITS.len + " · " + fmt(inp.arc, 0) + "°";
   if (setupAuto) el("setup").value = res.N + " boxes · centre–centre " + Lf(res.cc, 2) + " " + UNITS.len + " · spacing " + Lf(res.spacing, 3) + " " + UNITS.len;
   el("warn").hidden = !(res.spacing !== null && res.spacing < 0);
