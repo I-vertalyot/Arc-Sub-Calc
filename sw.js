@@ -1,4 +1,4 @@
-/* Arc Sub Calc service worker: lets the app install and open offline.
+/* Sub Arc Calc service worker: lets the app install and open offline.
    Pages: network first (so updates show up), cached copy when offline.
    Icons / fonts: cached after first use. */
 const CACHE = "arc-sub-calc-v5";

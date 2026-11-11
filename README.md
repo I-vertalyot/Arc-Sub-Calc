@@ -1,4 +1,4 @@
-# Arc Sub Calc
+# Sub Arc Calc
 
 Calculator for the spacing and delays of an arc subwoofer line.
 

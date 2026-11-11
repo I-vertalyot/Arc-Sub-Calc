@@ -1,7 +1,7 @@
 {
   "id": "./",
-  "name": "Arc Sub Calc",
-  "short_name": "Arc Sub Calc",
+  "name": "Sub Arc Calc",
+  "short_name": "Sub Arc Calc",
   "description": "Calculator for the spacing and delays of an arc subwoofer line.",
   "lang": "en",
   "start_url": "./",
@@ -65,7 +65,7 @@
       "sizes": "1280x720",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "Arc Sub Calc on a large screen"
+      "label": "Sub Arc Calc on a large screen"
     }
   ]
 }
