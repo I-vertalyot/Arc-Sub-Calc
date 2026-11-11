@@ -1248,23 +1248,29 @@ if ("serviceWorker" in navigator && (location.protocol === "https:" || location.
   function draw(now) {
     var t = (now - t0) / 1000, c = "rgba(" + col[0] + "," + col[1] + "," + col[2] + ",";
     ctx.clearRect(0, 0, W, H);
-    var S = Math.max(56, Math.min(96, Math.min(W, H) * 0.13)), cx = W / 2, cy = H - S * 0.31 - 2, maxR = Math.hypot(W, H) * 0.95, r0 = S * 0.62;
-    var g = ctx.createRadialGradient(cx, cy, 0, cx, cy, maxR * 0.8);
-    g.addColorStop(0, c + "0.30)"); g.addColorStop(0.5, c + "0.10)"); g.addColorStop(1, c + "0)");
+    var S = Math.max(56, Math.min(96, Math.min(W, H) * 0.13)), cx = W / 2;
+    /* the speaker belongs to the end of the page: the further you are from the end, the further below the screen the source is */
+    var off = Math.max(0, document.documentElement.scrollHeight - innerHeight - (window.pageYOffset || 0));
+    var cy = H - S * 0.31 - 2 + off;
+    var dmin = Math.max(0, cy - H), dmax = Math.hypot(Math.max(cx, W - cx), cy);
+    var span = Math.max(300, dmax - dmin), gap = 89, speed = 44, period = gap / speed;
+    var g = ctx.createRadialGradient(cx, cy, Math.max(0, dmin - 40), cx, cy, dmin + Math.min(span, 700));
+    g.addColorStop(0, c + "0.30)"); g.addColorStop(0.5, c + "0.12)"); g.addColorStop(1, c + "0)");
     ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
-    var N = 9, span = maxR - r0, gap = span / N, speed = span / 18, period = gap / speed;
     ctx.lineJoin = "round"; ctx.lineCap = "round";
-    for (var i = 0; i < N + 1; i++) {
-      var r = r0 + (t * speed + i * gap) % span, k = (r - r0) / span, a = Math.pow(1 - k, 1.6) * Math.min(1, k * 8) * 0.85;
-      if (a < 0.01) continue;
-      var pts = [];
-      for (var s = 0; s <= 120; s++) {
-        var ang = (s / 120) * 2 * Math.PI, rr = r + Math.sin(ang * 3 + t * 0.5 + i * 0.7) * (1 + 12 * k * k) + Math.sin(ang * 4 - t * 0.35) * 5 * k * k;
+    var ph = (t * speed) % gap, jStart = Math.max(0, Math.floor((dmin - gap) / gap));
+    for (var j = jStart; ; j++) {
+      var r = ph + j * gap; if (r > dmax + 20) break;
+      var k = Math.min(1, Math.max(0, (r - dmin) / Math.min(span, 800))), a = (0.4 + 0.6 * Math.pow(1 - k, 1.2)) * Math.min(1, (r + 1) / 60) * 0.95;
+      if (r < S * 0.62 || a < 0.01) continue;
+      var pts = [], steps = 160;
+      for (var s2 = 0; s2 <= steps; s2++) {
+        var ang = Math.PI + (s2 / steps) * Math.PI, rr = r + Math.sin(ang * 3 + t * 0.5 + j * 0.7) * (1 + 10 * k * k) + Math.sin(ang * 4 - t * 0.35) * 4 * k * k;
         pts.push([cx + Math.cos(ang) * rr, cy + Math.sin(ang) * rr]);
       }
       [[16, 0.10], [7, 0.18], [2.2, 0.55]].forEach(function (w) {
         ctx.lineWidth = w[0]; ctx.strokeStyle = c + (a * w[1]).toFixed(3) + ")"; ctx.beginPath();
-        pts.forEach(function (q, j) { if (j) ctx.lineTo(q[0], q[1]); else ctx.moveTo(q[0], q[1]); });
+        pts.forEach(function (q, jj) { if (jj) ctx.lineTo(q[0], q[1]); else ctx.moveTo(q[0], q[1]); });
         ctx.stroke();
       });
     }
@@ -1293,6 +1299,7 @@ if ("serviceWorker" in navigator && (location.protocol === "https:" || location.
   function stop() { if (raf) cancelAnimationFrame(raf); raf = 0; }
   var still = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
   window.addEventListener("resize", function () { size(); if (still) draw(performance.now()); });
+  window.addEventListener("scroll", function () { if (still) draw(performance.now()); }, { passive: true });
   document.addEventListener("visibilitychange", function () { if (document.hidden) stop(); else if (!still) start(); });
   size(); readCol();
   if (still) draw(performance.now()); else start();
