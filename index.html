@@ -103,7 +103,7 @@ body::after {
 @media (max-width: 420px) { .panel { padding: 24px 16px 22px; } }
 
 /* header */
-.top { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; }
+.top { display: flex; justify-content: flex-end; gap: 16px; align-items: flex-start; }
 .eyebrow { margin: 0; font-size: 13px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-soft); }
 h1 {
   margin: 2px 0 8px;
@@ -115,6 +115,8 @@ h1 {
   text-transform: uppercase;
   text-wrap: balance;
 }
+.titleBlock { margin-top: 16px; }
+.titleBlock h1 { margin-bottom: 4px; }
 .summary { margin: 0; font-size: 15px; font-weight: 500; font-variant-numeric: tabular-nums; }
 .summary small { display: block; color: var(--ink-soft); font-size: 13px; margin-top: 2px; }
 .speed { text-align: left; min-width: 0; flex: 0 0 auto; }
@@ -445,10 +447,6 @@ html[data-style="console"] .colorRow, html[data-style="rack"] .colorRow, html[da
 <div class="layout">
   <div class="panel">
     <div class="top">
-      <div>
-        <h1>Sub Arc<br>Calc</h1>
-        <p class="summary"><span id="sum1">8 boxes · 14 m · 65°</span></p>
-      </div>
       <div class="speed">
         <div class="ctrls">
           <div class="ctrlRow">
@@ -479,6 +477,10 @@ html[data-style="console"] .colorRow, html[data-style="rack"] .colorRow, html[da
       <div class="chip b"><div><div class="lab">Centre–centre</div><div class="val"><span id="length">12.660</span><i>m</i></div></div><button class="qbtn" type="button" data-help="centre" aria-expanded="false" aria-label="What is centre-to-centre length?">i</button></div>
       <div class="dot" aria-hidden="true"></div>
       <div class="lens"><svg id="arcsvg" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Diagram of the box line and the virtual arc"></svg></div>
+    </div>
+    <div class="titleBlock">
+      <h1>Sub Arc Calc</h1>
+      <p class="summary"><span id="sum1">8 boxes · 14 m · 65°</span></p>
     </div>
   </div>
 
