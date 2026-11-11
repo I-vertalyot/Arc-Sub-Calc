@@ -228,7 +228,7 @@ section + section { margin-top: 28px; }
 .field input::-webkit-outer-spin-button, .field input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .inw.num input { padding-right: 88px; min-height: 52px; padding-top: 6px; padding-bottom: 6px; font-size: 20px; }
 .inw.num .clr { right: 52px; width: 26px; height: 26px; margin-top: -13px; }
-.roller { position: absolute; right: 5px; top: 5px; bottom: 5px; width: 40px; border-radius: 3px; cursor: ns-resize; touch-action: none; user-select: none; -webkit-user-select: none; background: transparent; }
+.roller { position: absolute; right: 5px; top: 5px; bottom: 5px; width: 40px; border-radius: 3px; cursor: ns-resize; touch-action: pan-y; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; background: transparent; }
 .roller::before { content: ""; position: absolute; left: 50%; top: 6px; bottom: 6px; width: 4px; margin-left: -2px; border-radius: 2px; background: var(--ink-soft); opacity: 0.55; }
 .roller::after { content: ""; position: absolute; inset: 6px 0; pointer-events: none; opacity: 0.45;
   background: repeating-linear-gradient(to bottom, var(--ink-soft) 0 1px, transparent 1px 7px) 3px 0 / 7px 100% no-repeat, repeating-linear-gradient(to bottom, var(--ink-soft) 0 1px, transparent 1px 7px) right 3px top 0 / 7px 100% no-repeat; }
@@ -520,7 +520,7 @@ html[data-style] .panel { background: color-mix(in srgb, var(--panel) 66%, trans
       <li><b>Set the delays.</b> In the table, type each box's Norm. delay into your processor. The box with the smallest delay reads 0.</li>
       <li><b>Save it.</b> Add a venue name, then press Save results. Load, copy or delete it later under Saved setups.</li>
     </ol>
-    <p class="guideTip">Press and drag the little fader at the right of a number up or down to change it. Tap any small <b>i</b> or underlined column name to see what it means.</p>
+    <p class="guideTip">Touch and hold the little fader at the right of a number for a moment, then drag up or down to change it. A quick swipe just scrolls the page. Tap any small <b>i</b> or underlined column name to see what it means.</p>
     <p class="guideTip" id="installTip">Use it like a regular app: in Chrome on Android tap the ⋮ menu → <b>Install app</b> (or press the Install button here when it appears).</p>
     <button class="btn main" id="guideOk" type="button">Got it</button>
     <button class="btn" id="installBtn" type="button" hidden>Install app</button>
@@ -711,22 +711,32 @@ document.querySelectorAll(".field input").forEach(function (inp) {
       if (navigator.vibrate) { try { navigator.vibrate(4); } catch (e) {} }
       return true;
     }
-    var drag = false, y0 = 0, yl = 0, acc = 0;
-    r.addEventListener("pointerdown", function (e) {
-      drag = true; y0 = yl = e.clientY; acc = 0; r.classList.add("on");
-      try { r.setPointerCapture(e.pointerId); } catch (x) {}
-      e.preventDefault(); r.classList.remove("kb");
+    var drag = false, pend = null, y0 = 0, yl = 0, sx = 0, acc = 0, pid = 0;
+    function activate() {
+      pend = null; drag = true; acc = 0; r.classList.add("on");
+      try { r.setPointerCapture(pid); } catch (x) {}
+      r.classList.remove("kb");
       if (document.activeElement && document.activeElement !== r && document.activeElement.blur) document.activeElement.blur(); /* closes the on-screen keyboard */
       r.focus({ preventScroll: true });
+      if (navigator.vibrate) { try { navigator.vibrate(10); } catch (x) {} }
+    }
+    r.addEventListener("pointerdown", function (e) {
+      y0 = yl = e.clientY; sx = e.clientX; pid = e.pointerId; acc = 0;
+      if (e.pointerType === "mouse") { e.preventDefault(); activate(); return; }
+      /* touch: hold for a moment before the fader grabs, so a swipe that only scrolls the page never changes a value */
+      clearTimeout(pend); pend = setTimeout(activate, 230);
     });
-    ["touchstart", "mousedown"].forEach(function (ev) { r.addEventListener(ev, function (e) { e.preventDefault(); }, { passive: false }); });
+    r.addEventListener("mousedown", function (e) { e.preventDefault(); });
+    r.addEventListener("contextmenu", function (e) { e.preventDefault(); });
+    r.addEventListener("touchmove", function (e) { if (drag) e.preventDefault(); }, { passive: false });
     r.addEventListener("pointermove", function (e) {
+      if (pend && (Math.abs(e.clientY - y0) > 8 || Math.abs(e.clientX - sx) > 8)) { clearTimeout(pend); pend = null; return; }
       if (!drag) return;
       var dy = yl - e.clientY; yl = e.clientY; acc += dy;
       var px = Math.abs(y0 - e.clientY) > 70 ? 5 : 11, n = Math.trunc(acc / px);
       if (n) { setBy(n); acc -= n * px; }
     });
-    function end() { drag = false; r.classList.remove("on"); }
+    function end() { clearTimeout(pend); pend = null; drag = false; r.classList.remove("on"); }
     ["pointerup", "pointercancel", "lostpointercapture"].forEach(function (ev) { r.addEventListener(ev, end); });
     r.addEventListener("wheel", function (e) { e.preventDefault(); var n = e.deltaY < 0 ? 1 : -1; setBy(n); }, { passive: false });
     r.addEventListener("keydown", function (e) {
