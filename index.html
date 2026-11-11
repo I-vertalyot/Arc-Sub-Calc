@@ -228,7 +228,7 @@ h2 { margin: 0 0 14px; font-family: var(--font-display); font-weight: 700; font-
 h2::after { content: ""; display: block; height: 3px; width: 44px; background: var(--terra); margin-top: 8px; }
 section + section { margin-top: 28px; }
 .fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 12px; }
-.field { min-width: 0; }
+.field { min-width: 0; display: flex; flex-direction: column; justify-content: flex-end; }
 @media (max-width: 380px) { .fields { grid-template-columns: minmax(0, 1fr); } }
 .field.wide { grid-column: 1 / -1; }
 .field label { display: block; font-size: 11.5px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft); margin: 0 0 6px; }
@@ -524,7 +524,7 @@ html[data-style="night"] .field input:focus-visible { background: #35231d !impor
         <div class="field"><label for="arc">Arc angle (°)</label><input id="arc" type="number" inputmode="decimal" step="any" value="65"></div>
         <div class="field"><label for="t">Temperature (°C)</label><input id="t" type="number" inputmode="decimal" step="any" value="25"></div>
         <div class="field"><label for="h">Humidity (%)</label><input id="h" type="number" inputmode="decimal" step="any" value="63"></div>
-        <div class="field"><label for="m">Edge margin each end (m)</label><input id="m" type="number" inputmode="decimal" step="any" value="0"></div>
+        <div class="field"><label for="m">Edge margin (m)</label><input id="m" type="number" inputmode="decimal" step="any" value="0"></div>
       </div>
       <p class="hint">Enter either the line length or the centre–centre length; the other one follows. Spacing is calculated from the line length, box count and box width. The edge margin is kept free at both ends of the line, so the boxes are squeezed closer together.</p>
     </section>
@@ -1159,7 +1159,7 @@ var DEL_HEAD = { ms: "ms", us: "µs", s48: "smp 48k", s96: "smp 96k" };
 function saveUnits() { try { localStorage.setItem("subArcUnits", JSON.stringify(UNITS)); } catch (e) {} }
 function applyUnits() {
   var u = UNITS.len;
-  [["w", "Box width"], ["l", "Line length"], ["m", "Edge margin each end"], ["cc", "Centre–centre"]].forEach(function (x) { var lb = document.querySelector('label[for="' + x[0] + '"]'); if (lb) lb.textContent = x[1] + " (" + u + ")"; });
+  [["w", "Box width"], ["l", "Line length"], ["m", "Edge margin"], ["cc", "Centre–centre"]].forEach(function (x) { var lb = document.querySelector('label[for="' + x[0] + '"]'); if (lb) lb.textContent = x[1] + " (" + u + ")"; });
   var us = document.querySelectorAll("thead .u"), dl = DEL_HEAD[UNITS.delay];
   [u, u, u, dl, dl].forEach(function (t, i) { if (us[i]) us[i].textContent = t; });
   document.querySelectorAll(".hero .big i, .chip .val i").forEach(function (n) { n.textContent = u; });
