@@ -653,7 +653,7 @@ function drawArc(res, inp) {
   var k = maxV > 0 ? Math.max(1, Math.min(6, 44 / maxV)) : 1;
   var out = "", dls = "", pts = [];
   var ddx = rows.length > 1 ? (rows[1].pos - rows[0].pos) * scale : 99;
-  var vr = svg.getBoundingClientRect(), sc = Math.max(vr.width, vr.height) / 200 || 1.6;
+  var sc = Math.max(svg.clientWidth || 0, svg.clientHeight || 0) / 200 || 1.6; /* layout size: not shrunk by transforms, so numbers do not vanish while the page is still settling */
   var dtxt = rows.map(function (r) { return r.norm === null ? "" : (UNITS.delay === "ms" ? fmt(r.norm, 2) : Df(r.norm)); });
   var maxLen = Math.max.apply(null, dtxt.map(function (t) { return t.length; }).concat([1]));
   var dfsN = Math.min(6, (ddx - 1.5) / (maxLen * 0.6)), dfs = dfsN.toFixed(1), showDl = dfsN * sc >= 7.5;
@@ -1181,6 +1181,16 @@ applyTheme(false);
   window.addEventListener("resize", function () { if (!menu.hidden) place(); });
 })();
 window.addEventListener("resize", function () { if (last) drawArc(last.res, last.inp); });
+(function () {
+  /* redraw once the page has really settled, so the numbers on the diagram always appear */
+  function again() { if (last) drawArc(last.res, last.inp); }
+  var sv = document.getElementById("arcsvg");
+  if (window.ResizeObserver && sv) new ResizeObserver(again).observe(sv);
+  window.addEventListener("load", again); window.addEventListener("pageshow", again);
+  document.addEventListener("visibilitychange", function () { if (!document.hidden) again(); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(again);
+  setTimeout(again, 400); setTimeout(again, 1500);
+})();
 try { if (screen.orientation && screen.orientation.lock) screen.orientation.lock("portrait").catch(function () {}); } catch (e) {}
 /* ---------- Units and copying the delays ---------- */
 var DEL_HEAD = { ms: "ms", us: "µs", s48: "smp 48k", s96: "smp 96k" };
