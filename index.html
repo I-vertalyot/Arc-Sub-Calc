@@ -121,6 +121,9 @@ html[data-style="poster"] .lens .titleBlock { bottom: 12%; }
 html[data-style="poster"] .lens .titleBlock h1 { font-size: 17px !important; }
 .top { flex-wrap: wrap; }
 .top .speed { order: 1; margin-left: auto; }
+.lens .ttl { fill: var(--ink); font-family: var(--font-display); font-weight: 700; font-size: 14px; letter-spacing: 1.2px; text-anchor: middle; }
+html[data-style="night"] .lens .ttl { fill: var(--terra); }
+html[data-style="poster"] .lens .ttl { font-size: 12px; letter-spacing: 1px; }
 .topinfo { min-width: 0; order: 2; flex: 1 1 100%; }
 .topinfo .spd { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-start; gap: 2px 6px; margin: 0; font-size: 11.5px; font-variant-numeric: tabular-nums; color: var(--ink); }
 .topinfo .spd .sep { font-weight: 700; }
@@ -500,7 +503,7 @@ html[data-style="console"] .colorRow, html[data-style="rack"] .colorRow, html[da
       <div class="chip a"><div><div class="lab">Line length</div><div class="val"><span id="lineLen">14.000</span><i>m</i></div></div><button class="qbtn" type="button" data-help="linelen" aria-expanded="false" aria-label="What is line length?">i</button></div>
       <div class="chip b"><div><div class="lab">Centre–centre</div><div class="val"><span id="length">12.660</span><i>m</i></div></div><button class="qbtn" type="button" data-help="centre" aria-expanded="false" aria-label="What is centre-to-centre length?">i</button></div>
       <div class="dot" aria-hidden="true"></div>
-      <div class="lens"><svg id="arcsvg" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Diagram of the box line and the virtual arc"></svg><div class="titleBlock"><h1>Sub Arc Calc</h1></div></div>
+      <div class="lens"><svg id="arcsvg" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Diagram of the box line and the virtual arc"></svg></div>
     </div>
   </div>
 
@@ -639,6 +642,13 @@ function drawArc(res, inp) {
   });
   if (pts.length > 1) out += '<path class="arc" d="M' + pts.map(function (p) { return p[0].toFixed(1) + " " + p[1].toFixed(1); }).join(" L") + '"/>';
   pts.forEach(function (p) { out += '<circle class="pt" cx="' + p[0].toFixed(1) + '" cy="' + p[1].toFixed(1) + '" r="2"/>'; });
+  var tp = "M30 168 L170 168";
+  if (pts.length > 1) {
+    var p0 = pts[0], pn = pts[pts.length - 1], dd = 40, yc = Math.min.apply(null, pts.map(function (q) { return q[1]; })) + dd;
+    var cy = 2 * yc - 0.5 * ((p0[1] + dd) + (pn[1] + dd));
+    tp = "M" + p0[0].toFixed(1) + " " + (p0[1] + dd).toFixed(1) + " Q" + ((p0[0] + pn[0]) / 2).toFixed(1) + " " + cy.toFixed(1) + " " + pn[0].toFixed(1) + " " + (pn[1] + dd).toFixed(1);
+  }
+  out += '<path id="ttlpath" d="' + tp + '" fill="none" stroke="none"/><text class="ttl"><textPath href="#ttlpath" startOffset="50%">SUB ARC CALC</textPath></text>';
   if (!pts.length) out += '<text class="cap" x="100" y="160">arc cannot be calculated</text>';
   svg.innerHTML = out + dls;
 }
