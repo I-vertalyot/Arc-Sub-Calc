@@ -434,6 +434,9 @@ html[data-style] .panel { background: color-mix(in srgb, var(--panel) 66%, trans
 html[data-style="night"] .inw.num input.long { font-size: 20px; }
 html[data-style="night"] .inw.num input { padding-right: 62px; }
 .lens .dl { fill: var(--ink); font-family: var(--font-body); font-weight: 600; text-anchor: middle; paint-order: stroke; stroke: var(--lens-a); stroke-width: 2.6px; stroke-linejoin: round; }
+.ctrls { flex-direction: column; align-items: flex-end; gap: 8px; }
+.ctrlRow { display: flex; align-items: center; justify-content: flex-end; gap: 10px; }
+html[data-style="console"] .colorRow, html[data-style="rack"] .colorRow, html[data-style="datasheet"] .colorRow, html[data-style="night"] .colorRow { display: none; }
 </style>
 
 </head><body>
@@ -447,13 +450,17 @@ html[data-style="night"] .inw.num input { padding-right: 62px; }
       </div>
       <div class="speed">
         <div class="ctrls">
+          <div class="ctrlRow">
           <button class="helpBtn" id="helpBtn" type="button" aria-haspopup="dialog" aria-label="How to use this app" title="How to use">?</button>
           <button class="styleBtn" id="styleBtn" type="button" aria-label="Change style" aria-expanded="false" title="Style">Aa</button>
+          </div>
+          <div class="ctrlRow colorRow">
           <button class="bgBtn" id="bgBtn" type="button" aria-label="Change background" aria-expanded="false" title="Background"></button>
           <button class="themeSwitch" id="themeSwitch" type="button" role="switch" aria-checked="true" aria-label="Dark mode" title="Dark / light mode"><svg class="bg l" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.6M12 18.9v2.6M2.5 12h2.6M18.9 12h2.6M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></svg><svg class="bg r" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7z"/></svg><span class="knob">
             <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.6M12 18.9v2.6M2.5 12h2.6M18.9 12h2.6M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></svg>
             <svg class="moon" viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7z"/></svg>
           </span></button>
+          </div>
         </div>
         <b><span id="speed">347.231 m/s</span> <button class="qbtn inline" type="button" data-help="speed" aria-expanded="false" aria-label="What is speed of sound?">i</button></b>
         <span id="speedSub">25 °C · 63 %</span>
@@ -1032,7 +1039,7 @@ function buildStylePop() {
     var b = mk("button", "styleOpt", x.name); b.type = "button";
     b.appendChild(mk("span", "", x.note));
     b.setAttribute("aria-pressed", x.id === theme.style ? "true" : "false");
-    b.addEventListener("click", function (e) { e.stopPropagation(); theme.style = x.id; applyTheme(true); placePop(); });
+    b.addEventListener("click", function (e) { e.stopPropagation(); theme.style = x.id; applyTheme(true); closePop(); });
     list.appendChild(b);
   });
   pop.appendChild(list);
@@ -1052,7 +1059,7 @@ function buildBgPop() {
     b.style.setProperty("--sw", "linear-gradient(135deg, " + v[0] + " 50%, " + v[2] + " 50%)");
     b.setAttribute("aria-label", p.name + " background"); b.setAttribute("title", p.name);
     b.setAttribute("aria-pressed", p.id === theme.bg ? "true" : "false");
-    b.addEventListener("click", function (e) { e.stopPropagation(); theme.bg = p.id; applyTheme(true); });
+    b.addEventListener("click", function (e) { e.stopPropagation(); theme.bg = p.id; applyTheme(true); closePop(); });
     row.appendChild(b);
   });
   pop.appendChild(row);
