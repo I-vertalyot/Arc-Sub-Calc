@@ -1258,7 +1258,7 @@ if ("serviceWorker" in navigator && (location.protocol === "https:" || location.
     var rowW = N > 1 ? avail - bw : 0, ay = H - bh - 4 + off, baseY = ay + bh / 2;
     var r0 = N > 1 ? (rowW / 2) / Math.sin(TH / 2) : 0, Vx = W / 2, Vy = ay + (N > 1 ? r0 * Math.cos(TH / 2) : 0);
     var a1 = -Math.PI / 2 - TH / 2, a2 = -Math.PI / 2 + TH / 2;
-    var gap = 89, speed = 44, period = gap / speed;
+    var gap = 170, speed = 44, period = gap / speed;
     var dmin = Math.max(0, ay - H), dmax = Math.hypot(W, ay), span = Math.max(300, dmax - dmin);
     var g = ctx.createRadialGradient(Vx, ay, Math.max(0, dmin - 40), Vx, ay, dmin + Math.min(span, 700));
     g.addColorStop(0, c + "0.26)"); g.addColorStop(0.5, c + "0.10)"); g.addColorStop(1, c + "0)");
