@@ -463,6 +463,11 @@ html[data-style="night"] .inw.num input { padding-right: 62px; }
 .ctrlRow { display: flex; align-items: center; justify-content: flex-end; gap: 10px; }
 html[data-style="console"] .colorRow, html[data-style="rack"] .colorRow, html[data-style="datasheet"] .colorRow, html[data-style="night"] .colorRow { display: none; }
 .styleBtn svg { display: block; margin: 0 auto; }
+/* lighter input fields so they read as tappable */
+html .field input { background: color-mix(in srgb, var(--well) 84%, var(--ink) 16%) !important; border-color: color-mix(in srgb, var(--ink-soft) 85%, var(--ink)) !important; }
+html .field input:focus-visible { border-color: var(--terra) !important; background: color-mix(in srgb, var(--well) 78%, var(--ink) 22%) !important; }
+html[data-style="night"] .field input { background: #2a1b17 !important; border-color: #6b4036 !important; }
+html[data-style="night"] .field input:focus-visible { background: #35231d !important; border-color: var(--terra) !important; }
 </style>
 
 </head><body>
