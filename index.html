@@ -979,7 +979,10 @@ function applyTheme(save) {
   root.setAttribute("data-style", theme.style);
   var sw = el("themeSwitch"); sw.setAttribute("aria-checked", theme.mode === "dark" ? "true" : "false");
   el("bgBtn").style.setProperty("--swatch", "linear-gradient(135deg, " + vals[0] + " 50%, " + vals[2] + " 50%)");
-  var meta = document.querySelector('meta[name="theme-color"]'); if (meta) meta.setAttribute("content", fx ? fx.theme : vals[0]);
+  var bar = fx ? fx.theme : vals[0]; root.style.backgroundColor = bar;
+  var meta = document.querySelector('meta[name="theme-color"]');
+  if (!meta) { meta = document.createElement("meta"); meta.name = "theme-color"; document.head.appendChild(meta); }
+  meta.setAttribute("content", bar);
   if (popKey === "bg") buildBgPop();
   if (popKey === "style") buildStylePop();
   if (save) { try { localStorage.setItem("subArcTheme", JSON.stringify(theme)); } catch (e) {} }
