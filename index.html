@@ -119,6 +119,14 @@ h1 {
 .lens .titleBlock h1 { margin: 0 0 3px !important; font-size: clamp(15px, 5.2vw, 22px) !important; letter-spacing: 0.06em; line-height: 1.1 !important; white-space: nowrap; text-shadow: none; }
 html[data-style="poster"] .lens .titleBlock { bottom: 12%; }
 html[data-style="poster"] .lens .titleBlock h1 { font-size: 17px !important; }
+.lens .spd { display: flex; align-items: center; justify-content: center; gap: 6px; margin: 0 0 6px; pointer-events: auto; white-space: nowrap; font-size: 11px; font-variant-numeric: tabular-nums; }
+.lens .spd .spv { font-weight: 600; color: var(--ink); }
+.lens .spd .sps { color: var(--ink-soft); }
+.lens .spd .qbtn { position: static; width: 18px; height: 18px; font-size: 11px; line-height: 14px; margin: 0; flex: none; }
+html[data-style="poster"] .lens .spd { flex-wrap: wrap; row-gap: 0; font-size: 10px; margin-bottom: 4px; }
+html[data-style="poster"] .lens .spd .sps { flex-basis: 100%; text-align: center; line-height: 1.2; }
+html[data-style="poster"] .lens .titleBlock .summary { display: none; }
+html[data-style="poster"] .lens .titleBlock { bottom: 10%; }
 .lens .titleBlock .summary { font-size: 11px !important; color: var(--ink-soft); }
 .summary { margin: 0; font-size: 15px; font-weight: 500; font-variant-numeric: tabular-nums; }
 .summary small { display: block; color: var(--ink-soft); font-size: 13px; margin-top: 2px; }
@@ -477,8 +485,6 @@ html[data-style="console"] .colorRow, html[data-style="rack"] .colorRow, html[da
           <button class="styleBtn" id="menuBtn" type="button" aria-label="Menu" aria-haspopup="true" aria-expanded="false" aria-controls="menu" title="Menu"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
           </div>
         </div>
-        <b><span id="speed">347.231 m/s</span> <button class="qbtn inline" type="button" data-help="speed" aria-expanded="false" aria-label="What is speed of sound?">i</button></b>
-        <span id="speedSub">25 °C · 63 %</span>
       </div>
     </div>
 
@@ -492,7 +498,7 @@ html[data-style="console"] .colorRow, html[data-style="rack"] .colorRow, html[da
       <div class="chip a"><div><div class="lab">Line length</div><div class="val"><span id="lineLen">14.000</span><i>m</i></div></div><button class="qbtn" type="button" data-help="linelen" aria-expanded="false" aria-label="What is line length?">i</button></div>
       <div class="chip b"><div><div class="lab">Centre–centre</div><div class="val"><span id="length">12.660</span><i>m</i></div></div><button class="qbtn" type="button" data-help="centre" aria-expanded="false" aria-label="What is centre-to-centre length?">i</button></div>
       <div class="dot" aria-hidden="true"></div>
-      <div class="lens"><svg id="arcsvg" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Diagram of the box line and the virtual arc"></svg><div class="titleBlock"><h1>Sub Arc Calc</h1><p class="summary"><span id="sum1">8 boxes · 14 m · 65°</span></p></div></div>
+      <div class="lens"><svg id="arcsvg" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Diagram of the box line and the virtual arc"></svg><div class="titleBlock"><div class="spd"><span id="speed" class="spv">347.231 m/s</span><button class="qbtn inline" type="button" data-help="speed" aria-expanded="false" aria-label="What is speed of sound?">i</button><span id="speedSub" class="sps">25 °C · 63 %</span></div><h1>Sub Arc Calc</h1><p class="summary"><span id="sum1">8 boxes · 14 m · 65°</span></p></div></div>
     </div>
   </div>
 
