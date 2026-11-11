@@ -451,6 +451,17 @@ html[data-style="night"] .inw.num input { padding-right: 62px; }
 .ctrlRow { display: flex; align-items: center; justify-content: flex-end; gap: 10px; }
 html[data-style="console"] .colorRow, html[data-style="rack"] .colorRow, html[data-style="datasheet"] .colorRow, html[data-style="night"] .colorRow { display: none; }
 .styleBtn svg { display: block; margin: 0 auto; }
+/* smaller data boxes */
+.chip.a, .chip.b { width: 25%; }
+.chip .lab { font-size: 2.2cqw; letter-spacing: 0.04em; }
+.chip .val { font-size: 4.7cqw; }
+.chip .val i { font-size: 2.6cqw; }
+.chip .qbtn { width: 18px; height: 18px; font-size: 11px; line-height: 14px; }
+html[data-style="console"] .chip, html[data-style="rack"] .chip, html[data-style="datasheet"] .chip, html[data-style="night"] .chip { padding: 6px 9px; width: auto; }
+html[data-style="console"] .chip .val, html[data-style="rack"] .chip .val, html[data-style="datasheet"] .chip .val, html[data-style="night"] .chip .val { font-size: 17px; margin-top: 1px; }
+html[data-style="console"] .chip .val i, html[data-style="rack"] .chip .val i, html[data-style="datasheet"] .chip .val i, html[data-style="night"] .chip .val i { font-size: 10px; }
+html[data-style] .chip .lab { font-size: 9px; letter-spacing: 0.05em; padding-right: 20px; white-space: nowrap; }
+html[data-style="console"] .chip .qbtn, html[data-style="rack"] .chip .qbtn, html[data-style="datasheet"] .chip .qbtn, html[data-style="night"] .chip .qbtn { top: 5px; right: 6px; }
 </style>
 
 </head><body>
