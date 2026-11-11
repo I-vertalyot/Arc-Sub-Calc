@@ -421,6 +421,18 @@ html[data-style="night"] .inw.num .clr { right: 58px; }
 #bgwave { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; display: block; }
 html[data-style] .panel { background: color-mix(in srgb, var(--panel) 66%, transparent); }
 @media (max-width: 420px) { html[data-style] .chip .lab { font-size: 9.5px; letter-spacing: 0.05em; padding-right: 22px; white-space: nowrap; } }
+/* Units: length and delay switches, copy button */
+.unitrow { display: flex; align-items: center; gap: 12px; margin: -4px 0 12px; flex-wrap: wrap; }
+.ulab { font: 600 11px var(--font-body); letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft); }
+.seg { display: inline-flex; border: 2px solid var(--ink-soft); border-radius: 4px; overflow: hidden; }
+.seg button { appearance: none; border: 0; background: transparent; color: var(--ink); font: 600 13px var(--font-body); padding: 6px 12px; min-height: 34px; cursor: pointer; }
+.seg button + button { border-left: 2px solid var(--ink-soft); }
+.seg button[aria-pressed="true"] { background: var(--terra); color: var(--on-terra); }
+.seg button:focus-visible { outline: 3px solid var(--ink); outline-offset: -3px; }
+.copyRow { margin-top: 6px; }
+.inw.num input.long { font-size: 16px; }
+html[data-style="night"] .inw.num input.long { font-size: 20px; }
+html[data-style="night"] .inw.num input { padding-right: 62px; }
 </style>
 
 </head><body>
@@ -464,6 +476,7 @@ html[data-style] .panel { background: color-mix(in srgb, var(--panel) 66%, trans
   <div class="panel">
     <section>
       <h2>Inputs</h2>
+      <div class="unitrow"><span class="ulab">Length</span><div class="seg" role="group" aria-label="Length unit"><button type="button" data-len="m" aria-pressed="true">m</button><button type="button" data-len="ft" aria-pressed="false">ft</button></div></div>
       <div class="fields">
         <div class="field"><label for="n">Number of boxes</label><input id="n" type="number" inputmode="decimal" step="any" value="8"></div>
         <div class="field"><label for="w">Box width (m)</label><input id="w" type="number" inputmode="decimal" step="any" value="1.34"></div>
@@ -478,6 +491,7 @@ html[data-style] .panel { background: color-mix(in srgb, var(--panel) 66%, trans
 
     <section>
       <h2>Delay per box</h2>
+      <div class="unitrow"><span class="ulab">Delay in</span><div class="seg" role="group" aria-label="Delay unit"><button type="button" data-delay="ms" aria-pressed="true">ms</button><button type="button" data-delay="us" aria-pressed="false">µs</button><button type="button" data-delay="s48" aria-pressed="false" aria-label="Samples at 48 kilohertz">48k smp</button><button type="button" data-delay="s96" aria-pressed="false" aria-label="Samples at 96 kilohertz">96k smp</button></div></div>
       <div class="tablewrap">
         <table>
           <thead><tr><th>Box</th><th><button class="thb" type="button" data-help="pos" aria-expanded="false" aria-label="What is position?">Position</button><span class="u">m</span></th><th><button class="thb" type="button" data-help="gap" aria-expanded="false" aria-label="What is gap?">Gap</button><span class="u">m</span></th><th><button class="thb" type="button" data-help="dist" aria-expanded="false" aria-label="What is distance?">Dist.</button><span class="u">m</span></th><th><button class="thb" type="button" data-help="delay" aria-expanded="false" aria-label="What is delay?">Delay</button><span class="u">ms</span></th><th><button class="thb" type="button" data-help="norm" aria-expanded="false" aria-label="What is normalized delay?">Norm.</button><span class="u">ms</span></th></tr></thead>
@@ -485,6 +499,7 @@ html[data-style] .panel { background: color-mix(in srgb, var(--panel) 66%, trans
         </table>
         <div class="empty" id="empty" hidden>Enter at least one box.</div>
       </div>
+      <div class="actions copyRow"><button class="btn sm" id="copyDelays" type="button">Copy delays</button><span class="status" id="copyStatus" role="status" aria-live="polite"></span></div>
     </section>
 
     <section>
@@ -560,7 +575,14 @@ function num(x) { var v = parseFloat(x); return Number.isFinite(v) ? v : 0; }
 function fmt(x, d) { if (d === undefined) d = 3; return Number.isFinite(x) ? x.toFixed(d) : "—"; }
 function el(id) { return document.getElementById(id); }
 var setupAuto = true; /* setup name follows the inputs until the user types their own */
-function readInputs() { var o = {}; IDS.forEach(function (id) { o[id] = num(el(id).value); }); return o; }
+var UNITS = { len: "m", delay: "ms" }, FT = 3.28084, LENIDS = ["w", "l", "m"];
+try { var su = JSON.parse(localStorage.getItem("subArcUnits") || "null"); if (su) { if (su.len === "ft") UNITS.len = "ft"; if (["ms", "us", "s48", "s96"].indexOf(su.delay) >= 0) UNITS.delay = su.delay; } } catch (e) {}
+function lenF() { return UNITS.len === "ft" ? FT : 1; }
+var DEL = { ms: { f: 1, d: 3, u: "ms", name: "milliseconds (ms)" }, us: { f: 1000, d: 0, u: "µs", name: "microseconds (µs)" }, s48: { f: 48, d: 0, u: "smp 48k", name: "samples at 48 kHz" }, s96: { f: 96, d: 0, u: "smp 96k", name: "samples at 96 kHz" } };
+function Lf(x, d) { return fmt(x * lenF(), d); }
+function Df(x) { return x === null || x === undefined ? "" : fmt(x * DEL[UNITS.delay].f, DEL[UNITS.delay].d); }
+function toDisp(id, v) { return LENIDS.indexOf(id) >= 0 ? Math.round(v * lenF() * 10000) / 10000 : v; }
+function readInputs() { var o = {}; IDS.forEach(function (id) { var v = num(el(id).value); o[id] = LENIDS.indexOf(id) >= 0 ? v / lenF() : v; }); return o; }
 
 function drawArc(res, inp) {
   var svg = el("arcsvg"), rows = res.rows, w = inp.w;
@@ -592,19 +614,19 @@ function drawArc(res, inp) {
 var last = null;
 function render() {
   var inp = readInputs(), res = compute(inp);
-  el("speed").textContent = fmt(res.c) + " m/s";
+  el("speed").textContent = Lf(res.c) + (UNITS.len === "ft" ? " ft/s" : " m/s");
   el("speedSub").textContent = fmt(inp.t, 0).replace("—", "0") + " °C · " + fmt(inp.h, 0).replace("—", "0") + " %";
   last = { inp: inp, res: res };
-  el("spacing").textContent = res.spacing === null ? "—" : fmt(res.spacing);
-  el("radius").textContent = fmt(res.R);
-  el("length").textContent = fmt(res.cc);
-  el("sum1").textContent = res.N + " boxes · " + fmt(inp.l, 2).replace(/\.?0+$/, "") + " m · " + fmt(inp.arc, 0) + "°";
-  if (setupAuto) el("setup").value = res.N + " boxes · centre–centre " + fmt(res.cc, 2) + " m · spacing " + fmt(res.spacing, 3) + " m";
+  el("spacing").textContent = res.spacing === null ? "—" : Lf(res.spacing);
+  el("radius").textContent = Lf(res.R);
+  el("length").textContent = Lf(res.cc);
+  el("sum1").textContent = res.N + " boxes · " + Lf(inp.l, 2).replace(/\.?0+$/, "") + " " + UNITS.len + " · " + fmt(inp.arc, 0) + "°";
+  if (setupAuto) el("setup").value = res.N + " boxes · centre–centre " + Lf(res.cc, 2) + " " + UNITS.len + " · spacing " + Lf(res.spacing, 3) + " " + UNITS.len;
   el("warn").hidden = !(res.spacing !== null && res.spacing < 0);
   var body = el("body");
   body.innerHTML = res.rows.map(function (r) {
     var z = r.norm !== null && Math.abs(r.norm) < 0.0005;
-    return "<tr><td>" + r.i + "</td><td>" + fmt(r.pos) + "</td><td>" + (r.gap === null ? "" : fmt(r.gap)) + "</td><td>" + (r.virt === null ? "" : fmt(r.virt)) + "</td><td>" + (r.delay === null ? "" : fmt(r.delay)) + '</td><td><span class="norm' + (z ? " zero" : "") + '">' + (r.norm === null ? "" : fmt(r.norm)) + "</span></td></tr>";
+    return "<tr><td>" + r.i + "</td><td>" + Lf(r.pos) + "</td><td>" + (r.gap === null ? "" : Lf(r.gap)) + "</td><td>" + (r.virt === null ? "" : Lf(r.virt)) + "</td><td>" + Df(r.delay) + '</td><td><span class="norm' + (z ? " zero" : "") + '">' + Df(r.norm) + "</span></td></tr>";
   }).join("");
   el("empty").hidden = res.rows.length > 0;
   drawArc(res, inp);
@@ -702,11 +724,11 @@ document.querySelectorAll(".field input").forEach(function (inp) {
     r.setAttribute("aria-label", "Roller: " + name); r.setAttribute("aria-valuemin", LIM[id][0]); r.setAttribute("aria-valuemax", LIM[id][1]);
     r.innerHTML = '<i class="cap"></i>';
     var dec = (String(STEP[id]).split(".")[1] || "").length;
-    function sync() { var v = parseFloat(String(inp.value).replace(",", ".")); if (!isFinite(v)) v = 0; r.setAttribute("aria-valuenow", v); var d = DISP[id], f = Math.min(1, Math.max(0, (v - d[0]) / (d[1] - d[0]))); r.style.setProperty("--f", String(1 - f)); }
+    function sync() { var v = parseFloat(String(inp.value).replace(",", ".")); if (!isFinite(v)) v = 0; r.setAttribute("aria-valuenow", v); var sc = LENIDS.indexOf(id) >= 0 ? lenF() : 1, d = [DISP[id][0] * sc, DISP[id][1] * sc], f = Math.min(1, Math.max(0, (v - d[0]) / (d[1] - d[0]))); r.style.setProperty("--f", String(1 - f)); }
     function setBy(n) {
       var v = parseFloat(String(inp.value).replace(",", ".")); if (!isFinite(v)) v = 0;
       var cd = (String(inp.value).replace(",", ".").split(".")[1] || "").length, dd = Math.min(6, Math.max(dec, cd));
-      var nv = Math.min(LIM[id][1], Math.max(LIM[id][0], +(v + n * STEP[id]).toFixed(dd)));
+      var nv = Math.min(LIM[id][1] * (LENIDS.indexOf(id) >= 0 ? lenF() : 1), Math.max(LIM[id][0], +(v + n * STEP[id]).toFixed(dd)));
       if (nv === v && String(inp.value) !== "") return false;
       inp.value = String(nv); inp.dispatchEvent(new Event("input", { bubbles: true })); sync();
       if (navigator.vibrate) { try { navigator.vibrate(4); } catch (e) {} }
@@ -745,7 +767,8 @@ document.querySelectorAll(".field input").forEach(function (inp) {
       var k = e.key, n = k === "ArrowUp" ? 1 : k === "ArrowDown" ? -1 : k === "PageUp" ? 10 : k === "PageDown" ? -10 : 0;
       if (n) { e.preventDefault(); setBy(n); }
     });
-    inp.addEventListener("input", sync); sync();
+    function fit() { inp.classList.toggle("long", String(inp.value).length > 5); }
+    inp.addEventListener("input", function () { sync(); fit(); }); sync(); fit();
     wrap.appendChild(r);
   });
 })();
@@ -790,7 +813,7 @@ async function saveCurrent() {
 }
 
 function loadItem(it) {
-  IDS.forEach(function (id) { if (it.inputs && Number.isFinite(it.inputs[id])) el(id).value = it.inputs[id]; });
+  IDS.forEach(function (id) { if (it.inputs && Number.isFinite(it.inputs[id])) el(id).value = toDisp(id, it.inputs[id]); });
   el("venue").value = it.venue || ""; el("setup").value = it.setup || ""; setupAuto = !it.setup;
   render(); saySave("Loaded.");
   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -836,10 +859,10 @@ function renderList() {
     var card = mk("div", "card");
     card.appendChild(mk("h3", "", it.venue || "Untitled venue"));
     if (it.setup && !/^\d+ boxes ·/.test(it.setup)) card.appendChild(mk("p", "setupName", it.setup));
-    card.appendChild(mk("p", "meta", fmtDate(it.savedAt) + " · " + Math.floor(inp.n || 0) + " boxes · " + (inp.l || 0) + " m line · " + (inp.arc || 0) + "° arc · " + (inp.t || 0) + " °C / " + (inp.h || 0) + " %"));
+    card.appendChild(mk("p", "meta", fmtDate(it.savedAt) + " · " + Math.floor(inp.n || 0) + " boxes · " + fmt((inp.l || 0) * lenF(), 2).replace(/\.?0+$/, "") + " " + UNITS.len + " line · " + (inp.arc || 0) + "° arc · " + (inp.t || 0) + " °C / " + (inp.h || 0) + " %"));
     var st = mk("div", "stats");
     [["Spacing", r.spacing, "m"], ["Radius", r.radius, "m"], ["Centre–centre", Number.isFinite(r.centreToCentre) ? r.centreToCentre : (inp.l - inp.w), "m"], ["Speed", r.speedOfSound, "m/s"]].forEach(function (x) {
-      var sp = mk("span"); sp.appendChild(document.createTextNode(x[0] + " ")); sp.appendChild(mk("b", "", fmt(x[1]) + " " + x[2])); st.appendChild(sp);
+      var sp = mk("span"); sp.appendChild(document.createTextNode(x[0] + " ")); sp.appendChild(mk("b", "", fmt(x[1] * lenF()) + " " + (x[2] === "m" ? UNITS.len : UNITS.len + "/s"))); st.appendChild(sp);
     });
     card.appendChild(st);
     var row = mk("div", "row");
@@ -1071,10 +1094,48 @@ try {
 } catch (e) {}
 applyTheme(false);
 
+/* ---------- Units and copying the delays ---------- */
+var DEL_HEAD = { ms: "ms", us: "µs", s48: "smp 48k", s96: "smp 96k" };
+function saveUnits() { try { localStorage.setItem("subArcUnits", JSON.stringify(UNITS)); } catch (e) {} }
+function applyUnits() {
+  var u = UNITS.len;
+  [["w", "Box width"], ["l", "Line length"], ["m", "Edge margin each end"]].forEach(function (x) { var lb = document.querySelector('label[for="' + x[0] + '"]'); if (lb) lb.textContent = x[1] + " (" + u + ")"; });
+  var us = document.querySelectorAll("thead .u"), dl = DEL_HEAD[UNITS.delay];
+  [u, u, u, dl, dl].forEach(function (t, i) { if (us[i]) us[i].textContent = t; });
+  document.querySelectorAll(".hero .big i, .chip .val i").forEach(function (n) { n.textContent = u; });
+  document.querySelectorAll("[data-len]").forEach(function (b) { b.setAttribute("aria-pressed", b.getAttribute("data-len") === u ? "true" : "false"); });
+  document.querySelectorAll("[data-delay]").forEach(function (b) { b.setAttribute("aria-pressed", b.getAttribute("data-delay") === UNITS.delay ? "true" : "false"); });
+}
+function setLen(nu) {
+  if (nu === UNITS.len) return;
+  var f0 = lenF(); UNITS.len = nu; var f1 = lenF();
+  LENIDS.forEach(function (id) {
+    var inp = el(id), t = String(inp.value).trim(); if (t === "") return;
+    var v = parseFloat(t.replace(",", ".")); if (!isFinite(v)) return;
+    inp.value = String(Math.round(v * f1 / f0 * 10000) / 10000); inp.dispatchEvent(new Event("input", { bubbles: true }));
+  });
+  saveUnits(); applyUnits(); render(); renderList();
+}
+function setDelay(d) { if (d === UNITS.delay) return; UNITS.delay = d; saveUnits(); applyUnits(); render(); }
+document.querySelectorAll("[data-len]").forEach(function (b) { b.addEventListener("click", function () { setLen(b.getAttribute("data-len")); }); });
+document.querySelectorAll("[data-delay]").forEach(function (b) { b.addEventListener("click", function () { setDelay(b.getAttribute("data-delay")); }); });
+var copyTimer;
+function sayCopy(msg) { var x = el("copyStatus"); x.textContent = msg; clearTimeout(copyTimer); copyTimer = setTimeout(function () { x.textContent = ""; }, 2500); }
+el("copyDelays").addEventListener("click", function () {
+  render();
+  var res = last.res, ul = UNITS.len, venue = el("venue").value.trim();
+  var lines = ["Sub Arc Calc" + (venue ? " · " + venue : ""), res.N + " boxes · spacing " + Lf(res.spacing) + " " + ul + " · centre–centre " + Lf(res.cc, 2) + " " + ul, "Delay in " + DEL[UNITS.delay].name, "Box\tDelay\tNorm."];
+  res.rows.forEach(function (r) { lines.push(r.i + "\t" + (Df(r.delay) || "-") + "\t" + (Df(r.norm) || "-")); });
+  var text = lines.join("\n");
+  var ok = function () { sayCopy("Copied."); }, bad = function () { if (fallbackCopy(text)) ok(); else sayCopy("Could not copy."); };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(ok, bad); else bad();
+});
+applyUnits();
 try {
   var saved = JSON.parse(localStorage.getItem("subArcCalc") || "null");
-  if (saved) IDS.forEach(function (id) { if (Number.isFinite(saved[id])) el(id).value = saved[id]; });
+  if (saved) IDS.forEach(function (id) { if (Number.isFinite(saved[id])) el(id).value = toDisp(id, saved[id]); });
 } catch (e) {}
+IDS.forEach(function (id) { el(id).dispatchEvent(new Event("input")); });
 IDS.forEach(function (id) { el(id).addEventListener("input", render); });
 render();
 </script>
