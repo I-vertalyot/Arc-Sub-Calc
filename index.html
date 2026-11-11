@@ -603,13 +603,13 @@ function drawArc(res, inp) {
   var virts = rows.map(function (r) { return r.virt; }).filter(Number.isFinite);
   var maxV = virts.length ? Math.max.apply(null, virts) * scale : 0;
   var k = maxV > 0 ? Math.max(1, Math.min(6, 44 / maxV)) : 1;
-  var out = "", pts = [];
+  var out = "", dls = "", pts = [];
   var ddx = rows.length > 1 ? (rows[1].pos - rows[0].pos) * scale : 99, showDl = ddx >= 11, dfs = Math.min(6, ddx * 0.4).toFixed(1);
   rows.forEach(function (r) {
     var x = 100 + r.pos * scale;
     out += '<rect class="bx" x="' + (x - rw / 2).toFixed(1) + '" y="' + yBox + '" width="' + rw.toFixed(1) + '" height="' + rh + '" rx="2"/>';
     if (rw >= 11 && rows.length <= 24) out += '<text class="bn" x="' + x.toFixed(1) + '" y="' + (yBox + 6.6) + '">' + r.i + '</text>';
-    if (showDl && r.norm !== null) out += '<text class="dl" style="font-size:' + dfs + 'px" x="' + x.toFixed(1) + '" y="' + (yBox + rh + 7.8) + '">' + (UNITS.delay === "ms" ? fmt(r.norm, 2) : Df(r.norm)) + '</text>';
+    if (showDl && r.norm !== null) dls += '<text class="dl" style="font-size:' + dfs + 'px" x="' + x.toFixed(1) + '" y="' + (yBox + rh + 7.8) + '">' + (UNITS.delay === "ms" ? fmt(r.norm, 2) : Df(r.norm)) + '</text>';
     if (r.virt !== null) {
       var y = y0 + r.virt * scale * k;
       out += '<line class="st" x1="' + x.toFixed(1) + '" y1="' + (yBox + rh) + '" x2="' + x.toFixed(1) + '" y2="' + y.toFixed(1) + '"/>';
@@ -619,7 +619,7 @@ function drawArc(res, inp) {
   if (pts.length > 1) out += '<path class="arc" d="M' + pts.map(function (p) { return p[0].toFixed(1) + " " + p[1].toFixed(1); }).join(" L") + '"/>';
   pts.forEach(function (p) { out += '<circle class="pt" cx="' + p[0].toFixed(1) + '" cy="' + p[1].toFixed(1) + '" r="2"/>'; });
   if (!pts.length) out += '<text class="cap" x="100" y="160">arc cannot be calculated</text>';
-  svg.innerHTML = out;
+  svg.innerHTML = out + dls;
 }
 
 var last = null;
