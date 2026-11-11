@@ -477,6 +477,7 @@ html .top .speed { position: absolute; top: -8px; right: 0; margin: 0; order: 0;
 #menuBtn, html[data-style] #menuBtn { width: 40px; height: 40px; border: 0 !important; background: transparent !important; box-shadow: none !important; color: var(--ink) !important; border-radius: 8px; margin-right: -8px; }
 #menuBtn[aria-expanded="true"] { color: var(--terra) !important; }
 #menuBtn:focus-visible { outline: 3px solid var(--ink); outline-offset: 0; }
+html[data-style="poster"] .chip.a .lab { font-size: 2.45cqw; letter-spacing: 0.03em; white-space: nowrap; }
 </style>
 
 </head><body>
@@ -515,7 +516,7 @@ html .top .speed { position: absolute; top: -8px; right: 0; margin: 0; order: 0;
         <div class="sub" id="heroSub">between boxes in the line</div>
         <div class="warn" id="warn" hidden>Boxes do not fit in the line</div>
       </div>
-      <div class="chip a"><div><div class="lab">Line length</div><div class="val"><span id="lineLen">14.000</span><i>m</i></div></div><button class="qbtn" type="button" data-help="linelen" aria-expanded="false" aria-label="What is line length?">i</button></div>
+      <div class="chip a"><div><div class="lab">Total line length</div><div class="val"><span id="lineLen">14.000</span><i>m</i></div></div><button class="qbtn" type="button" data-help="linelen" aria-expanded="false" aria-label="What is line length?">i</button></div>
       <div class="chip b"><div><div class="lab">Centre–centre</div><div class="val"><span id="length">12.660</span><i>m</i></div></div><button class="qbtn" type="button" data-help="centre" aria-expanded="false" aria-label="What is centre-to-centre length?">i</button></div>
       <div class="dot" aria-hidden="true"></div>
       <div class="lens"><svg id="arcsvg" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Diagram of the box line and the virtual arc"></svg></div>
@@ -528,14 +529,14 @@ html .top .speed { position: absolute; top: -8px; right: 0; margin: 0; order: 0;
       <div class="fields">
         <div class="field"><label for="n">Number of boxes</label><input id="n" type="number" inputmode="decimal" step="any" value="8"></div>
         <div class="field"><label for="w">Box width (m)</label><input id="w" type="number" inputmode="decimal" step="any" value="1.34"></div>
-        <div class="field"><label for="l">Line length (m)</label><input id="l" type="number" inputmode="decimal" step="any" value="14"></div>
+        <div class="field"><label for="l">Total line length (m)</label><input id="l" type="number" inputmode="decimal" step="any" value="14"></div>
         <div class="field"><label for="cc">Centre–centre (m)</label><input id="cc" type="number" inputmode="decimal" step="any" value="12.66"></div>
         <div class="field"><label for="arc">Arc angle (°)</label><input id="arc" type="number" inputmode="decimal" step="any" value="65"></div>
         <div class="field"><label for="t">Temperature (°C)</label><input id="t" type="number" inputmode="decimal" step="any" value="25"></div>
         <div class="field"><label for="h">Humidity (%)</label><input id="h" type="number" inputmode="decimal" step="any" value="63"></div>
         <div class="field"><label for="m">Edge margin (m)</label><input id="m" type="number" inputmode="decimal" step="any" value="0"></div>
       </div>
-      <p class="hint">Enter either the line length or the centre–centre length; the other one follows. Spacing is calculated from the line length, box count and box width. The edge margin is kept free at both ends of the line, so the boxes are squeezed closer together.</p>
+      <p class="hint">Enter either the total line length or the centre–centre length; the other one follows. Spacing is calculated from the total line length, box count and box width. The edge margin is kept free at both ends of the line, so the boxes are squeezed closer together.</p>
     </section>
 
     <section>
@@ -577,7 +578,7 @@ html .top .speed { position: absolute; top: -8px; right: 0; margin: 0; order: 0;
     <h2 id="guideTitle">How to use</h2>
     <p class="guideLead">Sub Arc Calc helps you line up subwoofers so they work as an arc. Enter your boxes and the room, and it gives you the spacing between boxes, the radius of the arc, and the delay each box needs.</p>
     <ol class="guideSteps">
-      <li><b>Enter your setup.</b> Number of boxes, box width, line length and arc angle.</li>
+      <li><b>Enter your setup.</b> Number of boxes, box width, total line length and arc angle.</li>
       <li><b>Add the air.</b> Temperature and humidity change the speed of sound, so the delays stay accurate.</li>
       <li><b>Optional margin.</b> Edge margin keeps the ends of the line free, so the boxes sit closer together.</li>
       <li><b>Read the result.</b> The big circle shows the box spacing. The small circles show radius and centre-to-centre length. The drawing previews the arc.</li>
@@ -595,7 +596,7 @@ html .top .speed { position: absolute; top: -8px; right: 0; margin: 0; order: 0;
 <script>
 var IDS = ["n", "w", "l", "arc", "t", "h", "m"];
 var DEFAULTS = { n: 8, w: 1.34, l: 14, arc: 65, t: 25, h: 63, m: 0 };
-var LABELS = { n: "Number of boxes", w: "Box width (m)", l: "Line length (m)", arc: "Arc angle (°)", t: "Temperature (°C)", h: "Humidity (%)", m: "Edge margin each end (m)" };
+var LABELS = { n: "Number of boxes", w: "Box width (m)", l: "Total line length (m)", arc: "Arc angle (°)", t: "Temperature (°C)", h: "Humidity (%)", m: "Edge margin each end (m)" };
 
 function compute(inp) {
   var N = Math.floor(inp.n), w = inp.w, L = inp.l, arc = inp.arc, T = inp.t, H = inp.h, M = inp.m;
@@ -977,9 +978,9 @@ initStore();
 /* ---------- Info bubbles ---------- */
 var HELP_TEXT = {
   spacing: ["Box spacing", "The free gap between neighbouring boxes along the line."],
-  linelen: ["Line length", "The total length of the row of boxes, from the outer edge of the first box to the outer edge of the last."],
+  linelen: ["Total line length", "The total length of the row of boxes, from the outer edge of the first box to the outer edge of the last."],
   centre: ["Centre–centre length", "The distance between the centres of the first and last box."],
-  info: ["What these numbers mean", "Speed of sound in air, calculated from the temperature and humidity. Then the temperature, the humidity, the number of boxes, the line length and the arc angle you entered."],
+  info: ["What these numbers mean", "Speed of sound in air, calculated from the temperature and humidity. Then the temperature, the humidity, the number of boxes, the total line length and the arc angle you entered."],
   speed: ["Speed of sound", "The speed of sound in air at your temperature and humidity."],
   pos: ["Position", "Where each box centre sits, measured from the middle of the line. Negative is left, positive is right."],
   gap: ["Gap", "The distance between the centres of neighbouring boxes."],
@@ -1178,7 +1179,7 @@ var DEL_HEAD = { ms: "ms", us: "µs", s48: "smp 48k", s96: "smp 96k" };
 function saveUnits() { try { localStorage.setItem("subArcUnits", JSON.stringify(UNITS)); } catch (e) {} }
 function applyUnits() {
   var u = UNITS.len;
-  [["w", "Box width"], ["l", "Line length"], ["m", "Edge margin"], ["cc", "Centre–centre"]].forEach(function (x) { var lb = document.querySelector('label[for="' + x[0] + '"]'); if (lb) lb.textContent = x[1] + " (" + u + ")"; });
+  [["w", "Box width"], ["l", "Total line length"], ["m", "Edge margin"], ["cc", "Centre–centre"]].forEach(function (x) { var lb = document.querySelector('label[for="' + x[0] + '"]'); if (lb) lb.textContent = x[1] + " (" + u + ")"; });
   var us = document.querySelectorAll("thead .u"), dl = DEL_HEAD[UNITS.delay];
   [u, u, u, dl, dl].forEach(function (t, i) { if (us[i]) us[i].textContent = t; });
   document.querySelectorAll(".hero .big i, .chip .val i").forEach(function (n) { n.textContent = u; });
