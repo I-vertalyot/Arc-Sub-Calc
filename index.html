@@ -653,7 +653,7 @@ function render() {
   el("speed").textContent = Lf(res.c) + (UNITS.len === "ft" ? " ft/s" : " m/s");
   el("speedSub").textContent = fmt(inp.t, 0).replace("—", "0") + " °C · " + fmt(inp.h, 0).replace("—", "0") + " %";
   last = { inp: inp, res: res };
-  el("spacing").textContent = res.spacing === null ? "—" : Lf(res.spacing);
+  el("spacing").textContent = res.spacing === null ? "—" : Lf(res.spacing, 2);
   el("lineLen").textContent = Lf(inp.l);
   if (!ccDriving && document.activeElement !== el("cc")) el("cc").value = Number.isFinite(res.cc) ? String(toDisp("cc", res.cc)) : "";
   el("length").textContent = Lf(res.cc);
