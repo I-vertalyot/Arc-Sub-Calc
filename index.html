@@ -489,7 +489,7 @@ html[data-style="console"] .colorRow, html[data-style="rack"] .colorRow, html[da
         <div class="sub" id="heroSub">between boxes in the line</div>
         <div class="warn" id="warn" hidden>Boxes do not fit in the line</div>
       </div>
-      <div class="chip a"><div><div class="lab">Radius</div><div class="val"><span id="radius">11.781</span><i>m</i></div></div><button class="qbtn" type="button" data-help="radius" aria-expanded="false" aria-label="What is radius?">i</button></div>
+      <div class="chip a"><div><div class="lab">Line length</div><div class="val"><span id="lineLen">14.000</span><i>m</i></div></div><button class="qbtn" type="button" data-help="linelen" aria-expanded="false" aria-label="What is line length?">i</button></div>
       <div class="chip b"><div><div class="lab">Centre–centre</div><div class="val"><span id="length">12.660</span><i>m</i></div></div><button class="qbtn" type="button" data-help="centre" aria-expanded="false" aria-label="What is centre-to-centre length?">i</button></div>
       <div class="dot" aria-hidden="true"></div>
       <div class="lens"><svg id="arcsvg" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Diagram of the box line and the virtual arc"></svg><div class="titleBlock"><h1>Sub Arc Calc</h1><p class="summary"><span id="sum1">8 boxes · 14 m · 65°</span></p></div></div>
@@ -503,12 +503,13 @@ html[data-style="console"] .colorRow, html[data-style="rack"] .colorRow, html[da
         <div class="field"><label for="n">Number of boxes</label><input id="n" type="number" inputmode="decimal" step="any" value="8"></div>
         <div class="field"><label for="w">Box width (m)</label><input id="w" type="number" inputmode="decimal" step="any" value="1.34"></div>
         <div class="field"><label for="l">Line length (m)</label><input id="l" type="number" inputmode="decimal" step="any" value="14"></div>
+        <div class="field"><label for="cc">Centre–centre (m)</label><input id="cc" type="number" inputmode="decimal" step="any" value="12.66"></div>
         <div class="field"><label for="arc">Arc angle (°)</label><input id="arc" type="number" inputmode="decimal" step="any" value="65"></div>
         <div class="field"><label for="t">Temperature (°C)</label><input id="t" type="number" inputmode="decimal" step="any" value="25"></div>
         <div class="field"><label for="h">Humidity (%)</label><input id="h" type="number" inputmode="decimal" step="any" value="63"></div>
-        <div class="field wide"><label for="m">Edge margin each end (m)</label><input id="m" type="number" inputmode="decimal" step="any" value="0"></div>
+        <div class="field"><label for="m">Edge margin each end (m)</label><input id="m" type="number" inputmode="decimal" step="any" value="0"></div>
       </div>
-      <p class="hint">Spacing is calculated from the line length, box count and box width. The edge margin is kept free at both ends of the line, so the boxes are squeezed closer together.</p>
+      <p class="hint">Enter either the line length or the centre–centre length; the other one follows. Spacing is calculated from the line length, box count and box width. The edge margin is kept free at both ends of the line, so the boxes are squeezed closer together.</p>
     </section>
 
     <section>
@@ -596,7 +597,7 @@ function num(x) { var v = parseFloat(x); return Number.isFinite(v) ? v : 0; }
 function fmt(x, d) { if (d === undefined) d = 3; return Number.isFinite(x) ? x.toFixed(d) : "—"; }
 function el(id) { return document.getElementById(id); }
 var setupAuto = true; /* setup name follows the inputs until the user types their own */
-var UNITS = { len: "m", delay: "ms" }, FT = 3.28084, LENIDS = ["w", "l", "m"];
+var UNITS = { len: "m", delay: "ms" }, FT = 3.28084, LENIDS = ["w", "l", "m", "cc"], ccDriving = false;
 try { var su = JSON.parse(localStorage.getItem("subArcUnits") || "null"); if (su) { if (su.len === "ft") UNITS.len = "ft"; if (["ms", "us", "s48", "s96"].indexOf(su.delay) >= 0) UNITS.delay = su.delay; } } catch (e) {}
 function lenF() { return UNITS.len === "ft" ? FT : 1; }
 var DEL = { ms: { f: 1, d: 3, u: "ms", name: "milliseconds (ms)" }, us: { f: 1000, d: 0, u: "µs", name: "microseconds (µs)" }, s48: { f: 48, d: 0, u: "smp 48k", name: "samples at 48 kHz" }, s96: { f: 96, d: 0, u: "smp 96k", name: "samples at 96 kHz" } };
@@ -641,7 +642,8 @@ function render() {
   el("speedSub").textContent = fmt(inp.t, 0).replace("—", "0") + " °C · " + fmt(inp.h, 0).replace("—", "0") + " %";
   last = { inp: inp, res: res };
   el("spacing").textContent = res.spacing === null ? "—" : Lf(res.spacing);
-  el("radius").textContent = Lf(res.R);
+  el("lineLen").textContent = Lf(inp.l);
+  if (!ccDriving && document.activeElement !== el("cc")) el("cc").value = Number.isFinite(res.cc) ? String(toDisp("cc", res.cc)) : "";
   el("length").textContent = Lf(res.cc);
   el("sum1").textContent = res.N + " boxes · " + Lf(inp.l, 2).replace(/\.?0+$/, "") + " " + UNITS.len + " · " + fmt(inp.arc, 0) + "°";
   if (setupAuto) el("setup").value = res.N + " boxes · centre–centre " + Lf(res.cc, 2) + " " + UNITS.len + " · spacing " + Lf(res.spacing, 3) + " " + UNITS.len;
@@ -720,6 +722,13 @@ function nextUntitled() {
   }
   return "Mystery Venue " + (items.length + 1);
 }
+el("cc").addEventListener("input", function () {
+  if (String(el("cc").value).trim() === "") return;
+  var inp = readInputs(), ccm = num(el("cc").value) / lenF();
+  ccDriving = true;
+  el("l").value = String(toDisp("l", ccm + 2 * inp.m + inp.w)); el("l").dispatchEvent(new Event("input", { bubbles: true }));
+  ccDriving = false;
+});
 el("setup").addEventListener("input", function () { if (el("setup").value.trim()) setupAuto = false; });
 el("setup").addEventListener("blur", function () { if (!el("setup").value.trim()) { setupAuto = true; render(); } });
 /* x button inside every input: clears the box for quick retyping */
@@ -736,9 +745,9 @@ document.querySelectorAll(".field input").forEach(function (inp) {
 });
 /* roller on the number inputs: press, hold and drag up / down to change the value */
 (function () {
-  var STEP = { n: 1, w: 0.01, l: 0.01, arc: 1, t: 1, h: 1, m: 0.01 };
-  var DISP = { n: [1, 40], w: [0.3, 3], l: [1, 60], arc: [0, 180], t: [-10, 45], h: [0, 100], m: [0, 5] }; /* fader travel only; real limits are LIM */
-  var LIM = { n: [0, 999], w: [0, 99], l: [0, 999], arc: [0, 360], t: [-60, 80], h: [0, 100], m: [0, 99] };
+  var STEP = { n: 1, w: 0.01, l: 0.01, cc: 0.01, arc: 1, t: 1, h: 1, m: 0.01 };
+  var DISP = { n: [1, 40], w: [0.3, 3], l: [1, 60], cc: [1, 60], arc: [0, 180], t: [-10, 45], h: [0, 100], m: [0, 5] }; /* fader travel only; real limits are LIM */
+  var LIM = { n: [0, 999], w: [0, 99], l: [0, 999], cc: [0, 999], arc: [0, 360], t: [-60, 80], h: [0, 100], m: [0, 99] };
   Object.keys(STEP).forEach(function (id) {
     var inp = el(id), wrap = inp.parentNode, r = document.createElement("div");
     var lab = document.querySelector('label[for="' + id + '"]'), name = lab ? lab.textContent : id;
@@ -937,7 +946,7 @@ initStore();
 /* ---------- Info bubbles ---------- */
 var HELP_TEXT = {
   spacing: ["Box spacing", "The free gap between neighbouring boxes along the line."],
-  radius: ["Radius", "The radius of the virtual circle the row of boxes is bent onto."],
+  linelen: ["Line length", "The total length of the row of boxes, from the outer edge of the first box to the outer edge of the last."],
   centre: ["Centre–centre length", "The distance between the centres of the first and last box."],
   speed: ["Speed of sound", "The speed of sound in air at your temperature and humidity."],
   pos: ["Position", "Where each box centre sits, measured from the middle of the line. Negative is left, positive is right."],
@@ -1132,7 +1141,7 @@ var DEL_HEAD = { ms: "ms", us: "µs", s48: "smp 48k", s96: "smp 96k" };
 function saveUnits() { try { localStorage.setItem("subArcUnits", JSON.stringify(UNITS)); } catch (e) {} }
 function applyUnits() {
   var u = UNITS.len;
-  [["w", "Box width"], ["l", "Line length"], ["m", "Edge margin each end"]].forEach(function (x) { var lb = document.querySelector('label[for="' + x[0] + '"]'); if (lb) lb.textContent = x[1] + " (" + u + ")"; });
+  [["w", "Box width"], ["l", "Line length"], ["m", "Edge margin each end"], ["cc", "Centre–centre"]].forEach(function (x) { var lb = document.querySelector('label[for="' + x[0] + '"]'); if (lb) lb.textContent = x[1] + " (" + u + ")"; });
   var us = document.querySelectorAll("thead .u"), dl = DEL_HEAD[UNITS.delay];
   [u, u, u, dl, dl].forEach(function (t, i) { if (us[i]) us[i].textContent = t; });
   document.querySelectorAll(".hero .big i, .chip .val i").forEach(function (n) { n.textContent = u; });
@@ -1143,6 +1152,7 @@ function setLen(nu) {
   if (nu === UNITS.len) return;
   var f0 = lenF(); UNITS.len = nu; var f1 = lenF();
   LENIDS.forEach(function (id) {
+    if (id === "cc") return;
     var inp = el(id), t = String(inp.value).trim(); if (t === "") return;
     var v = parseFloat(t.replace(",", ".")); if (!isFinite(v)) return;
     inp.value = String(Math.round(v * f1 / f0 * 1000) / 1000); inp.dispatchEvent(new Event("input", { bubbles: true }));
