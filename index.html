@@ -581,7 +581,7 @@ function lenF() { return UNITS.len === "ft" ? FT : 1; }
 var DEL = { ms: { f: 1, d: 3, u: "ms", name: "milliseconds (ms)" }, us: { f: 1000, d: 0, u: "µs", name: "microseconds (µs)" }, s48: { f: 48, d: 0, u: "smp 48k", name: "samples at 48 kHz" }, s96: { f: 96, d: 0, u: "smp 96k", name: "samples at 96 kHz" } };
 function Lf(x, d) { return fmt(x * lenF(), d); }
 function Df(x) { return x === null || x === undefined ? "" : fmt(x * DEL[UNITS.delay].f, DEL[UNITS.delay].d); }
-function toDisp(id, v) { return LENIDS.indexOf(id) >= 0 ? Math.round(v * lenF() * 10000) / 10000 : v; }
+function toDisp(id, v) { return LENIDS.indexOf(id) >= 0 ? Math.round(v * lenF() * 1000) / 1000 : v; }
 function readInputs() { var o = {}; IDS.forEach(function (id) { var v = num(el(id).value); o[id] = LENIDS.indexOf(id) >= 0 ? v / lenF() : v; }); return o; }
 
 function drawArc(res, inp) {
@@ -1112,7 +1112,7 @@ function setLen(nu) {
   LENIDS.forEach(function (id) {
     var inp = el(id), t = String(inp.value).trim(); if (t === "") return;
     var v = parseFloat(t.replace(",", ".")); if (!isFinite(v)) return;
-    inp.value = String(Math.round(v * f1 / f0 * 10000) / 10000); inp.dispatchEvent(new Event("input", { bubbles: true }));
+    inp.value = String(Math.round(v * f1 / f0 * 1000) / 1000); inp.dispatchEvent(new Event("input", { bubbles: true }));
   });
   saveUnits(); applyUnits(); render(); renderList();
 }
