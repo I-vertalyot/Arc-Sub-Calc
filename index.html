@@ -17,7 +17,7 @@ html, body { margin: 0; }
 img { max-width: 100%; }
 [hidden] { display: none !important; }
 </style>
-<title>Sub Arc Calc</title>
+<title>Sub Arc Calculator</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Oxanium:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap">
 <style>
 /* Poster style (after the "1984" cover): flat vermilion / cream / ink-olive, hard edges and offset shadows, halftone dots and print grain, squared display type. */
@@ -485,6 +485,9 @@ html[data-style="poster"] .chip.a .lab { font-size: 2.45cqw; letter-spacing: 0.0
 @media (prefers-reduced-motion: reduce) { #splash img { animation: none; } #splash { animation-duration: 0.01s; animation-delay: 0.6s; } }
 /* room at the end of the page so the background speaker is fully visible when scrolled to the bottom */
 .layout { padding-bottom: 100px !important; }
+@media (max-width:420px){html .brand h1{font-size:clamp(20px,6.3vw,27px) !important}}
+.brand h1 .calc{font-size:.5em;letter-spacing:.02em}
+@media (max-width:350px){.brand .spk{width:36px}}
 </style>
 
 </head><body>
@@ -506,7 +509,7 @@ html[data-style="poster"] .chip.a .lab { font-size: 2.45cqw; letter-spacing: 0.0
           </div></div>
 </div>
     <div class="top">
-      <div class="brand"><svg class="spk" viewBox="96 190 320 284" aria-hidden="true"><g fill="none" stroke="var(--terra)" stroke-linecap="round"><path d="M128.8 312.5 A150 150 0 0 1 383.2 312.5" stroke-width="14" opacity=".35"/><path d="M153.7 346.4 A112 112 0 0 1 358.3 346.4" stroke-width="14" opacity=".6"/><rect x="104" y="338" width="304" height="124" rx="10" stroke-width="12"/><g stroke-width="6"><path d="M213 338v124M229 338v124M247 338v124M256 338v124M265 338v124M283 338v124M299 338v124"/></g></g><rect x="213" y="338" width="86" height="124" fill="var(--terra)" opacity=".22"/><rect x="152" y="444" width="14" height="22" rx="3" fill="var(--ink)"/><rect x="346" y="444" width="14" height="22" rx="3" fill="var(--ink)"/></svg><h1>Sub Arc Calc</h1></div>
+      <div class="brand"><svg class="spk" viewBox="96 190 320 284" aria-hidden="true"><g fill="none" stroke="var(--terra)" stroke-linecap="round"><path d="M128.8 312.5 A150 150 0 0 1 383.2 312.5" stroke-width="14" opacity=".35"/><path d="M153.7 346.4 A112 112 0 0 1 358.3 346.4" stroke-width="14" opacity=".6"/><rect x="104" y="338" width="304" height="124" rx="10" stroke-width="12"/><g stroke-width="6"><path d="M213 338v124M229 338v124M247 338v124M256 338v124M265 338v124M283 338v124M299 338v124"/></g></g><rect x="213" y="338" width="86" height="124" fill="var(--terra)" opacity=".22"/><rect x="152" y="444" width="14" height="22" rx="3" fill="var(--ink)"/><rect x="346" y="444" width="14" height="22" rx="3" fill="var(--ink)"/></svg><h1>Sub Arc <span class="calc">Calculator</span></h1></div>
       <div class="topinfo"><div class="spd"><span id="speed" class="spv">347.231 m/s</span><span class="sep">·</span><span id="speedSub" class="sps">25 °C · 63 %</span><span class="sep">·</span><span id="sum1" class="sps">8 boxes · 14 m · 65°</span><button class="qbtn inline" type="button" data-help="info" aria-expanded="false" aria-label="What do these numbers mean?">i</button></div></div>
       <div class="speed">
         <div class="ctrls">
@@ -1274,20 +1277,31 @@ if ("serviceWorker" in navigator && (location.protocol === "https:" || location.
         ctx.stroke();
       });
     }
-    /* the subwoofer: front view of a wide cabinet with a ribbed centre section and two rigging points */
-    var gc = "rgba(" + gnd[0] + "," + gnd[1] + "," + gnd[2] + ",1)", push = 0.5 + 0.5 * Math.sin(t * 2 * Math.PI / period);
-    var bh = S * 0.62, bw = bh * 2.53, x0 = cx - bw / 2, y0 = cy - bh / 2;
+    /* the subwoofer: black cabinet with a grey frame, two textured grilles, a V-shaped horn in the middle, side handles and two feet */
+    var push = 0.5 + 0.5 * Math.sin(t * 2 * Math.PI / period);
+    var bh = S * 0.62, bw = bh * 2.45, x0 = cx - bw / 2, y0 = cy - bh / 2, fr = Math.max(2.5, bh * 0.07);
+    var ix = x0 + fr, iy = y0 + fr, iw = bw - 2 * fr, ih = bh - 2 * fr, cw = bw * 0.2, hx = x0 + bw / 2 - cw / 2, gw = hx - ix - 2;
     ctx.lineJoin = "round";
-    ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x0, y0, bw, bh, bh * 0.03); else ctx.rect(x0, y0, bw, bh);
-    ctx.fillStyle = "#0b0b0c"; ctx.fill();
-    ctx.lineWidth = 3; ctx.strokeStyle = "#3d3d42"; ctx.stroke();
-    ctx.lineWidth = 1; ctx.strokeStyle = "rgba(255,255,255,0.14)"; ctx.beginPath(); ctx.moveTo(x0 + bh * 0.06, y0 + 3); ctx.lineTo(x0 + bw - bh * 0.06, y0 + 3); ctx.stroke();
-    ctx.fillStyle = "rgba(255,255,255," + (0.05 + 0.07 * push).toFixed(3) + ")"; ctx.fillRect(x0 + bw * 0.347, y0 + 2, bw * 0.3, bh - 4);
-    ctx.lineWidth = 1.3; ctx.strokeStyle = "#55555b"; ctx.beginPath();
-    [0.347, 0.386, 0.443, 0.497, 0.553, 0.608, 0.647].forEach(function (f) { ctx.moveTo(x0 + bw * f, y0); ctx.lineTo(x0 + bw * f, y0 + bh); });
-    ctx.stroke();
-    ctx.lineWidth = 1.5; ctx.strokeStyle = "#8d8d93";
-    [0.18, 0.82].forEach(function (f) { ctx.strokeRect(x0 + bw * f - bw * 0.013, y0 + bh * 0.88, bw * 0.026, bh * 0.1); });
+    ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x0, y0, bw, bh, bh * 0.04); else ctx.rect(x0, y0, bw, bh);
+    ctx.fillStyle = "#0a0a0b"; ctx.fill();
+    ctx.lineWidth = fr; ctx.strokeStyle = "#4e4e54"; ctx.stroke();
+    [ix, hx + cw + 2].forEach(function (gx) {
+      ctx.fillStyle = "#141416"; ctx.fillRect(gx, iy, gw, ih);
+      ctx.fillStyle = "rgba(255,255,255,0.075)";
+      for (var yy = iy + 1.5; yy < iy + ih - 1; yy += 3) for (var xx = gx + 1.5; xx < gx + gw - 1; xx += 3) ctx.fillRect(xx, yy, 1, 1);
+      ctx.lineWidth = 1; ctx.strokeStyle = "#2d2d31"; ctx.strokeRect(gx + 0.5, iy + 0.5, gw - 1, ih - 1);
+    });
+    ctx.fillStyle = "#040405"; ctx.fillRect(hx, iy, cw, ih);
+    var wl = ctx.createLinearGradient(hx, 0, hx + cw * 0.45, 0);
+    wl.addColorStop(0, "rgba(" + (92 + 22 * push | 0) + "," + (92 + 22 * push | 0) + "," + (98 + 22 * push | 0) + ",1)"); wl.addColorStop(1, "#303035");
+    ctx.fillStyle = wl; ctx.beginPath(); ctx.moveTo(hx, iy); ctx.lineTo(hx + cw * 0.46, iy); ctx.lineTo(hx + cw * 0.3, iy + ih); ctx.lineTo(hx, iy + ih); ctx.closePath(); ctx.fill();
+    var wr = ctx.createLinearGradient(hx + cw, 0, hx + cw * 0.55, 0);
+    wr.addColorStop(0, "rgba(" + (92 + 22 * push | 0) + "," + (92 + 22 * push | 0) + "," + (98 + 22 * push | 0) + ",1)"); wr.addColorStop(1, "#303035");
+    ctx.fillStyle = wr; ctx.beginPath(); ctx.moveTo(hx + cw, iy); ctx.lineTo(hx + cw * 0.54, iy); ctx.lineTo(hx + cw * 0.7, iy + ih); ctx.lineTo(hx + cw, iy + ih); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = "#222226"; ctx.fillRect(x0 + 0.5, y0 + bh * 0.34, fr * 0.8, bh * 0.32); ctx.fillRect(x0 + bw - fr * 0.8 - 0.5, y0 + bh * 0.34, fr * 0.8, bh * 0.32);
+    var fw = bw * 0.05, fh = bh * 0.1;
+    ctx.fillStyle = "#8d8d93"; ctx.fillRect(x0 + bw * 0.1 - fw / 2, y0 + bh - fr - fh - 1, fw, fh); ctx.fillRect(x0 + bw * 0.9 - fw / 2, y0 + bh - fr - fh - 1, fw, fh);
+    ctx.fillStyle = "rgba(255,226,190," + (0.55 + 0.4 * push).toFixed(2) + ")"; ctx.fillRect(x0 + bw * 0.1 - fw * 0.3, y0 + bh - fr - fh * 0.6 - 1, fw * 0.6, fh * 0.3);
   }
   function frame(now) {
     raf = requestAnimationFrame(frame);
