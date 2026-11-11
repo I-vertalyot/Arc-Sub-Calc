@@ -1263,7 +1263,7 @@ if ("serviceWorker" in navigator && (location.protocol === "https:" || location.
     var N = Math.round(parseFloat(nEl && nEl.value)); if (!(N >= 1)) N = 8; N = Math.min(N, 40);
     var TH = parseFloat(aEl && aEl.value); if (!(TH > 0)) TH = 65; TH = Math.max(5, Math.min(170, TH)) * Math.PI / 180;
     /* the row of boxes belongs to the end of the page: the further you are from the end, the further below the screen it is */
-    var off = Math.max(0, document.documentElement.scrollHeight - innerHeight - (window.pageYOffset || 0));
+    var off = 0; /* fixed to the screen: scrolling the page does not move the animation */
     var m = 30, avail = W - 2 * m, bwMax = S * 0.62 * 1.2, bw = Math.min(bwMax, avail / N * 0.5), bh = bw / 2.2;
     var rowW = N > 1 ? avail - bw : 0, ay = H - bh - 4 + off, baseY = ay + bh / 2;
     var r0 = N > 1 ? (rowW / 2) / Math.sin(TH / 2) : 0, Vx = W / 2, Vy = ay + (N > 1 ? r0 * Math.cos(TH / 2) : 0);
