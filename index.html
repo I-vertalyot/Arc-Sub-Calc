@@ -473,6 +473,7 @@ html[data-style="night"] .field input:focus-visible { background: #35231d !impor
 /* help and menu buttons: top right corner, level with the top of the title row */
 .top { position: relative; }
 html .top .speed { position: absolute; top: -8px; right: 0; margin: 0; order: 0; flex-basis: auto; z-index: 3; }
+.menu #helpBtn { width: auto; height: auto; min-height: 38px; padding: 6px 16px; border-radius: 99px; font: 600 14px var(--font-body); letter-spacing: 0; white-space: nowrap; }
 </style>
 
 </head><body>
@@ -482,6 +483,7 @@ html .top .speed { position: absolute; top: -8px; right: 0; margin: 0; order: 0;
     <div class="menu" id="menu" hidden>
   <div class="unitrow"><span class="ulab">Length</span><div class="seg" role="group" aria-label="Length unit"><button type="button" data-len="m" aria-pressed="true">m</button><button type="button" data-len="ft" aria-pressed="false">ft</button></div></div>
   <div class="unitrow"><span class="ulab">Delay</span><div class="seg" role="group" aria-label="Delay unit"><button type="button" data-delay="ms" aria-pressed="true">ms</button><button type="button" data-delay="us" aria-pressed="false">µs</button><button type="button" data-delay="s48" aria-pressed="false" aria-label="Samples at 48 kilohertz">48k smp</button><button type="button" data-delay="s96" aria-pressed="false" aria-label="Samples at 96 kilohertz">96k smp</button></div></div>
+  <div class="unitrow"><span class="ulab">Help</span><button class="helpBtn" id="helpBtn" type="button" aria-haspopup="dialog" aria-label="How to use this app" title="How to use">How to use</button></div>
   <div class="unitrow"><span class="ulab">Theme</span><button class="styleBtn" id="styleBtn" type="button" aria-label="Change theme" aria-expanded="false" title="Change theme"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.8-.9 1.5-1.9-.3-1 .4-2.1 1.5-2.1h2a4 4 0 0 0 4-4c0-5.2-4-10-9-10z"/><circle cx="7.5" cy="12" r="1.1" fill="currentColor"/><circle cx="10" cy="7.6" r="1.1" fill="currentColor"/><circle cx="15" cy="7.8" r="1.1" fill="currentColor"/></svg><span id="styleName">Night Stage</span></button></div>
   <div class="unitrow colorRow"><span class="ulab">Colour</span><div class="ctrlRow">
           <button class="bgBtn" id="bgBtn" type="button" aria-label="Change background" aria-expanded="false" title="Background"></button>
@@ -497,7 +499,6 @@ html .top .speed { position: absolute; top: -8px; right: 0; margin: 0; order: 0;
       <div class="speed">
         <div class="ctrls">
           <div class="ctrlRow">
-          <button class="helpBtn" id="helpBtn" type="button" aria-haspopup="dialog" aria-label="How to use this app" title="How to use">?</button>
           <button class="styleBtn" id="menuBtn" type="button" aria-label="Menu" aria-haspopup="true" aria-expanded="false" aria-controls="menu" title="Menu"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
           </div>
         </div>
@@ -1156,7 +1157,7 @@ applyTheme(false);
   function place() { var panel = menu.parentNode, pr = panel.getBoundingClientRect(), r = mb.getBoundingClientRect(); menu.style.top = Math.round(r.bottom - pr.top + 10) + "px"; }
   function setOpen(o) { menu.hidden = !o; mb.setAttribute("aria-expanded", o ? "true" : "false"); if (o) place(); }
   window.closeMenu = function () { setOpen(false); };
-  menu.addEventListener("click", function (e) { if (e.target.closest && e.target.closest("[data-len],[data-delay],#themeSwitch")) setOpen(false); });
+  menu.addEventListener("click", function (e) { if (e.target.closest && e.target.closest("[data-len],[data-delay],#themeSwitch,#helpBtn")) setOpen(false); });
   mb.addEventListener("click", function (e) { e.stopPropagation(); closePop(); setOpen(menu.hidden); });
   document.addEventListener("click", function (e) { if (menu.hidden) return; if (e.target.closest && (e.target.closest("#menu") || e.target.closest("#pop") || e.target.closest("#menuBtn"))) return; setOpen(false); });
   document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !menu.hidden) { setOpen(false); mb.focus(); } });
