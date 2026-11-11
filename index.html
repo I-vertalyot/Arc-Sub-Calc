@@ -115,23 +115,15 @@ h1 {
   text-transform: uppercase;
   text-wrap: balance;
 }
-.lens .titleBlock { position: absolute; left: 0; right: 0; bottom: 5%; z-index: 2; text-align: center; margin: 0; pointer-events: none; }
-.lens .titleBlock h1 { margin: 0 0 3px !important; font-size: clamp(15px, 5.2vw, 22px) !important; letter-spacing: 0.06em; line-height: 1.1 !important; white-space: nowrap; text-shadow: none; }
-html[data-style="poster"] .lens .titleBlock { bottom: 12%; }
-html[data-style="poster"] .lens .titleBlock h1 { font-size: 17px !important; }
 .top { flex-wrap: wrap; }
+.top .logo { order: 0; display: block; width: 84px; height: 84px; border-radius: 19px; flex: none; }
 .top .speed { order: 1; margin-left: auto; }
-.lens .ttl { fill: var(--ink); font-family: var(--font-display); font-weight: 700; font-size: 14px; letter-spacing: 1.2px; text-anchor: middle; }
-html[data-style="night"] .lens .ttl { fill: var(--terra); }
-html[data-style="poster"] .lens .ttl { font-size: 12px; letter-spacing: 1px; }
 .topinfo { min-width: 0; order: 2; flex: 1 1 100%; }
 .topinfo .spd { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-start; gap: 2px 6px; margin: 0; font-size: 11.5px; font-variant-numeric: tabular-nums; color: var(--ink); }
 .topinfo .spd .sep { font-weight: 700; }
 @media (max-width: 380px) { .topinfo .spd { font-size: 10.5px; gap: 2px 4px; } }
 .topinfo .spd .spv, .topinfo .spd .sps { font-weight: 500; color: var(--ink); white-space: nowrap; }
 .topinfo .spd .qbtn { position: static; width: 18px; height: 18px; font-size: 11px; line-height: 14px; margin: 0; flex: none; }
-html[data-style="poster"] .lens .titleBlock { bottom: 14%; }
-.lens .titleBlock .summary { font-size: 11px !important; color: var(--ink-soft); }
 .summary { margin: 0; font-size: 15px; font-weight: 500; font-variant-numeric: tabular-nums; }
 .summary small { display: block; color: var(--ink-soft); font-size: 13px; margin-top: 2px; }
 .speed { text-align: left; min-width: 0; flex: 0 0 auto; }
@@ -482,6 +474,7 @@ html[data-style="console"] .colorRow, html[data-style="rack"] .colorRow, html[da
           </div></div>
 </div>
     <div class="top">
+      <img class="logo" alt="Sub Arc Calc" width="84" height="84" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwIiB5MT0iMCIgeDI9IjAiIHkyPSIxIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiMxYTExMTAiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMwMDAiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjExMiIgZmlsbD0idXJsKCNnKSIvPgo8dGV4dCB4PSIyNTYiIHk9IjEyOCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IidBcmlhbCBCbGFjaycsJ0hlbHZldGljYSBOZXVlJyxBcmlhbCwnRGVqYVZ1IFNhbnMnLHNhbnMtc2VyaWYiIGZvbnQtd2VpZ2h0PSI5MDAiIGZvbnQtc2l6ZT0iODQiIGxldHRlci1zcGFjaW5nPSIzIiBmaWxsPSIjZmY2YTRkIj5TVUIgQVJDPC90ZXh0Pgo8dGV4dCB4PSIyNTYiIHk9IjIwNiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IidBcmlhbCBCbGFjaycsJ0hlbHZldGljYSBOZXVlJyxBcmlhbCwnRGVqYVZ1IFNhbnMnLHNhbnMtc2VyaWYiIGZvbnQtd2VpZ2h0PSI5MDAiIGZvbnQtc2l6ZT0iODQiIGxldHRlci1zcGFjaW5nPSIzIiBmaWxsPSIjZmY2YTRkIj5DQUxDPC90ZXh0Pgo8cGF0aCBkPSJNMTI4LjggMzEyLjUgQTE1MCAxNTAgMCAwIDEgMzgzLjIgMzEyLjUiIHN0cm9rZT0iI2ZmNmE0ZCIgc3Ryb2tlLXdpZHRoPSIxMiIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIuMzUiLz4KPHBhdGggZD0iTTE1My43IDM0Ni40IEExMTIgMTEyIDAgMCAxIDM1OC4zIDM0Ni40IiBzdHJva2U9IiNmZjZhNGQiIHN0cm9rZS13aWR0aD0iMTIiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgb3BhY2l0eT0iLjYiLz4KPHJlY3QgeD0iMTA0IiB5PSIzMzgiIHdpZHRoPSIzMDQiIGhlaWdodD0iMTI0IiByeD0iMTAiIGZpbGw9IiMwYjA1MDQiLz4KPHJlY3QgeD0iMTA0IiB5PSIzMzgiIHdpZHRoPSIzMDQiIGhlaWdodD0iMTI0IiByeD0iMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmNmE0ZCIgc3Ryb2tlLXdpZHRoPSIxMCIvPgo8cmVjdCB4PSIyMTMiIHk9IjMzOCIgd2lkdGg9Ijg2IiBoZWlnaHQ9IjEyNCIgZmlsbD0iI2ZmNmE0ZCIgb3BhY2l0eT0iLjIyIi8+CjxsaW5lIHgxPSIyMTMiIHkxPSIzMzgiIHgyPSIyMTMiIHkyPSI0NjIiIHN0cm9rZT0iI2ZmNmE0ZCIgc3Ryb2tlLXdpZHRoPSI1Ii8+PGxpbmUgeDE9IjIyOSIgeTE9IjMzOCIgeDI9IjIyOSIgeTI9IjQ2MiIgc3Ryb2tlPSIjZmY2YTRkIiBzdHJva2Utd2lkdGg9IjUiLz48bGluZSB4MT0iMjQ3IiB5MT0iMzM4IiB4Mj0iMjQ3IiB5Mj0iNDYyIiBzdHJva2U9IiNmZjZhNGQiIHN0cm9rZS13aWR0aD0iNSIvPjxsaW5lIHgxPSIyNTYiIHkxPSIzMzgiIHgyPSIyNTYiIHkyPSI0NjIiIHN0cm9rZT0iI2ZmNmE0ZCIgc3Ryb2tlLXdpZHRoPSI1Ii8+PGxpbmUgeDE9IjI2NSIgeTE9IjMzOCIgeDI9IjI2NSIgeTI9IjQ2MiIgc3Ryb2tlPSIjZmY2YTRkIiBzdHJva2Utd2lkdGg9IjUiLz48bGluZSB4MT0iMjgzIiB5MT0iMzM4IiB4Mj0iMjgzIiB5Mj0iNDYyIiBzdHJva2U9IiNmZjZhNGQiIHN0cm9rZS13aWR0aD0iNSIvPjxsaW5lIHgxPSIyOTkiIHkxPSIzMzgiIHgyPSIyOTkiIHkyPSI0NjIiIHN0cm9rZT0iI2ZmNmE0ZCIgc3Ryb2tlLXdpZHRoPSI1Ii8+CjxyZWN0IHg9IjE1MiIgeT0iNDQ0IiB3aWR0aD0iMTQiIGhlaWdodD0iMjIiIHJ4PSIzIiBmaWxsPSIjZjFlM2RmIi8+PHJlY3QgeD0iMzQ2IiB5PSI0NDQiIHdpZHRoPSIxNCIgaGVpZ2h0PSIyMiIgcng9IjMiIGZpbGw9IiNmMWUzZGYiLz48L3N2Zz4=">
       <div class="topinfo"><div class="spd"><span id="speed" class="spv">347.231 m/s</span><span class="sep">·</span><span id="speedSub" class="sps">25 °C · 63 %</span><span class="sep">·</span><span id="sum1" class="sps">8 boxes · 14 m · 65°</span><button class="qbtn inline" type="button" data-help="info" aria-expanded="false" aria-label="What do these numbers mean?">i</button></div></div>
       <div class="speed">
         <div class="ctrls">
@@ -642,13 +635,6 @@ function drawArc(res, inp) {
   });
   if (pts.length > 1) out += '<path class="arc" d="M' + pts.map(function (p) { return p[0].toFixed(1) + " " + p[1].toFixed(1); }).join(" L") + '"/>';
   pts.forEach(function (p) { out += '<circle class="pt" cx="' + p[0].toFixed(1) + '" cy="' + p[1].toFixed(1) + '" r="2"/>'; });
-  var tp = "M30 168 L170 168";
-  if (pts.length > 1) {
-    var p0 = pts[0], pn = pts[pts.length - 1], dd = 40, yc = Math.min.apply(null, pts.map(function (q) { return q[1]; })) + dd;
-    var cy = 2 * yc - 0.5 * ((p0[1] + dd) + (pn[1] + dd));
-    tp = "M" + p0[0].toFixed(1) + " " + (p0[1] + dd).toFixed(1) + " Q" + ((p0[0] + pn[0]) / 2).toFixed(1) + " " + cy.toFixed(1) + " " + pn[0].toFixed(1) + " " + (pn[1] + dd).toFixed(1);
-  }
-  out += '<path id="ttlpath" d="' + tp + '" fill="none" stroke="none"/><text class="ttl"><textPath href="#ttlpath" startOffset="50%">SUB ARC CALC</textPath></text>';
   if (!pts.length) out += '<text class="cap" x="100" y="160">arc cannot be calculated</text>';
   svg.innerHTML = out + dls;
 }
