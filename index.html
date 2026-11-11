@@ -1277,31 +1277,40 @@ if ("serviceWorker" in navigator && (location.protocol === "https:" || location.
         ctx.stroke();
       });
     }
-    /* the subwoofer: black cabinet with a grey frame, two textured grilles, a V-shaped horn in the middle, side handles and two feet */
+    /* the subwoofer: grey-framed cabinet, two dark mesh grilles with an open horn cavity between them, corner caps, side handles, gold tabs */
     var push = 0.5 + 0.5 * Math.sin(t * 2 * Math.PI / period);
-    var bh = S * 0.62, bw = bh * 2.45, x0 = cx - bw / 2, y0 = cy - bh / 2, fr = Math.max(2.5, bh * 0.07);
-    var ix = x0 + fr, iy = y0 + fr, iw = bw - 2 * fr, ih = bh - 2 * fr, cw = bw * 0.2, hx = x0 + bw / 2 - cw / 2, gw = hx - ix - 2;
+    var bh = S * 0.62, bw = bh * 2.2, x0 = cx - bw / 2, y0 = cy - bh / 2, fr = Math.max(2.5, bh * 0.07);
+    var ix = x0 + fr, iy = y0 + fr, iw = bw - 2 * fr, ih = bh - 2 * fr, cw = iw * 0.26, hx = x0 + bw / 2 - cw / 2, gw = (iw - cw) / 2 - 2;
     ctx.lineJoin = "round";
-    ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x0, y0, bw, bh, bh * 0.04); else ctx.rect(x0, y0, bw, bh);
+    ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x0, y0, bw, bh, bh * 0.03); else ctx.rect(x0, y0, bw, bh);
     ctx.fillStyle = "#0a0a0b"; ctx.fill();
-    ctx.lineWidth = fr; ctx.strokeStyle = "#4e4e54"; ctx.stroke();
+    ctx.lineWidth = fr; ctx.strokeStyle = "#47474c"; ctx.stroke();
+    ctx.lineWidth = 1; ctx.strokeStyle = "rgba(255,255,255,0.14)"; ctx.strokeRect(x0 + 0.5, y0 + 0.5, bw - 1, bh - 1);
+    /* open horn cavity */
+    var cg = ctx.createLinearGradient(hx, 0, hx + cw, 0);
+    var lv = 40 + 14 * push | 0;
+    cg.addColorStop(0, "#1a1a1d"); cg.addColorStop(0.5, "rgb(" + lv + "," + lv + "," + (lv + 4) + ")"); cg.addColorStop(1, "#202023");
+    ctx.fillStyle = cg; ctx.fillRect(hx, iy, cw, ih);
+    ctx.fillStyle = "rgba(255,255,255,0.07)"; ctx.fillRect(hx, iy + ih - ih * 0.09, cw, ih * 0.09);
+    ctx.fillStyle = "rgba(0,0,0,0.35)"; ctx.fillRect(hx, iy, cw, ih * 0.05);
+    /* grilles */
     [ix, hx + cw + 2].forEach(function (gx) {
-      ctx.fillStyle = "#141416"; ctx.fillRect(gx, iy, gw, ih);
-      ctx.fillStyle = "rgba(255,255,255,0.075)";
-      for (var yy = iy + 1.5; yy < iy + ih - 1; yy += 3) for (var xx = gx + 1.5; xx < gx + gw - 1; xx += 3) ctx.fillRect(xx, yy, 1, 1);
-      ctx.lineWidth = 1; ctx.strokeStyle = "#2d2d31"; ctx.strokeRect(gx + 0.5, iy + 0.5, gw - 1, ih - 1);
+      ctx.fillStyle = "#0d0d0e"; ctx.fillRect(gx, iy, gw, ih);
+      ctx.fillStyle = "rgba(255,255,255,0.06)";
+      for (var xx = gx + 1; xx < gx + gw; xx += 2) ctx.fillRect(xx, iy, 0.6, ih);
+      ctx.lineWidth = 1; ctx.strokeStyle = "#2b2b2f"; ctx.strokeRect(gx + 0.5, iy + 0.5, gw - 1, ih - 1);
+      /* gold tab */
+      var tw = Math.max(3, bh * 0.1);
+      ctx.fillStyle = "#c9a227"; ctx.fillRect(gx + gw / 2 - tw / 2, iy + ih - tw * 1.25, tw, tw);
+      ctx.fillStyle = "#0a0a0b"; ctx.fillRect(gx + gw / 2 - tw * 0.25, iy + ih - tw * 1.0, tw * 0.5, tw * 0.5);
     });
-    ctx.fillStyle = "#040405"; ctx.fillRect(hx, iy, cw, ih);
-    var wl = ctx.createLinearGradient(hx, 0, hx + cw * 0.45, 0);
-    wl.addColorStop(0, "rgba(" + (92 + 22 * push | 0) + "," + (92 + 22 * push | 0) + "," + (98 + 22 * push | 0) + ",1)"); wl.addColorStop(1, "#303035");
-    ctx.fillStyle = wl; ctx.beginPath(); ctx.moveTo(hx, iy); ctx.lineTo(hx + cw * 0.46, iy); ctx.lineTo(hx + cw * 0.3, iy + ih); ctx.lineTo(hx, iy + ih); ctx.closePath(); ctx.fill();
-    var wr = ctx.createLinearGradient(hx + cw, 0, hx + cw * 0.55, 0);
-    wr.addColorStop(0, "rgba(" + (92 + 22 * push | 0) + "," + (92 + 22 * push | 0) + "," + (98 + 22 * push | 0) + ",1)"); wr.addColorStop(1, "#303035");
-    ctx.fillStyle = wr; ctx.beginPath(); ctx.moveTo(hx + cw, iy); ctx.lineTo(hx + cw * 0.54, iy); ctx.lineTo(hx + cw * 0.7, iy + ih); ctx.lineTo(hx + cw, iy + ih); ctx.closePath(); ctx.fill();
-    ctx.fillStyle = "#222226"; ctx.fillRect(x0 + 0.5, y0 + bh * 0.34, fr * 0.8, bh * 0.32); ctx.fillRect(x0 + bw - fr * 0.8 - 0.5, y0 + bh * 0.34, fr * 0.8, bh * 0.32);
-    var fw = bw * 0.05, fh = bh * 0.1;
-    ctx.fillStyle = "#8d8d93"; ctx.fillRect(x0 + bw * 0.1 - fw / 2, y0 + bh - fr - fh - 1, fw, fh); ctx.fillRect(x0 + bw * 0.9 - fw / 2, y0 + bh - fr - fh - 1, fw, fh);
-    ctx.fillStyle = "rgba(255,226,190," + (0.55 + 0.4 * push).toFixed(2) + ")"; ctx.fillRect(x0 + bw * 0.1 - fw * 0.3, y0 + bh - fr - fh * 0.6 - 1, fw * 0.6, fh * 0.3);
+    /* corner caps */
+    var cs = Math.max(3, bh * 0.11);
+    ctx.fillStyle = "#0e0e10";
+    [[x0 - 1, y0 - 1], [x0 + bw - cs + 1, y0 - 1], [x0 - 1, y0 + bh - cs + 1], [x0 + bw - cs + 1, y0 + bh - cs + 1]].forEach(function (c) { ctx.fillRect(c[0], c[1], cs, cs); });
+    /* side handles */
+    var hw = Math.max(2, bh * 0.06);
+    ctx.fillStyle = "#050506"; ctx.fillRect(x0 - hw * 0.6, y0 + bh * 0.3, hw, bh * 0.4); ctx.fillRect(x0 + bw - hw * 0.4, y0 + bh * 0.3, hw, bh * 0.4);
   }
   function frame(now) {
     raf = requestAnimationFrame(frame);
