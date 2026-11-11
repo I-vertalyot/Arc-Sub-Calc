@@ -468,6 +468,8 @@ html .field input { background: color-mix(in srgb, var(--well) 84%, var(--ink) 1
 html .field input:focus-visible { border-color: var(--terra) !important; background: color-mix(in srgb, var(--well) 78%, var(--ink) 22%) !important; }
 html[data-style="night"] .field input { background: #2a1b17 !important; border-color: #6b4036 !important; }
 html[data-style="night"] .field input:focus-visible { background: #35231d !important; border-color: var(--terra) !important; }
+.menu #styleBtn { width: auto; height: auto; min-height: 38px; padding: 6px 14px 6px 11px; border-radius: 99px; display: inline-flex; align-items: center; gap: 8px; font: 600 14px var(--font-body); letter-spacing: 0; white-space: nowrap; }
+.menu #styleBtn svg { margin: 0; flex: none; }
 </style>
 
 </head><body>
@@ -477,7 +479,7 @@ html[data-style="night"] .field input:focus-visible { background: #35231d !impor
     <div class="menu" id="menu" hidden>
   <div class="unitrow"><span class="ulab">Length</span><div class="seg" role="group" aria-label="Length unit"><button type="button" data-len="m" aria-pressed="true">m</button><button type="button" data-len="ft" aria-pressed="false">ft</button></div></div>
   <div class="unitrow"><span class="ulab">Delay</span><div class="seg" role="group" aria-label="Delay unit"><button type="button" data-delay="ms" aria-pressed="true">ms</button><button type="button" data-delay="us" aria-pressed="false">µs</button><button type="button" data-delay="s48" aria-pressed="false" aria-label="Samples at 48 kilohertz">48k smp</button><button type="button" data-delay="s96" aria-pressed="false" aria-label="Samples at 96 kilohertz">96k smp</button></div></div>
-  <div class="unitrow"><span class="ulab">Look</span><button class="styleBtn" id="styleBtn" type="button" aria-label="Change look" aria-expanded="false" title="Look"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.8-.9 1.5-1.9-.3-1 .4-2.1 1.5-2.1h2a4 4 0 0 0 4-4c0-5.2-4-10-9-10z"/><circle cx="7.5" cy="12" r="1.1" fill="currentColor"/><circle cx="10" cy="7.6" r="1.1" fill="currentColor"/><circle cx="15" cy="7.8" r="1.1" fill="currentColor"/></svg></button></div>
+  <div class="unitrow"><span class="ulab">Theme</span><button class="styleBtn" id="styleBtn" type="button" aria-label="Change theme" aria-expanded="false" title="Change theme"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.8-.9 1.5-1.9-.3-1 .4-2.1 1.5-2.1h2a4 4 0 0 0 4-4c0-5.2-4-10-9-10z"/><circle cx="7.5" cy="12" r="1.1" fill="currentColor"/><circle cx="10" cy="7.6" r="1.1" fill="currentColor"/><circle cx="15" cy="7.8" r="1.1" fill="currentColor"/></svg><span id="styleName">Night Stage</span></button></div>
   <div class="unitrow colorRow"><span class="ulab">Colour</span><div class="ctrlRow">
           <button class="bgBtn" id="bgBtn" type="button" aria-label="Change background" aria-expanded="false" title="Background"></button>
           <button class="themeSwitch" id="themeSwitch" type="button" role="switch" aria-checked="true" aria-label="Dark mode" title="Dark / light mode"><svg class="bg l" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.6M12 18.9v2.6M2.5 12h2.6M18.9 12h2.6M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></svg><svg class="bg r" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7z"/></svg><span class="knob">
@@ -1055,6 +1057,7 @@ var theme = { mode: "dark", bg: "poster", style: "night" };
 function presetById(id) { for (var i = 0; i < PRESETS.length; i++) if (PRESETS[i].id === id) return PRESETS[i]; return PRESETS[0]; }
 function applyTheme(save) {
   var root = document.documentElement, fx = FIXED[theme.style];
+  STYLES.forEach(function (x) { if (x.id === theme.style && el("styleName")) el("styleName").textContent = x.name; });
   var pr = presetById(theme.bg), mode = fx ? fx.mode : theme.mode, vals = fx ? fx.colors : pr[theme.mode], acc = fx ? fx.acc : ACCENT[theme.mode];
   KEYS.forEach(function (k, i) { root.style.setProperty(k, vals[i]); });
   Object.keys(acc).forEach(function (k) { root.style.setProperty(k, acc[k]); });
@@ -1073,7 +1076,7 @@ function applyTheme(save) {
 }
 function buildStylePop() {
   var pop = el("pop"); pop.textContent = "";
-  pop.appendChild(mk("h4", "", "Look"));
+  pop.appendChild(mk("h4", "", "Theme"));
   var list = mk("div", "styleList");
   STYLES.forEach(function (x) {
     var b = mk("button", "styleOpt", x.name); b.type = "button";
