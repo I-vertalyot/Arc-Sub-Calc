@@ -119,11 +119,13 @@ h1 {
 .lens .titleBlock h1 { margin: 0 0 3px !important; font-size: clamp(15px, 5.2vw, 22px) !important; letter-spacing: 0.06em; line-height: 1.1 !important; white-space: nowrap; text-shadow: none; }
 html[data-style="poster"] .lens .titleBlock { bottom: 12%; }
 html[data-style="poster"] .lens .titleBlock h1 { font-size: 17px !important; }
-.topinfo { min-width: 0; align-self: center; }
-.topinfo .summary { font-size: 12px !important; color: var(--ink-soft); }
-.topinfo .spd { display: flex; align-items: center; justify-content: flex-start; gap: 6px; margin: 0 0 4px; white-space: nowrap; font-size: 11px; font-variant-numeric: tabular-nums; }
-.topinfo .spd .spv { font-weight: 600; color: var(--ink); }
-.topinfo .spd .sps { color: var(--ink-soft); }
+.top { flex-wrap: wrap; }
+.top .speed { order: 1; margin-left: auto; }
+.topinfo { min-width: 0; order: 2; flex: 1 1 100%; }
+.topinfo .spd { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-start; gap: 2px 6px; margin: 0; font-size: 11.5px; font-variant-numeric: tabular-nums; color: var(--ink); }
+.topinfo .spd .sep { font-weight: 700; }
+@media (max-width: 380px) { .topinfo .spd { font-size: 10.5px; gap: 2px 4px; } }
+.topinfo .spd .spv, .topinfo .spd .sps { font-weight: 500; color: var(--ink); white-space: nowrap; }
 .topinfo .spd .qbtn { position: static; width: 18px; height: 18px; font-size: 11px; line-height: 14px; margin: 0; flex: none; }
 html[data-style="poster"] .lens .titleBlock { bottom: 14%; }
 .lens .titleBlock .summary { font-size: 11px !important; color: var(--ink-soft); }
@@ -477,7 +479,7 @@ html[data-style="console"] .colorRow, html[data-style="rack"] .colorRow, html[da
           </div></div>
 </div>
     <div class="top">
-      <div class="topinfo"><div class="spd"><span id="speed" class="spv">347.231 m/s</span><button class="qbtn inline" type="button" data-help="speed" aria-expanded="false" aria-label="What is speed of sound?">i</button><span id="speedSub" class="sps">25 °C · 63 %</span></div><p class="summary"><span id="sum1">8 boxes · 14 m · 65°</span></p></div>
+      <div class="topinfo"><div class="spd"><span id="speed" class="spv">347.231 m/s</span><span class="sep">·</span><span id="speedSub" class="sps">25 °C · 63 %</span><span class="sep">·</span><span id="sum1" class="sps">8 boxes · 14 m · 65°</span><button class="qbtn inline" type="button" data-help="info" aria-expanded="false" aria-label="What do these numbers mean?">i</button></div></div>
       <div class="speed">
         <div class="ctrls">
           <div class="ctrlRow">
@@ -954,6 +956,7 @@ var HELP_TEXT = {
   spacing: ["Box spacing", "The free gap between neighbouring boxes along the line."],
   linelen: ["Line length", "The total length of the row of boxes, from the outer edge of the first box to the outer edge of the last."],
   centre: ["Centre–centre length", "The distance between the centres of the first and last box."],
+  info: ["What these numbers mean", "Speed of sound in air, calculated from the temperature and humidity. Then the temperature, the humidity, the number of boxes, the line length and the arc angle you entered."],
   speed: ["Speed of sound", "The speed of sound in air at your temperature and humidity."],
   pos: ["Position", "Where each box centre sits, measured from the middle of the line. Negative is left, positive is right."],
   gap: ["Gap", "The distance between the centres of neighbouring boxes."],
