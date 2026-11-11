@@ -118,13 +118,13 @@ h1 {
 .top { flex-wrap: wrap; }
 .top .brand { order: 0; display: flex; align-items: flex-end; gap: 15px; min-width: 0; }
 @media (max-width: 480px) { html .top .speed { order: -1; flex-basis: 100%; display: flex; justify-content: flex-end; } }
-@media (max-width: 350px) { .brand .spk { width: 42px; } html[data-style] .brand h1 { font-size: 18px; letter-spacing: 0.01em; } .brand { gap: 8px; } }
+@media (max-width: 350px) { .brand .spk { width: 42px; } html[data-style] .brand h1 { font-size: 27px; letter-spacing: 0.01em; } .brand { gap: 8px; } }
 .brand { --tb: -6.75px; }
 html[data-style="poster"] .brand { --tb: -5.25px; }
 html[data-style="datasheet"] .brand, html[data-style="console"] .brand, html[data-style="rack"] .brand { --tb: -4.8px; }
 .brand .spk { width: 60px; height: auto; flex: none; display: block; }
-.brand h1 { margin: 0 0 var(--tb, 0px) !important; font-size: clamp(27px, 8.4vw, 36px); line-height: 1; white-space: nowrap; text-wrap: nowrap; }
-html[data-style="night"] .brand h1, html[data-style="console"] .brand h1, html[data-style="rack"] .brand h1, html[data-style="datasheet"] .brand h1 { font-size: clamp(25px, 7.8vw, 33px); letter-spacing: 0.03em; }
+.brand h1 { margin: 0 0 var(--tb, 0px) !important; font-size: clamp(40px, 12.6vw, 54px); line-height: 1; white-space: nowrap; text-wrap: nowrap; }
+html[data-style="night"] .brand h1, html[data-style="console"] .brand h1, html[data-style="rack"] .brand h1, html[data-style="datasheet"] .brand h1 { font-size: clamp(37px, 11.7vw, 50px); letter-spacing: 0.03em; }
 .top .speed { order: 1; margin-left: auto; }
 .topinfo { min-width: 0; order: 2; flex: 1 1 100%; }
 .topinfo .spd { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-start; gap: 2px 6px; margin: 0; font-size: 11.5px; font-variant-numeric: tabular-nums; color: var(--ink); }
@@ -480,8 +480,11 @@ html .top .speed { position: absolute; top: -8px; right: 0; margin: 0; order: 0;
 html[data-style="poster"] .chip.a .lab { font-size: 2.45cqw; letter-spacing: 0.03em; white-space: nowrap; }
 /* room at the end of the page so the background speaker is fully visible when scrolled to the bottom */
 .layout { padding-bottom: 100px !important; }
-@media (max-width:420px){html .brand h1{font-size:clamp(20px,6.3vw,27px) !important}}
+@media (max-width:420px){html .brand h1{font-size:clamp(30px,9.4vw,40px) !important}}
 .brand h1 .calc{font-size:.5em;letter-spacing:.02em}
+.brand h1{white-space:normal !important;text-wrap:balance}
+.brand h1 .calc{display:block;margin-top:2px}
+.brand h1{position:relative;top:-6px}
 @media (max-width:350px){.brand .spk{width:36px}}
 </style>
 
